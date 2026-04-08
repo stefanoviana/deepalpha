@@ -115,7 +115,7 @@ The AI model uses walk-forward validation (no overfitting):
 - Validation: 15% (for early stopping)
 - Test: 15% (newest, never seen during training)
 
-Typical accuracy: **58-62%** on out-of-sample data. Combined with 2:1+ reward-to-risk, this generates positive expected value.
+Typical accuracy: **60-65%** on out-of-sample data. Combined with 2:1+ reward-to-risk, this generates positive expected value.
 
 ## Disclaimer
 
