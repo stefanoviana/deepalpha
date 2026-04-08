@@ -9,7 +9,7 @@
 [![Hyperliquid](https://img.shields.io/badge/Exchange-Hyperliquid-purple.svg)](https://hyperliquid.xyz)
 [![LightGBM](https://img.shields.io/badge/ML-LightGBM-orange.svg)](https://lightgbm.readthedocs.io)
 
-[Live Stats](https://deepalpha.duckdns.org) · [Telegram](https://t.me/DeepAlphaVault) · [Get Pro](https://gumroad.com)
+[Telegram](https://t.me/DeepAlphaVault) · [Get Pro](https://gumroad.com)
 
 </div>
 
@@ -123,6 +123,5 @@ MIT License — see [LICENSE](LICENSE)
 
 ## Links
 
-- [Live Dashboard](https://deepalpha.duckdns.org)
 - [Telegram Channel](https://t.me/DeepAlphaVault)
 - [DeepAlpha Pro](https://gumroad.com) — 5 strategies, ensemble model, 38 features, ATR stops
