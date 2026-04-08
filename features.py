@@ -50,7 +50,8 @@ def _rsi(close: np.ndarray, period: int = 14) -> np.ndarray:
     loss = np.where(delta < 0, -delta, 0.0)
     avg_gain = _ema(gain, period * 2 - 1)
     avg_loss = _ema(loss, period * 2 - 1)
-    rs = np.where(avg_loss != 0, avg_gain / avg_loss, 100.0)
+    with np.errstate(divide='ignore', invalid='ignore'):
+        rs = np.where(avg_loss > 1e-10, avg_gain / avg_loss, 100.0)
     return 100.0 - 100.0 / (1.0 + rs)
 
 
