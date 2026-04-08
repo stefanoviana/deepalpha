@@ -19,7 +19,7 @@ TELEGRAM_CHAT_ID: str = os.getenv("TELEGRAM_CHAT_ID", "")
 # ─── Trading parameters ────────────────────────────────────────────────────
 LEVERAGE: int = int(os.getenv("LEVERAGE", "5"))
 MAX_POSITIONS: int = int(os.getenv("MAX_POSITIONS", "3"))
-RISK_PER_TRADE: float = float(os.getenv("RISK_PER_TRADE", "0.05"))       # 5% of equity
+RISK_PER_TRADE: float = float(os.getenv("RISK_PER_TRADE", "0.10"))       # 5% of equity
 MAX_DAILY_LOSS_PCT: float = float(os.getenv("MAX_DAILY_LOSS_PCT", "0.05"))  # 5% daily max loss
 
 # ─── Risk management ───────────────────────────────────────────────────────
