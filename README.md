@@ -9,7 +9,7 @@
 [![Hyperliquid](https://img.shields.io/badge/Exchange-Hyperliquid-purple.svg)](https://hyperliquid.xyz)
 [![LightGBM](https://img.shields.io/badge/ML-LightGBM-orange.svg)](https://lightgbm.readthedocs.io)
 
-[Telegram](https://t.me/DeepAlphaVault) · [Get Pro](https://gumroad.com)
+[Telegram](https://t.me/DeepAlphaVault) · [Get Pro](https://stefanocrypto.gumroad.com/l/ezilv)
 
 </div>
 
@@ -23,7 +23,7 @@ DeepAlpha is an open-source AI trading bot that uses machine learning to trade p
 
 ## Features
 
-| Feature | Free | [Pro](https://gumroad.com) |
+| Feature | Free | [Pro](https://stefanocrypto.gumroad.com/l/ezilv) |
 |---------|------|-----|
 | AI Model (LightGBM) | ✅ | ✅ |
 | XGBoost Ensemble | ❌ | ✅ |
@@ -124,4 +124,4 @@ MIT License — see [LICENSE](LICENSE)
 ## Links
 
 - [Telegram Channel](https://t.me/DeepAlphaVault)
-- [DeepAlpha Pro](https://gumroad.com) — 5 strategies, ensemble model, 38 features, ATR stops
+- [DeepAlpha Pro](https://stefanocrypto.gumroad.com/l/ezilv) — 5 strategies, ensemble model, 38 features, ATR stops
