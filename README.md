@@ -11,6 +11,10 @@
 
 [Telegram](https://t.me/DeepAlphaVault) · [Get Pro](https://stefanocrypto.gumroad.com/l/ezilv)
 
+**If you find this useful, please give it a star — it helps a lot!**
+
+[![GitHub stars](https://img.shields.io/github/stars/stefanoviana/deepalpha?style=social)](https://github.com/stefanoviana/deepalpha/stargazers)
+
 </div>
 
 ---
