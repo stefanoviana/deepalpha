@@ -59,6 +59,12 @@ Risk Management (position sizing, stop-loss, max positions)
 Trade Execution (Hyperliquid API)
 ```
 
+## What's New
+
+**v1.1** — Improved prediction target (0.5% threshold), wider stop-loss (2%), faster execution.
+
+The Pro version includes even more improvements: 5 strategies → 3 focused strategies, soft regime filter, LLM removed for cleaner ML signals.
+
 ## Quick Start
 
 ### 1. Install

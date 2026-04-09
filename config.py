@@ -23,7 +23,7 @@ RISK_PER_TRADE: float = float(os.getenv("RISK_PER_TRADE", "0.10"))       # 5% of
 MAX_DAILY_LOSS_PCT: float = float(os.getenv("MAX_DAILY_LOSS_PCT", "0.05"))  # 5% daily max loss
 
 # ─── Risk management ───────────────────────────────────────────────────────
-STOP_LOSS_PCT: float = float(os.getenv("STOP_LOSS_PCT", "0.015"))        # 1.5% fixed SL
+STOP_LOSS_PCT: float = float(os.getenv("STOP_LOSS_PCT", "0.02"))        # 1.5% fixed SL
 TAKE_PROFIT_PCT: float = float(os.getenv("TAKE_PROFIT_PCT", "0.03"))     # 3.0% fixed TP
 CIRCUIT_BREAKER_LOSSES: int = int(os.getenv("CIRCUIT_BREAKER_LOSSES", "3"))
 CIRCUIT_BREAKER_COOLDOWN: int = int(os.getenv("CIRCUIT_BREAKER_COOLDOWN", "3600"))  # seconds
