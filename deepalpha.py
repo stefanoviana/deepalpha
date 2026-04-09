@@ -299,7 +299,11 @@ class DeepAlpha:
                 "Run `python train.py` first."
             )
         with open(config.MODEL_PATH, "rb") as f:
-            self.model = pickle.load(f)
+            model_data = pickle.load(f)
+            if isinstance(model_data, dict):
+                self.model = model_data["model"]
+            else:
+                self.model = model_data  # legacy raw Booster
 
         # Initialise Hyperliquid connection
         account = Account.from_key(config.PRIVATE_KEY)
