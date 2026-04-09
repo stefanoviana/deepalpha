@@ -164,7 +164,7 @@ def train_model(X: np.ndarray, y: np.ndarray) -> lgb.Booster:
     for rank, idx in enumerate(sorted_idx[:10], 1):
         print(f"    {rank:2d}. {FEATURE_NAMES[idx]:25s} {importance[idx]:,.0f}")
 
-    return model
+    return model, accuracy
 
 
 def main() -> None:
@@ -181,7 +181,7 @@ def main() -> None:
 
     # 2. Train model
     print("\n[2/3] Training LightGBM model...")
-    model = train_model(X, y)
+    model, accuracy = train_model(X, y)
 
     # 3. Save model
     print(f"\n[3/3] Saving model to {config.MODEL_PATH}...")
