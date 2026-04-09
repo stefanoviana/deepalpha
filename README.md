@@ -32,12 +32,12 @@ DeepAlpha is an open-source AI trading bot that uses machine learning to trade p
 | AI Model (LightGBM) | ✅ | ✅ |
 | XGBoost Ensemble | ❌ | ✅ |
 | Walk-Forward Validation | ✅ | ✅ |
-| Technical Features | 15 | 38 |
+| Technical Features | 15 | 40 |
 | OBI + CVD Features | ❌ | ✅ |
-| Strategies | 1 (AI Autonomous) | 5 |
+| Strategies | 1 (AI Autonomous) | 3 |
 | ATR Dynamic Trailing Stop | ❌ | ✅ |
 | BTC Regime Filter | ❌ | ✅ |
-| LLM Market Analysis | ❌ | ✅ |
+| Fear & Greed Index | ❌ | ✅ |
 | Auto-Retrain | Every 2h | Every 15min |
 | Grafana Dashboard | ❌ | ✅ |
 | Telegram Notifications | Basic | Full |
@@ -61,9 +61,11 @@ Trade Execution (Hyperliquid API)
 
 ## What's New
 
+**v1.2** — Chronological walk-forward split now sorts by timestamp across all coins (fixes forward-looking bias). Updated feature table.
+
 **v1.1** — Improved prediction target (0.5% threshold), wider stop-loss (2%), faster execution.
 
-The Pro version includes even more improvements: 5 strategies → 3 focused strategies, soft regime filter, LLM removed for cleaner ML signals.
+The Pro version (v8.2) includes: 3 focused strategies, 40 features, XGBoost ensemble (72.9% accuracy), ATR trailing stops, BTC regime filter.
 
 
 ## How the AI Works
@@ -155,4 +157,4 @@ MIT License — see [LICENSE](LICENSE)
 ## Links
 
 - [Telegram Channel](https://t.me/DeepAlphaVault)
-- [DeepAlpha Pro](https://stefanocrypto.gumroad.com/l/ezilv) — 5 strategies, ensemble model, 38 features, ATR stops
+- [DeepAlpha Pro](https://stefanocrypto.gumroad.com/l/ezilv) — 3 strategies, ensemble model, 40 features, ATR stops
