@@ -65,6 +65,27 @@ Trade Execution (Hyperliquid API)
 
 The Pro version includes even more improvements: 5 strategies → 3 focused strategies, soft regime filter, LLM removed for cleaner ML signals.
 
+
+## How the AI Works
+
+DeepAlpha uses a LightGBM gradient boosting model trained on historical crypto data with walk-forward validation.
+
+**Training Pipeline:**
+1. Download 1 year of hourly candles for 20 coins
+2. Compute 15 technical features (RSI, ATR, EMA, momentum, etc.)
+3. Generate labels: does price move significantly in the next hour?
+4. Split data chronologically: 70% train, 15% validation, 15% test
+5. Train with early stopping to prevent overfitting
+6. Evaluate on test set (never seen during training)
+
+**Key Design Decisions:**
+- Walk-forward validation (not random split) — prevents overfitting
+- Conservative features — only battle-tested technical indicators
+- Early stopping — model stops training when validation loss increases
+- Symmetric labels — model predicts both up and down moves
+
+The Pro version adds XGBoost ensemble, 40 features, and ATR-based prediction targets.
+
 ## Quick Start
 
 ### 1. Install
