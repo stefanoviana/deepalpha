@@ -155,7 +155,7 @@ You should see:
                               Free Edition
 
 DeepAlpha initialised successfully
-  Wallet:    0x29Df...ab12
+  Wallet:    0xYour...addr
   Leverage:  5x
   Max pos:   3
   Risk/trade:10%

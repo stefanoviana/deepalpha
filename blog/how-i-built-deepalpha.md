@@ -172,4 +172,4 @@ If you build something with it, I'd love to hear about it. Open an issue or reac
 
 ---
 
-*Written by Stefano — building quantitative trading systems since 2024.*
+*Written by the DeepAlpha team — building quantitative trading systems since 2024.*
