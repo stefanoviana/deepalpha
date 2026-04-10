@@ -8,9 +8,23 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+# ─── Exchange selection ───────────────────────────────────────────────────
+# Supported values: "hyperliquid", "binance", "bybit"
+EXCHANGE: str = os.getenv("EXCHANGE", "hyperliquid")
+
 # ─── Hyperliquid credentials ───────────────────────────────────────────────
 PRIVATE_KEY: str = os.getenv("PRIVATE_KEY", "")
 WALLET_ADDRESS: str = os.getenv("WALLET_ADDRESS", "")
+
+# ─── Binance Futures credentials ──────────────────────────────────────────
+BINANCE_API_KEY: str = os.getenv("BINANCE_API_KEY", "")
+BINANCE_API_SECRET: str = os.getenv("BINANCE_API_SECRET", "")
+BINANCE_TESTNET: bool = os.getenv("BINANCE_TESTNET", "false").lower() == "true"
+
+# ─── Bybit credentials ───────────────────────────────────────────────────
+BYBIT_API_KEY: str = os.getenv("BYBIT_API_KEY", "")
+BYBIT_API_SECRET: str = os.getenv("BYBIT_API_SECRET", "")
+BYBIT_TESTNET: bool = os.getenv("BYBIT_TESTNET", "false").lower() == "true"
 
 # ─── Telegram notifications (optional) ─────────────────────────────────────
 TELEGRAM_TOKEN: str = os.getenv("TELEGRAM_TOKEN", "")

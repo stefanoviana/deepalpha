@@ -7,8 +7,8 @@ This guide walks you through installing DeepAlpha, training the AI model, and ru
 ## Requirements
 
 - **Python 3.10 or higher**
-- **A Hyperliquid account** with funds deposited -- see [hyperliquid.xyz](https://hyperliquid.xyz)
-- **A Hyperliquid API private key** -- generated from the Hyperliquid web app under Settings > API
+- **An account on a supported exchange**: Hyperliquid, Binance Futures, or Bybit
+- **API credentials** for your chosen exchange (see below)
 - **Minimum recommended capital**: $500 USD (to allow proper position sizing at 5x leverage)
 
 ---
@@ -31,6 +31,7 @@ Dependencies installed:
 | `python-dotenv>=1.0` | Load environment variables from `.env` |
 | `hyperliquid-python-sdk>=0.5` | Official Hyperliquid Python SDK |
 | `eth-account>=0.11` | Ethereum account signing |
+| `ccxt>=4.0` *(optional)* | Binance and Bybit exchange support |
 
 ---
 
@@ -120,20 +121,66 @@ Copy the example environment file and fill in your credentials:
 cp .env.example .env
 ```
 
-Edit `.env` with your Hyperliquid API credentials:
+Edit `.env` with the credentials for your chosen exchange.
+
+### Option A: Hyperliquid (default)
 
 ```bash
-# Required
+EXCHANGE=hyperliquid
 PRIVATE_KEY=0xYOUR_PRIVATE_KEY_HERE
 WALLET_ADDRESS=0xYOUR_WALLET_ADDRESS_HERE
+```
 
+No extra dependencies needed -- Hyperliquid uses its own SDK included in `requirements.txt`.
+
+### Option B: Binance Futures
+
+```bash
+# Install ccxt first
+pip install ccxt
+
+# .env
+EXCHANGE=binance
+BINANCE_API_KEY=your_api_key
+BINANCE_API_SECRET=your_api_secret
+BINANCE_TESTNET=false
+```
+
+Generate your API key from the [Binance API Management](https://www.binance.com/en/my/settings/api-management) page. Make sure to enable **Futures** permission.
+
+### Option C: Bybit
+
+```bash
+# Install ccxt first
+pip install ccxt
+
+# .env
+EXCHANGE=bybit
+BYBIT_API_KEY=your_api_key
+BYBIT_API_SECRET=your_api_secret
+BYBIT_TESTNET=false
+```
+
+Generate your API key from the [Bybit API Management](https://www.bybit.com/app/user/api-management) page. Enable **Contract - Trade** permission.
+
+### Common settings (all exchanges)
+
+```bash
 # Optional: Telegram notifications
 TELEGRAM_TOKEN=your_bot_token
 TELEGRAM_CHAT_ID=your_chat_id
+
+# Trading parameters (apply to all exchanges)
+LEVERAGE=5
+MAX_POSITIONS=3
+RISK_PER_TRADE=0.10
 ```
 
 !!! warning
     Never commit your `.env` file to version control. The `.gitignore` file already excludes it, but always double-check.
+
+!!! tip
+    Set `BINANCE_TESTNET=true` or `BYBIT_TESTNET=true` to practice on testnet before risking real funds.
 
 ---
 

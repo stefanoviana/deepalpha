@@ -1,25 +1,38 @@
 # DeepAlpha
 
-**AI-Powered Autonomous Trading on Hyperliquid**
+**AI-Powered Autonomous Trading on Hyperliquid, Binance, and Bybit**
 
 ---
 
 ## What is DeepAlpha?
 
-DeepAlpha is an open-source AI trading bot that uses machine learning to trade perpetual futures on [Hyperliquid L1](https://hyperliquid.xyz). It downloads historical market data, trains a LightGBM gradient boosting model on 15 technical features, and executes trades autonomously with built-in risk management.
+DeepAlpha is an open-source AI trading bot that uses machine learning to trade perpetual futures on multiple exchanges. It supports **Hyperliquid**, **Binance Futures**, and **Bybit** out of the box. It trains a LightGBM + XGBoost + PPO ensemble on 50 engineered features, and executes trades autonomously with maker-only orders and built-in risk management.
 
-This is not a toy or a proof-of-concept. DeepAlpha is a production system designed to run 24/7, survive volatile markets, and adapt through periodic retraining.
+This is not a toy. DeepAlpha is a production system designed to run 24/7, learn from its own mistakes, and adapt through continuous retraining.
+
+---
+
+## Supported Exchanges
+
+| Exchange | Markets | Leverage | Status |
+|----------|---------|----------|--------|
+| **Hyperliquid** | 229 perps | up to 40x | Full support |
+| **Binance Futures** | 300+ USDT-M | up to 125x | Supported via ccxt |
+| **Bybit** | 200+ USDT perps | up to 100x | Supported via ccxt |
 
 ---
 
 ## Key Features
 
-- **LightGBM AI Model** -- Gradient boosting classifier trained on 1M+ samples with walk-forward validation to prevent overfitting.
-- **20 Markets** -- Scans BTC, ETH, SOL, DOGE, AVAX, LINK, ARB, OP, SUI, INJ, MATIC, APT, SEI, TIA, WIF, PEPE, ONDO, RENDER, FET, and JUP for trading opportunities.
-- **Self-Learning** -- Automatically retrains the model every 2 hours using the latest market data.
-- **Risk Management** -- Fixed stop-loss/take-profit, position sizing as a percentage of equity, daily loss limits, and a circuit breaker that pauses trading after consecutive losses.
-- **Telegram Notifications** -- Real-time alerts for trade entries, exits, stop-losses, and retraining events.
-- **Zero API Keys Required for Data** -- Hyperliquid's info API is fully public. No exchange API key needed to download data or train the model.
+- **LightGBM + XGBoost + PPO Ensemble** -- 3 ML models working together. 50 engineered features including skewness, kurtosis, trend slope, and area ratio.
+- **229+ Markets** -- Trades all available perpetual markets on your chosen exchange.
+- **Multi-Exchange** -- Switch between Hyperliquid, Binance, and Bybit with one config change.
+- **Self-Learning** -- Learns from its own trades. Losses are weighted 5x in retraining so the model avoids past mistakes.
+- **Maker-Only Orders** -- Limit orders with 30s wait and re-pricing. Near-zero fees.
+- **50 Advanced Features** -- RSI, ATR, EMA, skewness, kurtosis, linear trend slope, area ratio, range position, volume-price trend, and more.
+- **Risk Management** -- ATR trailing stops, BTC regime filter, position sizing, daily loss limits, circuit breaker.
+- **Telegram Notifications** -- Real-time alerts for trade entries, exits, and errors.
+- **Walk-Forward Validation** -- Chronological data split prevents overfitting. No look-ahead bias.
 
 ---
 

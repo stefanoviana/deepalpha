@@ -2,7 +2,7 @@
 
 # DeepAlpha
 
-### AI-Powered Autonomous Trading on Hyperliquid
+### AI-Powered Autonomous Trading on Hyperliquid, Binance & Bybit
 
 [![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://python.org)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
@@ -122,6 +122,7 @@ python deepalpha.py        # Start trading
 ```
 deepalpha/
 ├── deepalpha.py          # Main trading bot
+├── exchange_adapter.py   # Multi-exchange adapter layer
 ├── train.py              # AI training pipeline
 ├── download_data.py      # Data downloader
 ├── features.py           # Feature engineering
@@ -129,6 +130,71 @@ deepalpha/
 ├── config.py             # Configuration
 └── requirements.txt      # Dependencies
 ```
+
+## Supported Exchanges
+
+DeepAlpha supports multiple exchanges through a unified adapter layer. Set the `EXCHANGE` variable in your `.env` file to switch between them.
+
+| Exchange | Type | Status |
+|----------|------|--------|
+| [Hyperliquid](https://hyperliquid.xyz) | L1 Perps | Default |
+| [Binance Futures](https://www.binance.com/en/futures) | USDT-M Perpetual | Supported |
+| [Bybit](https://www.bybit.com) | USDT Perpetual | Supported |
+
+### Switching Exchanges
+
+Set the `EXCHANGE` environment variable in your `.env` file:
+
+```bash
+EXCHANGE=hyperliquid   # default
+EXCHANGE=binance
+EXCHANGE=bybit
+```
+
+### Environment Variables per Exchange
+
+**Hyperliquid** (default -- no extra dependency):
+```bash
+EXCHANGE=hyperliquid
+PRIVATE_KEY=0xYOUR_PRIVATE_KEY
+WALLET_ADDRESS=0xYOUR_WALLET_ADDRESS
+```
+
+**Binance Futures** (requires `pip install ccxt`):
+```bash
+EXCHANGE=binance
+BINANCE_API_KEY=your_api_key
+BINANCE_API_SECRET=your_api_secret
+BINANCE_TESTNET=false          # set to true for testnet
+```
+
+**Bybit** (requires `pip install ccxt`):
+```bash
+EXCHANGE=bybit
+BYBIT_API_KEY=your_api_key
+BYBIT_API_SECRET=your_api_secret
+BYBIT_TESTNET=false            # set to true for testnet
+```
+
+### Example `.env` for Binance
+
+```bash
+# Exchange
+EXCHANGE=binance
+BINANCE_API_KEY=abc123
+BINANCE_API_SECRET=secret456
+
+# Trading
+LEVERAGE=5
+MAX_POSITIONS=3
+RISK_PER_TRADE=0.10
+
+# Telegram (optional)
+TELEGRAM_TOKEN=your_bot_token
+TELEGRAM_CHAT_ID=your_chat_id
+```
+
+> **Note:** Binance and Bybit adapters require the `ccxt` library. Install it with `pip install ccxt`. Hyperliquid uses its own SDK and does not need ccxt.
 
 ## Risk Management
 
