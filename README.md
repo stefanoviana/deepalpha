@@ -261,3 +261,4 @@ MIT License — see [LICENSE](LICENSE)
 - [Blog: How I Built DeepAlpha](blog/how-i-built-deepalpha.md)
 - [Documentation](https://stefanoviana.github.io/deepalpha/)
 - [DeepAlpha Pro](https://stefanocrypto.gumroad.com/l/ezilv) — 3 strategies, ensemble model, 50 features, PPO agent, ATR stops
+# Tests: 52 passing
