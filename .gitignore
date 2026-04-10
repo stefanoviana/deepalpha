@@ -3,3 +3,7 @@ __pycache__/
 *.pkl
 data/
 *.log
+site/
+__pycache__/
+*.pyc
+.env
