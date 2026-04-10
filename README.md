@@ -8,8 +8,11 @@
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Hyperliquid](https://img.shields.io/badge/Exchange-Hyperliquid-purple.svg)](https://hyperliquid.xyz)
 [![LightGBM](https://img.shields.io/badge/ML-LightGBM-orange.svg)](https://lightgbm.readthedocs.io)
+[![XGBoost](https://img.shields.io/badge/ML-XGBoost-red.svg)](https://xgboost.readthedocs.io)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+[![Discord](https://img.shields.io/badge/Discord-Join-7289da.svg)](https://discord.gg/deepalpha)
 
-[Telegram](https://t.me/DeepAlphaVault) · [Get Pro](https://stefanocrypto.gumroad.com/l/ezilv)
+[Telegram](https://t.me/DeepAlphaVault) · [Discord](https://discord.gg/deepalpha) · [Blog](blog/how-i-built-deepalpha.md) · [Docs](https://deepalpha.gitbook.io) · [Get Pro](https://stefanocrypto.gumroad.com/l/ezilv)
 
 **If you find this useful, please give it a star — it helps a lot!**
 
@@ -150,11 +153,31 @@ Typical accuracy: **55-80%** on out-of-sample data. Combined with 2:1+ reward-to
 
 **Trading involves significant risk of loss.** This software is provided as-is, with no guarantees of profitability. Past performance does not indicate future results. Only trade with money you can afford to lose.
 
+## Contributing
+
+We welcome contributions! Whether it's new features, bug fixes, documentation, or exchange adapters — every PR helps.
+
+1. Read the [Contributing Guide](CONTRIBUTING.md)
+2. Check [open issues](https://github.com/stefanoviana/deepalpha/issues) for ideas
+3. Fork, branch, code, and submit a PR
+
+High-impact areas: new technical indicators, exchange adapters (Binance, Bybit, dYdX), tests, and documentation.
+
+## Community
+
+- [Discord](https://discord.gg/deepalpha) — General discussion, help, feature ideas
+- [Telegram](https://t.me/DeepAlphaVault) — Announcements and trade signals
+- [Blog](blog/how-i-built-deepalpha.md) — Technical deep dives on the architecture
+- [Docs](https://deepalpha.gitbook.io) — Full documentation (coming soon)
+
 ## License
 
 MIT License — see [LICENSE](LICENSE)
 
 ## Links
 
+- [Discord Server](https://discord.gg/deepalpha)
 - [Telegram Channel](https://t.me/DeepAlphaVault)
-- [DeepAlpha Pro](https://stefanocrypto.gumroad.com/l/ezilv) — 3 strategies, ensemble model, 40 features, ATR stops
+- [Blog: How I Built DeepAlpha](blog/how-i-built-deepalpha.md)
+- [Documentation](https://deepalpha.gitbook.io)
+- [DeepAlpha Pro](https://stefanocrypto.gumroad.com/l/ezilv) — 3 strategies, ensemble model, 50 features, PPO agent, ATR stops

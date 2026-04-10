@@ -1,0 +1,59 @@
+site_name: DeepAlpha Documentation
+site_url: https://stefanoviana.github.io/deepalpha/
+site_description: AI-powered autonomous trading bot for Hyperliquid
+site_author: Stefano Viana
+repo_url: https://github.com/stefanoviana/deepalpha
+repo_name: stefanoviana/deepalpha
+
+theme:
+  name: material
+  palette:
+    - scheme: slate
+      primary: deep purple
+      accent: amber
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+    - scheme: default
+      primary: deep purple
+      accent: amber
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+    - search.highlight
+  icon:
+    repo: fontawesome/brands/github
+
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - Configuration: configuration.md
+  - Architecture: architecture.md
+  - Features: features.md
+  - Strategies: strategies.md
+  - FAQ: faq.md
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - toc:
+      permalink: true
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/stefanoviana/deepalpha
+    - icon: fontawesome/brands/telegram
+      link: https://t.me/DeepAlphaVault
