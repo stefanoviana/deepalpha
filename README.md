@@ -10,9 +10,9 @@
 [![LightGBM](https://img.shields.io/badge/ML-LightGBM-orange.svg)](https://lightgbm.readthedocs.io)
 [![XGBoost](https://img.shields.io/badge/ML-XGBoost-red.svg)](https://xgboost.readthedocs.io)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
-[![Discord](https://img.shields.io/badge/Discord-Join-7289da.svg)](https://discord.gg/deepalpha)
+[![Discord](https://img.shields.io/badge/Discord-Join-7289da.svg)](https://discord.gg/P4yX686m)
 
-[Telegram](https://t.me/DeepAlphaVault) · [Discord](https://discord.gg/deepalpha) · [Blog](blog/how-i-built-deepalpha.md) · [Docs](https://deepalpha.gitbook.io) · [Get Pro](https://stefanocrypto.gumroad.com/l/ezilv)
+[Telegram](https://t.me/DeepAlphaVault) · [Discord](https://discord.gg/P4yX686m) · [Blog](blog/how-i-built-deepalpha.md) · [Docs](https://stefanoviana.github.io/deepalpha/) · [Get Pro](https://stefanocrypto.gumroad.com/l/ezilv)
 
 **If you find this useful, please give it a star — it helps a lot!**
 
@@ -165,10 +165,10 @@ High-impact areas: new technical indicators, exchange adapters (Binance, Bybit, 
 
 ## Community
 
-- [Discord](https://discord.gg/deepalpha) — General discussion, help, feature ideas
+- [Discord](https://discord.gg/P4yX686m) — General discussion, help, feature ideas
 - [Telegram](https://t.me/DeepAlphaVault) — Announcements and trade signals
 - [Blog](blog/how-i-built-deepalpha.md) — Technical deep dives on the architecture
-- [Docs](https://deepalpha.gitbook.io) — Full documentation (coming soon)
+- [Docs](https://stefanoviana.github.io/deepalpha/) — Full documentation (coming soon)
 
 ## License
 
@@ -176,8 +176,8 @@ MIT License — see [LICENSE](LICENSE)
 
 ## Links
 
-- [Discord Server](https://discord.gg/deepalpha)
+- [Discord Server](https://discord.gg/P4yX686m)
 - [Telegram Channel](https://t.me/DeepAlphaVault)
 - [Blog: How I Built DeepAlpha](blog/how-i-built-deepalpha.md)
-- [Documentation](https://deepalpha.gitbook.io)
+- [Documentation](https://stefanoviana.github.io/deepalpha/)
 - [DeepAlpha Pro](https://stefanocrypto.gumroad.com/l/ezilv) — 3 strategies, ensemble model, 50 features, PPO agent, ATR stops
