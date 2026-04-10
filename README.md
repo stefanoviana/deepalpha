@@ -12,7 +12,7 @@
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 [![Discord](https://img.shields.io/badge/Discord-Join-7289da.svg)](https://discord.gg/P4yX686m)
 
-[Telegram](https://t.me/DeepAlphaVault) · [Discord](https://discord.gg/P4yX686m) · [Blog](blog/how-i-built-deepalpha.md) · [Docs](https://stefanoviana.github.io/deepalpha/) · [Get Pro](https://stefanocrypto.gumroad.com/l/ezilv)
+[Telegram](https://t.me/DeepAlphaVault) · [Discord](https://discord.gg/P4yX686m) · [Blog](blog/how-i-built-deepalpha.md) · [Docs](docs/index.md) · [Get Pro](https://stefanocrypto.gumroad.com/l/ezilv)
 
 **If you find this useful, please give it a star — it helps a lot!**
 
