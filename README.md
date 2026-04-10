@@ -89,21 +89,35 @@ DeepAlpha uses a LightGBM gradient boosting model trained on historical crypto d
 - Early stopping — model stops training when validation loss increases
 - Symmetric labels — model predicts both up and down moves
 
-The Pro version adds XGBoost ensemble, 40 features, and ATR-based prediction targets.
+The Pro version adds XGBoost ensemble, PPO reinforcement learning, 50 features, and ATR-based prediction targets.
 
 ## Quick Start
 
-### 1. Install
+### Option A: Docker (recommended)
+```bash
+git clone https://github.com/stefanoviana/deepalpha.git
+cd deepalpha
+cp .env.example .env
+# Edit .env with your exchange credentials
+
+# Train the model
+docker compose run --rm trainer
+
+# Start trading
+docker compose up -d deepalpha
+
+# Open dashboard (optional)
+docker compose --profile dashboard up -d
+# Visit http://localhost:8501
+```
+
+### Option B: Manual Install
 ```bash
 git clone https://github.com/stefanoviana/deepalpha.git
 cd deepalpha
 pip install -r requirements.txt
-```
-
-### 2. Configure
-```bash
 cp .env.example .env
-# Edit .env with your Hyperliquid private key
+# Edit .env with your exchange credentials
 ```
 
 ### 3. Train the AI

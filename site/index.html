@@ -475,6 +475,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#supported-exchanges" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported Exchanges
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#key-features" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -737,6 +748,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#supported-exchanges" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported Exchanges
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#key-features" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -812,20 +834,55 @@
 
 
 <h1 id="deepalpha">DeepAlpha<a class="headerlink" href="#deepalpha" title="Permanent link">&para;</a></h1>
-<p><strong>AI-Powered Autonomous Trading on Hyperliquid</strong></p>
+<p><strong>AI-Powered Autonomous Trading on Hyperliquid, Binance, and Bybit</strong></p>
 <hr />
 <h2 id="what-is-deepalpha">What is DeepAlpha?<a class="headerlink" href="#what-is-deepalpha" title="Permanent link">&para;</a></h2>
-<p>DeepAlpha is an open-source AI trading bot that uses machine learning to trade perpetual futures on <a href="https://hyperliquid.xyz">Hyperliquid L1</a>. It downloads historical market data, trains a LightGBM gradient boosting model on 15 technical features, and executes trades autonomously with built-in risk management.</p>
-<p>This is not a toy or a proof-of-concept. DeepAlpha is a production system designed to run 24/7, survive volatile markets, and adapt through periodic retraining.</p>
+<p>DeepAlpha is an open-source AI trading bot that uses machine learning to trade perpetual futures on multiple exchanges. It supports <strong>Hyperliquid</strong>, <strong>Binance Futures</strong>, and <strong>Bybit</strong> out of the box. It trains a LightGBM + XGBoost + PPO ensemble on 50 engineered features, and executes trades autonomously with maker-only orders and built-in risk management.</p>
+<p>This is not a toy. DeepAlpha is a production system designed to run 24/7, learn from its own mistakes, and adapt through continuous retraining.</p>
+<hr />
+<h2 id="supported-exchanges">Supported Exchanges<a class="headerlink" href="#supported-exchanges" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Exchange</th>
+<th>Markets</th>
+<th>Leverage</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Hyperliquid</strong></td>
+<td>229 perps</td>
+<td>up to 40x</td>
+<td>Full support</td>
+</tr>
+<tr>
+<td><strong>Binance Futures</strong></td>
+<td>300+ USDT-M</td>
+<td>up to 125x</td>
+<td>Supported via ccxt</td>
+</tr>
+<tr>
+<td><strong>Bybit</strong></td>
+<td>200+ USDT perps</td>
+<td>up to 100x</td>
+<td>Supported via ccxt</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="key-features">Key Features<a class="headerlink" href="#key-features" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>LightGBM AI Model</strong> -- Gradient boosting classifier trained on 1M+ samples with walk-forward validation to prevent overfitting.</li>
-<li><strong>20 Markets</strong> -- Scans BTC, ETH, SOL, DOGE, AVAX, LINK, ARB, OP, SUI, INJ, MATIC, APT, SEI, TIA, WIF, PEPE, ONDO, RENDER, FET, and JUP for trading opportunities.</li>
-<li><strong>Self-Learning</strong> -- Automatically retrains the model every 2 hours using the latest market data.</li>
-<li><strong>Risk Management</strong> -- Fixed stop-loss/take-profit, position sizing as a percentage of equity, daily loss limits, and a circuit breaker that pauses trading after consecutive losses.</li>
-<li><strong>Telegram Notifications</strong> -- Real-time alerts for trade entries, exits, stop-losses, and retraining events.</li>
-<li><strong>Zero API Keys Required for Data</strong> -- Hyperliquid's info API is fully public. No exchange API key needed to download data or train the model.</li>
+<li><strong>LightGBM + XGBoost + PPO Ensemble</strong> -- 3 ML models working together. 50 engineered features including skewness, kurtosis, trend slope, and area ratio.</li>
+<li><strong>229+ Markets</strong> -- Trades all available perpetual markets on your chosen exchange.</li>
+<li><strong>Multi-Exchange</strong> -- Switch between Hyperliquid, Binance, and Bybit with one config change.</li>
+<li><strong>Self-Learning</strong> -- Learns from its own trades. Losses are weighted 5x in retraining so the model avoids past mistakes.</li>
+<li><strong>Maker-Only Orders</strong> -- Limit orders with 30s wait and re-pricing. Near-zero fees.</li>
+<li><strong>50 Advanced Features</strong> -- RSI, ATR, EMA, skewness, kurtosis, linear trend slope, area ratio, range position, volume-price trend, and more.</li>
+<li><strong>Risk Management</strong> -- ATR trailing stops, BTC regime filter, position sizing, daily loss limits, circuit breaker.</li>
+<li><strong>Telegram Notifications</strong> -- Real-time alerts for trade entries, exits, and errors.</li>
+<li><strong>Walk-Forward Validation</strong> -- Chronological data split prevents overfitting. No look-ahead bias.</li>
 </ul>
 <hr />
 <h2 id="quick-links">Quick Links<a class="headerlink" href="#quick-links" title="Permanent link">&para;</a></h2>

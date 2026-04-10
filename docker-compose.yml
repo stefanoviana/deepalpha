@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  deepalpha:
+    build: .
+    container_name: deepalpha-bot
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./ai_data:/app/ai_data
+    command: python deepalpha.py
+
+  trainer:
+    build: .
+    container_name: deepalpha-trainer
+    env_file: .env
+    volumes:
+      - ./ai_data:/app/ai_data
+    command: python train.py
+    profiles: ["train"]
+
+  dashboard:
+    build: .
+    container_name: deepalpha-dashboard
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./ai_data:/app/ai_data
+    command: python -m streamlit run dashboard.py --server.port 8501 --server.address 0.0.0.0
+    profiles: ["dashboard"]

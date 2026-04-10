@@ -545,6 +545,56 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Step 4: Configure Environment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#option-a-hyperliquid-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option A: Hyperliquid (default)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-b-binance-futures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option B: Binance Futures
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-c-bybit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option C: Bybit
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-settings-all-exchanges" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common settings (all exchanges)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -813,6 +863,56 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Step 4: Configure Environment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#option-a-hyperliquid-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option A: Hyperliquid (default)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-b-binance-futures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option B: Binance Futures
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-c-bybit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option C: Bybit
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-settings-all-exchanges" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common settings (all exchanges)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -885,8 +985,8 @@
 <h2 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Python 3.10 or higher</strong></li>
-<li><strong>A Hyperliquid account</strong> with funds deposited -- see <a href="https://hyperliquid.xyz">hyperliquid.xyz</a></li>
-<li><strong>A Hyperliquid API private key</strong> -- generated from the Hyperliquid web app under Settings &gt; API</li>
+<li><strong>An account on a supported exchange</strong>: Hyperliquid, Binance Futures, or Bybit</li>
+<li><strong>API credentials</strong> for your chosen exchange (see below)</li>
 <li><strong>Minimum recommended capital</strong>: $500 USD (to allow proper position sizing at 5x leverage)</li>
 </ul>
 <hr />
@@ -927,6 +1027,10 @@
 <tr>
 <td><code>eth-account&gt;=0.11</code></td>
 <td>Ethereum account signing</td>
+</tr>
+<tr>
+<td><code>ccxt&gt;=4.0</code> <em>(optional)</em></td>
+<td>Binance and Bybit exchange support</td>
 </tr>
 </tbody>
 </table>
@@ -997,44 +1101,78 @@
 <p>Copy the example environment file and fill in your credentials:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>cp<span class="w"> </span>.env.example<span class="w"> </span>.env
 </code></pre></div>
-<p>Edit <code>.env</code> with your Hyperliquid API credentials:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Required</span>
+<p>Edit <code>.env</code> with the credentials for your chosen exchange.</p>
+<h3 id="option-a-hyperliquid-default">Option A: Hyperliquid (default)<a class="headerlink" href="#option-a-hyperliquid-default" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nv">EXCHANGE</span><span class="o">=</span>hyperliquid
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">PRIVATE_KEY</span><span class="o">=</span>0xYOUR_PRIVATE_KEY_HERE
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nv">WALLET_ADDRESS</span><span class="o">=</span>0xYOUR_WALLET_ADDRESS_HERE
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Optional: Telegram notifications</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nv">TELEGRAM_TOKEN</span><span class="o">=</span>your_bot_token
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="nv">TELEGRAM_CHAT_ID</span><span class="o">=</span>your_chat_id
+</code></pre></div>
+<p>No extra dependencies needed -- Hyperliquid uses its own SDK included in <code>requirements.txt</code>.</p>
+<h3 id="option-b-binance-futures">Option B: Binance Futures<a class="headerlink" href="#option-b-binance-futures" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Install ccxt first</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>pip<span class="w"> </span>install<span class="w"> </span>ccxt
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># .env</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="nv">EXCHANGE</span><span class="o">=</span>binance
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="nv">BINANCE_API_KEY</span><span class="o">=</span>your_api_key
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="nv">BINANCE_API_SECRET</span><span class="o">=</span>your_api_secret
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="nv">BINANCE_TESTNET</span><span class="o">=</span><span class="nb">false</span>
+</code></pre></div>
+<p>Generate your API key from the <a href="https://www.binance.com/en/my/settings/api-management">Binance API Management</a> page. Make sure to enable <strong>Futures</strong> permission.</p>
+<h3 id="option-c-bybit">Option C: Bybit<a class="headerlink" href="#option-c-bybit" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Install ccxt first</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>pip<span class="w"> </span>install<span class="w"> </span>ccxt
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># .env</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nv">EXCHANGE</span><span class="o">=</span>bybit
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="nv">BYBIT_API_KEY</span><span class="o">=</span>your_api_key
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="nv">BYBIT_API_SECRET</span><span class="o">=</span>your_api_secret
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="nv">BYBIT_TESTNET</span><span class="o">=</span><span class="nb">false</span>
+</code></pre></div>
+<p>Generate your API key from the <a href="https://www.bybit.com/app/user/api-management">Bybit API Management</a> page. Enable <strong>Contract - Trade</strong> permission.</p>
+<h3 id="common-settings-all-exchanges">Common settings (all exchanges)<a class="headerlink" href="#common-settings-all-exchanges" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Optional: Telegram notifications</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nv">TELEGRAM_TOKEN</span><span class="o">=</span>your_bot_token
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="nv">TELEGRAM_CHAT_ID</span><span class="o">=</span>your_chat_id
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Trading parameters (apply to all exchanges)</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="nv">LEVERAGE</span><span class="o">=</span><span class="m">5</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="nv">MAX_POSITIONS</span><span class="o">=</span><span class="m">3</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="nv">RISK_PER_TRADE</span><span class="o">=</span><span class="m">0</span>.10
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>Never commit your <code>.env</code> file to version control. The <code>.gitignore</code> file already excludes it, but always double-check.</p>
 </div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Set <code>BINANCE_TESTNET=true</code> or <code>BYBIT_TESTNET=true</code> to practice on testnet before risking real funds.</p>
+</div>
 <hr />
 <h2 id="step-5-run-the-bot">Step 5: Run the Bot<a class="headerlink" href="#step-5-run-the-bot" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>python<span class="w"> </span>deepalpha.py
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>python<span class="w"> </span>deepalpha.py
 </code></pre></div>
 <p>You should see:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>    ____                  ___    __      __
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>   / __ \___  ___  ____  /   |  / /___  / /_  ____ _
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  / / / / _ \/ _ \/ __ \/ /| | / / __ \/ __ \/ __ `/
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a> / /_/ /  __/  __/ /_/ / ___ |/ / /_/ / / / / /_/ /
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>/_____/\___/\___/ .___/_/  |_/_/ .___/_/ /_/\__,_/
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>               /_/            /_/
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>                              Free Edition
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>DeepAlpha initialised successfully
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>  Wallet:    0xYour...addr
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>  Leverage:  5x
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>  Max pos:   3
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>  Risk/trade:10%
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>============================================================
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>DeepAlpha — Starting trading loop
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>Scanning 20 coins every 60s
-<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>============================================================
-<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>
-<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>[2026-04-10 12:00:00] Equity: $1,000.00 | Positions: 0/3 | Daily PnL: $0.00
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>    ____                  ___    __      __
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>   / __ \___  ___  ____  /   |  / /___  / /_  ____ _
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>  / / / / _ \/ _ \/ __ \/ /| | / / __ \/ __ \/ __ `/
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a> / /_/ /  __/  __/ /_/ / ___ |/ / /_/ / / / / /_/ /
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>/_____/\___/\___/ .___/_/  |_/_/ .___/_/ /_/\__,_/
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>               /_/            /_/
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>                              Free Edition
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>DeepAlpha initialised successfully
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>  Wallet:    0xYour...addr
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>  Leverage:  5x
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>  Max pos:   3
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>  Risk/trade:10%
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>============================================================
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>DeepAlpha — Starting trading loop
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>Scanning 20 coins every 60s
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>============================================================
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>[2026-04-10 12:00:00] Equity: $1,000.00 | Positions: 0/3 | Daily PnL: $0.00
 </code></pre></div>
 <hr />
 <h2 id="step-6-verify-it-works">Step 6: Verify It Works<a class="headerlink" href="#step-6-verify-it-works" title="Permanent link">&para;</a></h2>
@@ -1049,33 +1187,33 @@
 <hr />
 <h2 id="running-on-a-vps-recommended">Running on a VPS (Recommended)<a class="headerlink" href="#running-on-a-vps-recommended" title="Permanent link">&para;</a></h2>
 <p>For 24/7 operation, run DeepAlpha on a Linux VPS. A $5/month server (1 CPU, 1 GB RAM) is sufficient.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Using screen to keep the bot running after SSH disconnect</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>screen<span class="w"> </span>-S<span class="w"> </span>deepalpha
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>python<span class="w"> </span>deepalpha.py
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Detach: Ctrl+A, then D</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1"># Reattach: screen -r deepalpha</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Using screen to keep the bot running after SSH disconnect</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>screen<span class="w"> </span>-S<span class="w"> </span>deepalpha
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>python<span class="w"> </span>deepalpha.py
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1"># Detach: Ctrl+A, then D</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="c1"># Reattach: screen -r deepalpha</span>
 </code></pre></div>
 <p>Alternatively, use <code>systemd</code> for automatic restart:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># /etc/systemd/system/deepalpha.service</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="k">[Unit]</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="na">Description</span><span class="o">=</span><span class="s">DeepAlpha Trading Bot</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="na">After</span><span class="o">=</span><span class="s">network.target</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="k">[Service]</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="na">Type</span><span class="o">=</span><span class="s">simple</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="na">User</span><span class="o">=</span><span class="s">root</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="na">WorkingDirectory</span><span class="o">=</span><span class="s">/root/deepalpha</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="na">ExecStart</span><span class="o">=</span><span class="s">/usr/bin/python3 deepalpha.py</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="na">Restart</span><span class="o">=</span><span class="s">always</span>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="na">RestartSec</span><span class="o">=</span><span class="s">30</span>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="k">[Install]</span>
-<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="na">WantedBy</span><span class="o">=</span><span class="s">multi-user.target</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># /etc/systemd/system/deepalpha.service</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="k">[Unit]</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="na">Description</span><span class="o">=</span><span class="s">DeepAlpha Trading Bot</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="na">After</span><span class="o">=</span><span class="s">network.target</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="k">[Service]</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="na">Type</span><span class="o">=</span><span class="s">simple</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="na">User</span><span class="o">=</span><span class="s">root</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="na">WorkingDirectory</span><span class="o">=</span><span class="s">/root/deepalpha</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="na">ExecStart</span><span class="o">=</span><span class="s">/usr/bin/python3 deepalpha.py</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="na">Restart</span><span class="o">=</span><span class="s">always</span>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="na">RestartSec</span><span class="o">=</span><span class="s">30</span>
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a><span class="k">[Install]</span>
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a><span class="na">WantedBy</span><span class="o">=</span><span class="s">multi-user.target</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>deepalpha
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>deepalpha
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>sudo<span class="w"> </span>journalctl<span class="w"> </span>-u<span class="w"> </span>deepalpha<span class="w"> </span>-f<span class="w">  </span><span class="c1"># View logs</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>deepalpha
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>deepalpha
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>sudo<span class="w"> </span>journalctl<span class="w"> </span>-u<span class="w"> </span>deepalpha<span class="w"> </span>-f<span class="w">  </span><span class="c1"># View logs</span>
 </code></pre></div>
 <hr />
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
