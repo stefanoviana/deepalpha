@@ -64,11 +64,19 @@ Trade Execution (Hyperliquid API)
 
 ## What's New
 
-**v1.2** — Chronological walk-forward split now sorts by timestamp across all coins (fixes forward-looking bias). Updated feature table.
+**v2.0** — Major ML overhaul:
+- Triple Barrier Labeling (labels based on real TP/SL outcomes, not price direction)
+- SHAP feature selection (removed noise features, kept top 13-14)
+- Purged 5-fold Walk-Forward CV with 24h embargo (no overfitting)
+- Multi-exchange support (Hyperliquid + Binance + Bybit)
+- Docker + Streamlit dashboard
+- 52 automated tests
 
-**v1.1** — Improved prediction target (0.5% threshold), wider stop-loss (2%), faster execution.
+**v1.2** — Chronological walk-forward split, updated feature table.
 
-The Pro version (v8.2) includes: 3 focused strategies, 40 features, XGBoost ensemble (72.9% accuracy), ATR trailing stops, BTC regime filter.
+**v1.1** — Improved prediction target, wider stop-loss, faster execution.
+
+The Pro version (v9.0) includes: Triple Barrier + Meta-labeling (68.4% accuracy), PPO reinforcement learning, SHAP selection, maker-only orders, 27 liquid markets.
 
 
 ## How the AI Works
