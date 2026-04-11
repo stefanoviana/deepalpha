@@ -153,6 +153,24 @@ deepalpha/
 └── requirements.txt      # Dependencies
 ```
 
+## Dashboard
+
+Professional Bloomberg-style dark terminal built with Streamlit.
+
+- Real-time USDC balance, PnL, fee ratio, margin usage
+- Live cross-venue order flow (Hyperliquid + Binance)
+- AI model status with timestamps
+- Recent trades with PnL
+- Auto-refresh every 30 seconds
+
+```bash
+export WALLET_ADDRESS=your_wallet
+streamlit run dashboard.py
+# Open http://localhost:8501
+```
+
+---
+
 ## FreqAI Plugin
 
 Already using Freqtrade? Use DeepAlpha's ML pipeline as a FreqAI plugin — no need to switch platforms.
