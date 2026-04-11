@@ -33,7 +33,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-WALLET = os.getenv("WALLET_ADDRESS", "0x29Df5B9dc4c8125Be15e7CC9D5fef387af05E54c")
+WALLET = os.getenv("WALLET_ADDRESS", "")
 DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "ai_data")
 
 
