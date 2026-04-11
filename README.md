@@ -153,6 +153,25 @@ deepalpha/
 └── requirements.txt      # Dependencies
 ```
 
+## FreqAI Plugin
+
+Already using Freqtrade? Use DeepAlpha's ML pipeline as a FreqAI plugin — no need to switch platforms.
+
+```bash
+# Copy the plugin into your Freqtrade project
+cp freqai-plugin/deepalpha_model.py your_freqtrade/freqai/prediction_models/
+```
+
+Features included:
+- **Triple Barrier Labeling** (68.4% accuracy vs ~55-60% standard FreqAI)
+- **SHAP Feature Selection** (auto-removes noise features)
+- **Meta-Labeling** (filters bad trades, 21% rejection rate)
+- **Purged Walk-Forward CV** (no overfitting)
+
+See [freqai-plugin/README.md](freqai-plugin/README.md) for full setup guide.
+
+---
+
 ## Supported Exchanges
 
 DeepAlpha supports multiple exchanges through a unified adapter layer. Set the `EXCHANGE` variable in your `.env` file to switch between them.

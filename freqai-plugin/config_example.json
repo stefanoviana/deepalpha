@@ -1,0 +1,113 @@
+{
+    "trading_mode": "futures",
+    "margin_mode": "isolated",
+    "max_open_trades": 3,
+    "stake_currency": "USDT",
+    "stake_amount": "unlimited",
+    "tradable_balance_ratio": 0.99,
+    "dry_run": true,
+    "dry_run_wallet": 1000,
+
+    "exchange": {
+        "name": "binance",
+        "key": "",
+        "secret": "",
+        "ccxt_sync_config": {
+            "enableRateLimit": true
+        },
+        "pair_whitelist": [
+            "BTC/USDT:USDT",
+            "ETH/USDT:USDT"
+        ]
+    },
+
+    "entry_pricing": {
+        "price_side": "same",
+        "use_order_book": true,
+        "order_book_top": 1
+    },
+    "exit_pricing": {
+        "price_side": "same",
+        "use_order_book": true,
+        "order_book_top": 1
+    },
+
+    "freqai": {
+        "enabled": true,
+        "purge_old_models": 2,
+        "train_period_days": 60,
+        "backtest_period_days": 7,
+        "identifier": "deepalpha_v1",
+
+        "feature_parameters": {
+            "include_timeframes": ["5m", "15m", "1h"],
+            "include_corr_pairlist": ["ETH/USDT:USDT", "BNB/USDT:USDT"],
+            "indicator_periods_candles": [10, 20, 50],
+            "label_period_candles": 48,
+            "include_shifted_candles": 2,
+            "weight_factor": 0.9,
+            "DI_threshold": 0.9,
+            "use_SVM_to_remove_outliers": false,
+            "use_DBSCAN_to_remove_outliers": false,
+            "inlier_metric_window": 14,
+            "noise_standard_deviation": 0.02
+        },
+
+        "data_split_parameters": {
+            "test_size": 0.15,
+            "random_state": 42,
+            "shuffle": false
+        },
+
+        "model_training_parameters": {
+            "n_estimators": 2000,
+            "learning_rate": 0.02,
+            "max_depth": 6,
+            "num_leaves": 48,
+            "subsample": 0.7,
+            "colsample_bytree": 0.7,
+            "min_child_samples": 50,
+            "reg_alpha": 0.1,
+            "reg_lambda": 1.0
+        },
+
+        "deepalpha": {
+            "triple_barrier": {
+                "profit_taking": 2.0,
+                "stop_loss": 1.0,
+                "max_holding_period": 48,
+                "volatility_window": 20
+            },
+            "shap_feature_selection": {
+                "enabled": true,
+                "top_k": 30,
+                "recalculate_every_n_trainings": 5
+            },
+            "meta_labeling": {
+                "enabled": true,
+                "threshold": 0.55
+            },
+            "purged_cv": {
+                "n_splits": 5,
+                "purge_gap": 24,
+                "embargo_pct": 0.01
+            }
+        }
+    },
+
+    "bot_name": "DeepAlpha-FreqAI",
+    "initial_state": "running",
+    "force_entry_enable": false,
+
+    "api_server": {
+        "enabled": true,
+        "listen_ip_address": "127.0.0.1",
+        "listen_port": 8080,
+        "verbosity": "error",
+        "enable_openapi": false,
+        "jwt_secret_key": "CHANGE_ME",
+        "CORS_origins": [],
+        "username": "freqtrader",
+        "password": "CHANGE_ME"
+    }
+}
