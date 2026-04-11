@@ -28,23 +28,27 @@ DeepAlpha is an open-source AI trading bot that uses machine learning to trade p
 
 **This is not a toy.** DeepAlpha is a production system designed to survive bear markets.
 
-## Features
+## Plans
 
-| Feature | Free | [Pro](https://stefanocrypto.gumroad.com/l/ezilv) |
-|---------|------|-----|
-| AI Model (LightGBM) | ✅ | ✅ |
-| XGBoost Ensemble | ❌ | ✅ |
-| Walk-Forward Validation | ✅ | ✅ |
-| Technical Features | 15 | 40 |
-| OBI + CVD Features | ❌ | ✅ |
-| Strategies | 1 (AI Autonomous) | 3 |
-| ATR Dynamic Trailing Stop | ❌ | ✅ |
-| BTC Regime Filter | ❌ | ✅ |
-| Fear & Greed Index | ❌ | ✅ |
-| Auto-Retrain | Every 2h | Every 15min |
-| Grafana Dashboard | ❌ | ✅ |
-| Telegram Notifications | Basic | Full |
-| Support | Community | Private TG |
+| Feature | Free | [Starter $49/mo](https://stefanocrypto.gumroad.com/l/ezilv) | [Pro $99/mo](https://stefanocrypto.gumroad.com/l/ezilv) | [Lifetime $499](https://stefanocrypto.gumroad.com/l/ezilv) |
+|---------|------|---------|-----|----------|
+| AI Model (LightGBM) | ✅ | ✅ | ✅ | ✅ |
+| XGBoost + PPO RL Ensemble | ❌ | ❌ | ✅ | ✅ |
+| Walk-Forward Validation | ✅ | ✅ | ✅ | ✅ |
+| Technical Features | 15 | 15 | 50+ (SHAP selected) | 50+ (SHAP selected) |
+| Triple Barrier Labeling | ❌ | ❌ | ✅ | ✅ |
+| Meta-Labeling (68.4% acc) | ❌ | ❌ | ✅ | ✅ |
+| Cross-venue Order Flow | ❌ | ❌ | ✅ | ✅ |
+| Kelly Criterion Sizing | ❌ | ❌ | ✅ | ✅ |
+| ATR Dynamic Trailing Stop | ❌ | ❌ | ✅ | ✅ |
+| Risk Management | Basic | Fixed SL/TP | Dynamic ATR | Dynamic ATR |
+| Exchanges | 1 (Hyperliquid) | 1 (Hyperliquid) | 3 (HL + Binance + Bybit) | 3 (HL + Binance + Bybit) |
+| Auto-Retrain | Manual | Manual | Nightly | Nightly |
+| Bloomberg Dashboard | ❌ | ❌ | ✅ | ✅ |
+| FreqAI Plugin | ❌ | ❌ | ❌ | ✅ |
+| Telegram Notifications | ❌ | ✅ | Priority | Priority |
+| Support | Community | Discord | Priority TG | Direct Developer |
+| Future Updates | — | — | ✅ | ✅ Forever |
 
 ## How It Works
 
