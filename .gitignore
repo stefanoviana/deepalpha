@@ -4,6 +4,4 @@ __pycache__/
 data/
 *.log
 site/
-__pycache__/
 *.pyc
-.env

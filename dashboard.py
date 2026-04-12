@@ -6,7 +6,7 @@ import os
 import time
 import requests
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timezone
 
 st.set_page_config(
     page_title="DeepAlpha Terminal",
@@ -58,7 +58,7 @@ st.markdown("""
 <div class="header-bar">
     <div style="display:flex;align-items:center;gap:12px;">
         <span style="font-size:24px;font-weight:900;color:#00d4aa;">DeepAlpha</span>
-        <span style="font-size:12px;color:#6b7280;">TERMINAL v9.0</span>
+        <span style="font-size:12px;color:#6b7280;">TERMINAL v2.0</span>
     </div>
     <div style="font-size:12px;color:#6b7280;">""" + datetime.now().strftime("%Y-%m-%d %H:%M:%S") + """</div>
 </div>
@@ -107,8 +107,8 @@ if state and spot:
             total_hist_pnl += pnl
             total_hist_fees += fee
             ts = int(f["time"]) / 1000
-            dt = datetime.utcfromtimestamp(ts)
-            if dt.date() == datetime.utcnow().date():
+            dt = datetime.fromtimestamp(ts, tz=timezone.utc)
+            if dt.date() == datetime.now(timezone.utc).date():
                 today_pnl += pnl
                 today_fees += fee
                 today_trades += 1
@@ -221,7 +221,7 @@ if state and spot:
             if pnl == 0:
                 continue
             ts = int(f["time"]) / 1000
-            dt = datetime.utcfromtimestamp(ts)
+            dt = datetime.fromtimestamp(ts, tz=timezone.utc)
             trade_rows.append({
                 "Time": dt.strftime("%m/%d %H:%M"),
                 "Coin": f["coin"],

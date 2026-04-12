@@ -74,7 +74,7 @@ Trade Execution (Hyperliquid API)
 - Purged 5-fold Walk-Forward CV with 24h embargo (no overfitting)
 - Multi-exchange support (Hyperliquid + Binance + Bybit)
 - Docker + Streamlit dashboard
-- 52 automated tests
+- 42 automated tests
 
 **v1.2** — Chronological walk-forward split, updated feature table.
 
@@ -310,4 +310,3 @@ MIT License — see [LICENSE](LICENSE)
 - [Blog: How I Built DeepAlpha](blog/how-i-built-deepalpha.md)
 - [Documentation](https://stefanoviana.github.io/deepalpha/)
 - [DeepAlpha Pro](https://stefanocrypto.gumroad.com/l/ezilv) — 3 strategies, ensemble model, 50 features, PPO agent, ATR stops
-# Tests: 52 passing
