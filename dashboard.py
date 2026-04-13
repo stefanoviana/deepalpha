@@ -245,7 +245,7 @@ fc1, fc2, fc3, fc4 = st.columns(4)
 fc1.markdown("[GitHub](https://github.com/stefanoviana/deepalpha)")
 fc2.markdown("[Discord](https://discord.gg/P4yX686m)")
 fc3.markdown("[Telegram](https://t.me/DeepAlphaVault)")
-fc4.markdown("[Landing](https://deepalpha.duckdns.org)")
+fc4.markdown("[Landing](https://deepalphabot.com)")
 
 # Auto-refresh
 if st.sidebar.checkbox("Auto-refresh (30s)"):
