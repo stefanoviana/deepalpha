@@ -2,11 +2,11 @@
 
 # DeepAlpha
 
-### AI-Powered Autonomous Trading on Hyperliquid, Binance & Bybit
+### AI-Powered Autonomous Trading on Bitget — Copy Trading Ready
 
 [![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://python.org)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Hyperliquid](https://img.shields.io/badge/Exchange-Hyperliquid-purple.svg)](https://hyperliquid.xyz)
+[![Bitget](https://img.shields.io/badge/Exchange-Bitget-00E0B0.svg)](https://www.bitget.com/referral/register?clacCode=LAM6LQEJ)
 [![LightGBM](https://img.shields.io/badge/ML-LightGBM-orange.svg)](https://lightgbm.readthedocs.io)
 [![XGBoost](https://img.shields.io/badge/ML-XGBoost-red.svg)](https://xgboost.readthedocs.io)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
@@ -24,7 +24,7 @@
 
 ## What is DeepAlpha?
 
-DeepAlpha is an open-source AI trading bot that uses machine learning to trade perpetual futures on [Hyperliquid L1](https://hyperliquid.xyz). It trains on years of historical data, generates predictions, and executes trades autonomously.
+DeepAlpha is an open-source AI trading bot that uses machine learning to trade perpetual futures on [Bitget](https://www.bitget.com/referral/register?clacCode=LAM6LQEJ). It trains on years of historical data, generates predictions, and executes trades autonomously.
 
 **This is not a toy.** DeepAlpha is a production system designed to survive bear markets.
 
@@ -53,7 +53,7 @@ DeepAlpha is an open-source AI trading bot that uses machine learning to trade p
 ## How It Works
 
 ```
-Market Data (Hyperliquid API)
+Market Data (Bitget API)
     ↓
 Feature Engineering (RSI, ATR, EMA, Momentum, Volume)
     ↓
@@ -63,7 +63,7 @@ Signal Generation (LONG/SHORT with confidence %)
     ↓
 Risk Management (position sizing, stop-loss, max positions)
     ↓
-Trade Execution (Hyperliquid API)
+Trade Execution (Bitget API)
 ```
 
 ## What's New
@@ -200,7 +200,7 @@ DeepAlpha supports multiple exchanges through a unified adapter layer. Set the `
 
 | Exchange | Type | Status |
 |----------|------|--------|
-| [Hyperliquid](https://hyperliquid.xyz) | L1 Perps | Default |
+| [Hyperliquid](https://www.bitget.com/referral/register?clacCode=LAM6LQEJ) | L1 Perps | Default |
 | [Binance Futures](https://www.binance.com/en/futures) | USDT-M Perpetual | Supported |
 | [Bybit](https://www.bybit.com) | USDT Perpetual | Supported |
 
@@ -209,7 +209,7 @@ DeepAlpha supports multiple exchanges through a unified adapter layer. Set the `
 Set the `EXCHANGE` environment variable in your `.env` file:
 
 ```bash
-EXCHANGE=hyperliquid   # default
+EXCHANGE=bitget   # default
 EXCHANGE=binance
 EXCHANGE=bybit
 ```
@@ -218,7 +218,7 @@ EXCHANGE=bybit
 
 **Hyperliquid** (default -- no extra dependency):
 ```bash
-EXCHANGE=hyperliquid
+EXCHANGE=bitget
 PRIVATE_KEY=0xYOUR_PRIVATE_KEY
 WALLET_ADDRESS=0xYOUR_WALLET_ADDRESS
 ```

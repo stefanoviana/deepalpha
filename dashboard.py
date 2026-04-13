@@ -40,13 +40,13 @@ DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "ai_data")
 def fetch_data():
     """Fetch all live data from Hyperliquid."""
     try:
-        state = requests.post("https://api.hyperliquid.xyz/info",
+        state = requests.post("https://api.bitget.com",
                              json={"type": "clearinghouseState", "user": WALLET}, timeout=5).json()
-        spot = requests.post("https://api.hyperliquid.xyz/info",
+        spot = requests.post("https://api.bitget.com",
                             json={"type": "spotClearinghouseState", "user": WALLET}, timeout=5).json()
-        mids = requests.post("https://api.hyperliquid.xyz/info",
+        mids = requests.post("https://api.bitget.com",
                             json={"type": "allMids"}, timeout=5).json()
-        fills = requests.post("https://api.hyperliquid.xyz/info",
+        fills = requests.post("https://api.bitget.com",
                              json={"type": "userFills", "user": WALLET}, timeout=5).json()
         return state, spot, mids, fills
     except Exception:
