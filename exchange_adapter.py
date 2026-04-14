@@ -2,12 +2,12 @@
 DeepAlpha -- Exchange Adapter Layer
 
 Provides a unified interface for trading on multiple exchanges.
-Currently supported: Hyperliquid, Binance Futures, Bybit.
+Currently supported: Hyperliquid, Bitget, Binance Futures, Bybit.
 
 Usage:
     from exchange_adapter import get_exchange
 
-    exchange = get_exchange("hyperliquid")
+    exchange = get_exchange("bitget")
     exchange.connect()
     balance = exchange.get_balance()
 """
@@ -603,6 +603,154 @@ class BybitAdapter(ExchangeAdapter):
 
 
 # ---------------------------------------------------------------------------
+# Bitget (USDT-M Futures) via ccxt
+# ---------------------------------------------------------------------------
+
+class BitgetAdapter(ExchangeAdapter):
+    """Adapter for Bitget USDT-M Futures using ccxt."""
+
+    def __init__(self) -> None:
+        self.api_key: str = os.getenv("BITGET_API_KEY", "")
+        self.api_secret: str = os.getenv("BITGET_SECRET", "")
+        self.passphrase: str = os.getenv("BITGET_PASSPHRASE", "")
+        self.client = None
+
+    def connect(self) -> None:
+        try:
+            import ccxt
+        except ImportError:
+            raise ImportError(
+                "ccxt is required for Bitget support. "
+                "Install it with: pip install ccxt"
+            )
+        if not self.api_key or not self.api_secret:
+            raise ValueError(
+                "BITGET_API_KEY, BITGET_SECRET, and BITGET_PASSPHRASE "
+                "env vars are required"
+            )
+        self.client = ccxt.bitget({
+            "apiKey": self.api_key,
+            "secret": self.api_secret,
+            "password": self.passphrase,
+            "enableRateLimit": True,
+            "options": {"defaultType": "swap"},
+        })
+        self.client.load_markets()
+
+    # -- helpers ------------------------------------------------------------
+
+    def _symbol(self, coin: str) -> str:
+        return f"{coin}/USDT:USDT"
+
+    # -- account info -------------------------------------------------------
+
+    def get_balance(self) -> float:
+        try:
+            bal = self.client.fetch_balance({"type": "swap"})
+            return float(bal["total"].get("USDT", 0))
+        except Exception:
+            return 0.0
+
+    def get_positions(self) -> list[dict]:
+        try:
+            raw = self.client.fetch_positions()
+            positions: list[dict] = []
+            for p in raw:
+                size = abs(float(p.get("contracts", 0) or 0))
+                if size == 0:
+                    continue
+                side_str = p.get("side", "long")
+                positions.append({
+                    "coin": p["symbol"].split("/")[0],
+                    "size": size if side_str == "long" else -size,
+                    "entry": float(p.get("entryPrice", 0) or 0),
+                    "side": side_str,
+                    "unrealized_pnl": float(p.get("unrealizedPnl", 0) or 0),
+                })
+            return positions
+        except Exception:
+            return []
+
+    # -- market data --------------------------------------------------------
+
+    def get_orderbook(self, coin: str) -> dict:
+        book = self.client.fetch_order_book(self._symbol(coin), limit=5)
+        bid = book["bids"][0][0]
+        ask = book["asks"][0][0]
+        return {"bid": bid, "ask": ask, "mid": (bid + ask) / 2}
+
+    def get_candles(self, coin: str, interval: str = "1h",
+                    limit: int = 200) -> list[dict]:
+        ohlcv = self.client.fetch_ohlcv(self._symbol(coin), interval, limit=limit)
+        return [
+            {"o": c[1], "h": c[2], "l": c[3], "c": c[4], "v": c[5]}
+            for c in ohlcv
+        ]
+
+    def get_funding_rate(self, coin: str) -> float:
+        try:
+            data = self.client.fetch_funding_rate(self._symbol(coin))
+            return float(data.get("fundingRate", 0))
+        except Exception:
+            return 0.0
+
+    # -- order execution ----------------------------------------------------
+
+    def place_limit_order(self, coin: str, side: str, size: float,
+                          price: float) -> dict:
+        try:
+            order = self.client.create_limit_order(
+                self._symbol(coin), side, size, price
+            )
+            return {
+                "success": True,
+                "order_id": order.get("id"),
+                "detail": str(order),
+            }
+        except Exception as e:
+            return {"success": False, "order_id": None, "detail": str(e)}
+
+    def place_market_order(self, coin: str, side: str,
+                           size: float) -> dict:
+        try:
+            order = self.client.create_market_order(
+                self._symbol(coin), side, size
+            )
+            return {
+                "success": True,
+                "order_id": order.get("id"),
+                "detail": str(order),
+            }
+        except Exception as e:
+            return {"success": False, "order_id": None, "detail": str(e)}
+
+    def cancel_order(self, coin: str, oid: str) -> None:
+        self.client.cancel_order(oid, self._symbol(coin))
+
+    def close_position(self, coin: str) -> dict:
+        try:
+            positions = self.get_positions()
+            target = None
+            for p in positions:
+                if p["coin"] == coin:
+                    target = p
+                    break
+            if target is None:
+                return {"success": False, "detail": f"No open position for {coin}"}
+            side = "sell" if target["side"] == "long" else "buy"
+            return self.place_market_order(coin, side, abs(target["size"]))
+        except Exception as e:
+            return {"success": False, "detail": str(e)}
+
+    def set_leverage(self, coin: str, leverage: int) -> None:
+        try:
+            self.client.set_leverage(leverage, self._symbol(coin),
+                                     params={"marginCoin": "USDT"})
+        except Exception:
+            pass
+
+
+# ---------------------------------------------------------------------------
 # Utility helpers
 # ---------------------------------------------------------------------------
 
@@ -629,6 +777,7 @@ def _round_price(price: float) -> float:
 
 _ADAPTERS: dict[str, type[ExchangeAdapter]] = {
     "hyperliquid": HyperliquidAdapter,
+    "bitget": BitgetAdapter,
     "binance": BinanceAdapter,
     "bybit": BybitAdapter,
 }

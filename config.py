@@ -9,8 +9,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # ─── Exchange selection ───────────────────────────────────────────────────
-# Supported values: "hyperliquid", "binance", "bybit"
-EXCHANGE: str = os.getenv("EXCHANGE", "hyperliquid")
+# Supported values: "hyperliquid", "bitget", "binance", "bybit"
+EXCHANGE: str = os.getenv("EXCHANGE", "bitget")
 
 # ─── Hyperliquid credentials ───────────────────────────────────────────────
 PRIVATE_KEY: str = os.getenv("PRIVATE_KEY", "")
@@ -21,6 +21,11 @@ BINANCE_API_KEY: str = os.getenv("BINANCE_API_KEY", "")
 BINANCE_API_SECRET: str = os.getenv("BINANCE_API_SECRET", "")
 BINANCE_TESTNET: bool = os.getenv("BINANCE_TESTNET", "false").lower() == "true"
 
+# ─── Bitget credentials ──────────────────────────────────────────────────
+BITGET_API_KEY: str = os.getenv("BITGET_API_KEY", "")
+BITGET_SECRET: str = os.getenv("BITGET_SECRET", "")
+BITGET_PASSPHRASE: str = os.getenv("BITGET_PASSPHRASE", "")
+
 # ─── Bybit credentials ───────────────────────────────────────────────────
 BYBIT_API_KEY: str = os.getenv("BYBIT_API_KEY", "")
 BYBIT_API_SECRET: str = os.getenv("BYBIT_API_SECRET", "")
@@ -29,6 +34,9 @@ BYBIT_TESTNET: bool = os.getenv("BYBIT_TESTNET", "false").lower() == "true"
 # ─── Telegram notifications (optional) ─────────────────────────────────────
 TELEGRAM_TOKEN: str = os.getenv("TELEGRAM_TOKEN", "")
 TELEGRAM_CHAT_ID: str = os.getenv("TELEGRAM_CHAT_ID", "")
+
+# ─── Fee rates (per side) ─────────────────────────────────────────────────
+FEE_RATE: float = 0.0006 if EXCHANGE == "bitget" else 0.00035  # taker fee
 
 # ─── Trading parameters ────────────────────────────────────────────────────
 LEVERAGE: int = int(os.getenv("LEVERAGE", "5"))
