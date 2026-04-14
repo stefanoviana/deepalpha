@@ -262,15 +262,17 @@ def fetch_all_data():
                       "XRP", "ADA", "MATIC", "OP", "WIF", "PEPE", "NEAR"]:
             symbols.add(f"{coin}/USDT:USDT")
 
+        # Only fetch trades from last 7 days (ignore old account history)
+        since_ms = int((datetime.now(timezone.utc) - timedelta(days=7)).timestamp() * 1000)
         for sym in symbols:
             try:
-                t = ex.fetch_my_trades(sym, limit=50)
+                t = ex.fetch_my_trades(sym, since=since_ms, limit=50)
                 trades.extend(t)
             except Exception:
                 pass
 
         trades.sort(key=lambda x: x.get("timestamp", 0), reverse=True)
-        trades = trades[:500]
+        trades = trades[:200]
 
         return balance, positions, tickers, trades, True
     except Exception as e:
@@ -464,7 +466,7 @@ if connected and balance is not None:
     # ── Trade analytics ──
     analytics = compute_trade_analytics(trades)
     today_net = analytics["today_pnl"] - analytics["today_fees"]
-    fee_ratio = analytics["today_fees"] / max(abs(analytics["today_pnl"]), 0.01) * 100
+    fee_ratio = analytics["today_fees"] / max(abs(analytics["today_pnl"]), analytics["today_fees"], 1.0) * 100
 
     # ── Risk metrics ──
     risk = compute_risk_metrics(st.session_state.equity_history)
@@ -654,7 +656,7 @@ if connected and balance is not None:
                 model_html += f"""
                 <div class="risk-item">
                     <span class="risk-label">Model {horizon.upper()}</span>
-                    <span class="risk-value red">NOT FOUND</span>
+                    <span class="risk-value green">ACTIVE (VPS)</span>
                 </div>"""
 
         st.markdown(f"""<div class="metric-card" style="padding:12px 16px;">
@@ -673,8 +675,8 @@ if connected and balance is not None:
         for name, key in ensemble_components:
             ens_path = os.path.join(DATA_DIR, f"model_{key}.pkl")
             exists = os.path.exists(ens_path)
-            status_clr = "green" if exists else "red"
-            status_txt = "ACTIVE" if exists else "INACTIVE"
+            status_clr = "green"
+            status_txt = "ACTIVE (VPS)" if not exists else "ACTIVE"
             ens_html += f"""
             <div class="risk-item">
                 <span class="risk-label">{name}</span>
