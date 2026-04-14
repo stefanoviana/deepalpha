@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.2.0 (2026-04-14)
+- **Clean confidence**: removed 5 ad-hoc modifiers (mean-rev, PPO, OFI, regime, VPIN/liq sizing). Model probability is now used raw
+- **Cost-aware trading**: trades only open when expected edge > 1.5x transaction costs
+- **Conservative sizing**: risk per trade reduced from 40% to 15% of equity
+- **L2 feature fix**: live features now use same candle proxies as training (was using real L2 = train/serve skew)
+- **TP multi-target fix**: TP raised to 4x ATR so T2 (3.5x ATR) can trigger before full close
+- **AI coin filter**: only 27 trained crypto, removed FTM/MKR (not on Bitget)
+
 ## v1.1.0 (2026-04-14)
 - **Bitget exchange support** — full adapter via ccxt (copy trading compatible)
 - **Fee rate fix** — correct 0.06% taker fee for Bitget (was hardcoded at 0.035%)
