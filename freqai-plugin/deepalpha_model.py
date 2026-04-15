@@ -18,7 +18,7 @@ License: MIT
 from __future__ import annotations
 
 import logging
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
 import pandas as pd
@@ -168,7 +168,7 @@ def select_features_by_shap(
     model: LGBMClassifier,
     X: pd.DataFrame,
     top_k: int = 30,
-) -> list[str]:
+) -> "list[str]":
     """
     Select the top-k most important features using SHAP values.
 
@@ -190,11 +190,26 @@ def select_features_by_shap(
     explainer = shap.TreeExplainer(model)
     shap_values = explainer.shap_values(sample)
 
-    # For multi-class, shap_values is a list; average across classes
+    # For multi-class, shap_values may be a list of arrays or a 3D array;
+    # reduce to a 1D importance vector (one value per feature).
     if isinstance(shap_values, list):
-        importance = np.mean([np.abs(sv).mean(axis=0) for sv in shap_values], axis=0)
+        # List of (n_samples, n_features) arrays, one per class
+        importance = np.mean(
+            [np.abs(sv).mean(axis=0) for sv in shap_values], axis=0
+        )
     else:
-        importance = np.abs(shap_values).mean(axis=0)
+        shap_arr = np.array(shap_values)
+        if shap_arr.ndim == 3:
+            # Shape (n_samples, n_features, n_classes) or (n_classes, n_samples, n_features)
+            # Average over samples and classes
+            importance = np.abs(shap_arr).mean(axis=(0, 2)) if shap_arr.shape[2] != len(X.columns) \
+                else np.abs(shap_arr).mean(axis=(0, 1))
+        elif shap_arr.ndim == 2:
+            importance = np.abs(shap_arr).mean(axis=0)
+        else:
+            importance = np.abs(shap_arr)
+    # Ensure 1D
+    importance = np.asarray(importance).flatten()[:len(X.columns)]
 
     feature_importance = pd.Series(importance, index=X.columns)
     top_features = feature_importance.nlargest(top_k).index.tolist()
@@ -232,7 +247,7 @@ class DeepAlphaModel(BaseClassifierModel):
         super().__init__(**kwargs)
         self.primary_model: Optional[LGBMClassifier] = None
         self.meta_model: Optional[LGBMClassifier] = None
-        self.selected_features: Optional[list[str]] = None
+        self.selected_features: Optional[List[str]] = None
         self._training_count: int = 0
 
     # ------------------------------------------------------------------

@@ -1,3 +1,8 @@
+[![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![FreqAI Compatible](https://img.shields.io/badge/FreqAI-compatible-orange.svg)](https://www.freqtrade.io/en/stable/freqai/)
+[![PyPI version](https://img.shields.io/pypi/v/deepalpha-freqai.svg)](https://pypi.org/project/deepalpha-freqai/)
+
 # DeepAlpha FreqAI Plugin
 
 > **DeepAlpha's ML pipeline as a drop-in FreqAI model for Freqtrade.**
@@ -31,9 +36,28 @@ This plugin brings DeepAlpha's battle-tested machine learning pipeline into the 
 
 ## Installation
 
+### Option 1: Install via pip (recommended)
+
+```bash
+pip install deepalpha-freqai
+```
+
+### Option 2: Install from source
+
+```bash
+# Clone the repository
+git clone https://github.com/stefanoviana/deepalpha.git
+cd deepalpha
+
+# Install in development mode
+pip install -e .
+```
+
+### Option 3: Manual setup
+
 ```bash
 # Clone this plugin into your Freqtrade directory
-git clone https://github.com/your-org/deepalpha-freqai-plugin.git freqai-plugin
+git clone https://github.com/stefanoviana/deepalpha.git freqai-plugin
 
 # Install dependencies
 pip install lightgbm shap scikit-learn pandas numpy
@@ -72,7 +96,8 @@ Key section:
             "triple_barrier": {
                 "profit_taking": 2.0,
                 "stop_loss": 1.0,
-                "max_holding_period": 48
+                "max_holding_period": 48,
+                "volatility_window": 20
             },
             "shap_feature_selection": {
                 "enabled": true,
@@ -136,16 +161,71 @@ Cross-validation splits respect temporal ordering with purge gaps between train/
 ```
 freqai-plugin/
   README.md                 # This file
+  setup.py                  # PyPI packaging
+  __init__.py               # Package init
   deepalpha_model.py        # FreqAI-compatible model class
   example_strategy.py       # Example Freqtrade strategy
   config_example.json       # Example configuration
+  tests/
+    test_deepalpha_model.py # Unit tests
 ```
+
+## Running Tests
+
+```bash
+pip install pytest
+pytest tests/ -v
+```
+
+---
+
+## Contributing to Freqtrade
+
+We welcome contributions and are working towards submitting DeepAlpha as an official FreqAI model within Freqtrade. Here is how you can help or submit your own changes upstream:
+
+### Submitting as a Freqtrade PR
+
+1. **Fork** the [Freqtrade repository](https://github.com/freqtrade/freqtrade) on GitHub.
+2. **Create a feature branch** from the `develop` branch:
+   ```bash
+   git checkout develop
+   git checkout -b feat/deepalpha-freqai-model
+   ```
+3. **Add the model file** to `freqtrade/freqai/prediction_models/DeepAlphaModel.py`.
+4. **Add the example strategy** to `freqtrade/templates/DeepAlphaStrategy.py`.
+5. **Add unit tests** to `tests/freqai/test_deepalpha_model.py`.
+6. **Update the FreqAI documentation** in `docs/freqai.md` to reference the new model.
+7. **Ensure all tests pass**:
+   ```bash
+   pytest tests/freqai/ -v
+   ```
+8. **Submit a Pull Request** against the `develop` branch with:
+   - A clear description of the model and its advantages
+   - Backtest results demonstrating improved performance
+   - Links to the academic references (Triple Barrier from *Advances in Financial Machine Learning* by Marcos Lopez de Prado)
+
+### Contributing to this Plugin
+
+1. Fork this repository at [github.com/stefanoviana/deepalpha](https://github.com/stefanoviana/deepalpha).
+2. Create a feature branch: `git checkout -b feat/your-feature`.
+3. Write tests for any new functionality.
+4. Ensure all tests pass: `pytest tests/ -v`.
+5. Submit a Pull Request with a clear description of your changes.
+
+### Code Style
+
+- Follow PEP 8 and the existing code conventions.
+- All public functions and classes must have docstrings.
+- Type hints are required for all function signatures.
+
+---
 
 ## Links
 
-- [DeepAlpha Main Repository](https://github.com/your-org/deepalpha)
+- [DeepAlpha Repository](https://github.com/stefanoviana/deepalpha)
 - [Freqtrade Documentation](https://www.freqtrade.io/)
 - [FreqAI Documentation](https://www.freqtrade.io/en/stable/freqai/)
+- [Advances in Financial Machine Learning](https://www.wiley.com/en-us/Advances+in+Financial+Machine+Learning-p-9781119482086) (Triple Barrier reference)
 
 ## License
 
