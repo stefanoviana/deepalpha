@@ -5,3 +5,6 @@ data/
 *.log
 site/
 *.pyc
+freqai-plugin/deepalpha_freqai.egg-info/
+freqai-plugin/dist/
+freqai-plugin/build/
