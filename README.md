@@ -42,8 +42,8 @@ DeepAlpha is an open-source AI trading bot that uses machine learning to trade p
 | Kelly Criterion Sizing | ❌ | ❌ | ✅ | ✅ |
 | ATR Dynamic Trailing Stop | ❌ | ❌ | ✅ | ✅ |
 | Risk Management | Basic | Fixed SL/TP | Dynamic ATR | Dynamic ATR |
-| Exchanges | 1 (Hyperliquid) | 1 (Hyperliquid) | 3 (HL + Binance + Bybit) | 3 (HL + Binance + Bybit) |
-| Auto-Retrain | Manual | Manual | Nightly | Nightly |
+| Exchanges | 1 | 1 | 4 (Bitget + HL + Binance + Bybit) | 4 (All) |
+| AI Model Updates | Manual | Manual | Auto (daily) | Auto (daily) |
 | Bloomberg Dashboard | ❌ | ❌ | ✅ | ✅ |
 | FreqAI Plugin | ❌ | ❌ | ❌ | ✅ |
 | Telegram Notifications | ❌ | ✅ | Priority | Priority |
@@ -103,39 +103,35 @@ DeepAlpha uses a LightGBM gradient boosting model trained on historical crypto d
 
 The Pro version adds XGBoost ensemble, PPO reinforcement learning, 50 features, and ATR-based prediction targets.
 
-## Quick Start
+## Quick Start (Pro — 2 minutes)
 
-### Option A: Docker (recommended)
-```bash
-git clone https://github.com/stefanoviana/deepalpha.git
-cd deepalpha
-cp .env.example .env
-# Edit .env with your exchange credentials
+**Windows:** double-click `setup.bat`
+**Mac/Linux:** run `bash setup.sh`
 
-# Train the model
-docker compose run --rm trainer
+The setup wizard asks for your license key and Bitget API keys, then starts trading automatically. The AI model is downloaded from our server — no training needed.
 
-# Start trading
-docker compose up -d deepalpha
-
-# Open dashboard (optional)
-docker compose --profile dashboard up -d
-# Visit http://localhost:8501
-```
-
-### Option B: Manual Install
+### Manual Install
 ```bash
 git clone https://github.com/stefanoviana/deepalpha.git
 cd deepalpha
 pip install -r requirements.txt
-cp .env.example .env
-# Edit .env with your exchange credentials
+cp .env.example .env        # edit with your keys
+python deepalpha.py          # start trading
 ```
 
-### 3. Train the AI
+### Docker
 ```bash
-python download_data.py    # Download 1 year of candle data
-python train.py            # Train the model (~5 min)
+git clone https://github.com/stefanoviana/deepalpha.git
+cd deepalpha
+cp .env.example .env        # edit with your keys
+docker compose up -d deepalpha
+```
+
+### Free Version (train your own model)
+```bash
+python download_data.py      # download historical data
+python train.py              # train model (~5 min)
+python deepalpha.py           # start trading
 ```
 
 ### 4. Run

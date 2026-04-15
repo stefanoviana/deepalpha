@@ -1,14 +1,12 @@
 """
-DeepAlpha — AI Trading Bot (Free Version)
-Autonomous trading on Hyperliquid, Binance & Bybit using a LightGBM model.
+DeepAlpha — AI Trading Bot
+Autonomous crypto trading on Bitget, Hyperliquid, Binance & Bybit.
 
 Usage:
-    python download_data.py   # download historical data
-    python train.py           # train the AI model
-    python deepalpha.py       # start trading
+    1. Create .env file with your API keys (see .env.example)
+    2. python deepalpha.py
 
-Environment variables: see .env.example
-Set EXCHANGE=hyperliquid|binance|bybit in .env to choose your exchange.
+The bot auto-downloads the latest AI model from the license server.
 """
 
 import os
@@ -19,10 +17,75 @@ import numpy as np
 import requests
 import lightgbm as lgb
 
+import hashlib
+import platform
+import uuid
+
 import config
 from features import build_features, FEATURE_NAMES
 from risk_manager import RiskManager
 from exchange_adapter import ExchangeAdapter, get_exchange
+
+
+# ─── License & Model Update ───────────────────────────────────────────────
+
+def get_machine_id() -> str:
+    """Generate a unique machine identifier for license binding."""
+    node = uuid.getnode()
+    system = platform.system()
+    return hashlib.sha256(f"{node}-{system}".encode()).hexdigest()[:32]
+
+
+def verify_license() -> dict:
+    """Verify license key with the server. Returns license info or exits."""
+    if not config.LICENSE_KEY:
+        print("[LICENSE] No LICENSE_KEY in .env — running in free mode (limited features)")
+        return {"valid": False, "plan": "free"}
+    try:
+        resp = requests.post(
+            f"{config.LICENSE_SERVER}/verify",
+            json={"key": config.LICENSE_KEY, "machine_id": get_machine_id()},
+            timeout=15,
+        )
+        data = resp.json()
+        if data.get("valid"):
+            print(f"[LICENSE] Valid — plan: {data['plan']}, expires in {data.get('days_remaining', '?')} days")
+            return data
+        else:
+            print(f"[LICENSE] Invalid: {data.get('error', 'unknown')}")
+            print("[LICENSE] Get a license at https://deepalphabot.com")
+            return {"valid": False, "plan": "free"}
+    except Exception as e:
+        print(f"[LICENSE] Server unreachable ({e}) — continuing with local model")
+        return {"valid": True, "plan": "offline"}
+
+
+def update_model(horizon: str = "1h") -> bool:
+    """Download latest AI model from the license server."""
+    if not config.LICENSE_KEY:
+        return False
+    try:
+        print(f"[MODEL] Checking for {horizon} model update...")
+        resp = requests.post(
+            f"{config.LICENSE_SERVER}/model/{horizon}",
+            json={"key": config.LICENSE_KEY, "machine_id": get_machine_id()},
+            timeout=30,
+        )
+        if resp.status_code == 200:
+            model_path = config.MODEL_PATH
+            # Backup old model
+            if os.path.exists(model_path):
+                os.rename(model_path, model_path + ".bak")
+            with open(model_path, "wb") as f:
+                f.write(resp.content)
+            print(f"[MODEL] Updated {horizon} model ({len(resp.content)//1024}KB)")
+            return True
+        else:
+            print(f"[MODEL] No update available ({resp.status_code})")
+            return False
+    except Exception as e:
+        print(f"[MODEL] Update failed: {e}")
+        return False
 
 
 # ─── Telegram ───────────────────────────────────────────────────────────────
@@ -103,18 +166,28 @@ class DeepAlpha:
     """Main trading bot orchestrator.  Works with any supported exchange."""
 
     def __init__(self):
+        # Verify license
+        self.license = verify_license()
+
+        # Try to download latest model from server
+        if self.license.get("valid") and config.LICENSE_KEY:
+            update_model("1h")
+
         # Load model
         if not os.path.exists(config.MODEL_PATH):
             raise FileNotFoundError(
-                f"Model not found at {config.MODEL_PATH}. "
-                "Run `python train.py` first."
+                f"Model not found at {config.MODEL_PATH}.\n"
+                "Set LICENSE_KEY in .env to auto-download, "
+                "or run `python train.py` to train locally."
             )
         with open(config.MODEL_PATH, "rb") as f:
             model_data = pickle.load(f)
             if isinstance(model_data, dict):
                 self.model = model_data["model"]
+                self.selected_features = model_data.get("selected_feature_indices")
             else:
-                self.model = model_data  # legacy raw Booster
+                self.model = model_data
+                self.selected_features = None
 
         # Initialise exchange via the adapter layer
         self.exchange: ExchangeAdapter = get_exchange(config.EXCHANGE)
@@ -126,15 +199,16 @@ class DeepAlpha:
         # Risk manager
         self.risk = RiskManager()
 
-        # Track last retrain time
-        self.last_retrain = time.time()
+        # Track model update time
+        self.last_model_check = time.time()
 
         print("DeepAlpha initialised successfully")
         print(f"  Exchange:  {config.EXCHANGE}")
         print(f"  Leverage:  {config.LEVERAGE}x")
         print(f"  Max pos:   {config.MAX_POSITIONS}")
-        print(f"  Risk/trade:{config.RISK_PER_TRADE*100:.0f}%")
-        send_telegram(f"DeepAlpha bot started ({config.EXCHANGE})")
+        print(f"  Coins:     {len(config.COINS)}")
+        print(f"  License:   {self.license.get('plan', 'free')}")
+        send_telegram(f"DeepAlpha started ({config.EXCHANGE}, {self.license.get('plan', 'free')})")
 
     def _set_leverage(self) -> None:
         """Set leverage for all traded coins."""
@@ -260,25 +334,26 @@ class DeepAlpha:
             # Small delay between orders
             time.sleep(0.5)
 
-    def _maybe_retrain(self) -> None:
-        """Retrain the model periodically (every 2 hours)."""
-        if time.time() - self.last_retrain < config.RETRAIN_INTERVAL:
+    def _maybe_update_model(self) -> None:
+        """Check for model updates from the license server."""
+        update_interval = config.MODEL_UPDATE_HOURS * 3600
+        if time.time() - self.last_model_check < update_interval:
             return
-
-        print("  [RETRAIN] Starting automatic retrain...")
+        self.last_model_check = time.time()
+        if not config.LICENSE_KEY:
+            return
         try:
-            # Import and run training inline
-            from train import prepare_dataset, train_model
-            X, y = prepare_dataset()
-            model = train_model(X, y)
-            with open(config.MODEL_PATH, "wb") as f:
-                pickle.dump(model, f)
-            self.model = model
-            self.last_retrain = time.time()
-            print("  [RETRAIN] Complete")
-            send_telegram("Model retrained successfully")
+            if update_model("1h"):
+                with open(config.MODEL_PATH, "rb") as f:
+                    model_data = pickle.load(f)
+                    if isinstance(model_data, dict):
+                        self.model = model_data["model"]
+                        self.selected_features = model_data.get("selected_feature_indices")
+                    else:
+                        self.model = model_data
+                send_telegram("AI model auto-updated to latest version")
         except Exception as e:
-            print(f"  [RETRAIN] Failed: {e}")
+            print(f"  [MODEL] Update check failed: {e}")
 
     def run(self) -> None:
         """Main trading loop."""
@@ -307,8 +382,8 @@ class DeepAlpha:
                 # 3. Scan for new entries
                 self._scan_for_entries()
 
-                # 4. Maybe retrain
-                self._maybe_retrain()
+                # 4. Check for model updates
+                self._maybe_update_model()
 
                 # Sleep until next iteration
                 elapsed = time.time() - loop_start

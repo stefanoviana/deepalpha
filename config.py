@@ -50,21 +50,24 @@ TAKE_PROFIT_PCT: float = float(os.getenv("TAKE_PROFIT_PCT", "0.03"))     # 3.0% 
 CIRCUIT_BREAKER_LOSSES: int = int(os.getenv("CIRCUIT_BREAKER_LOSSES", "3"))
 CIRCUIT_BREAKER_COOLDOWN: int = int(os.getenv("CIRCUIT_BREAKER_COOLDOWN", "3600"))  # seconds
 
+# ─── License & Model Server ───────────────────────────────────────────────
+LICENSE_KEY: str = os.getenv("LICENSE_KEY", "")
+LICENSE_SERVER: str = os.getenv("LICENSE_SERVER", "http://217.15.163.134:8090")
+MODEL_UPDATE_HOURS: int = int(os.getenv("MODEL_UPDATE_HOURS", "24"))  # check for new models every N hours
+
 # ─── Model / AI ────────────────────────────────────────────────────────────
 MODEL_PATH: str = os.getenv("MODEL_PATH", "model.pkl")
 MIN_CONFIDENCE: float = float(os.getenv("MIN_CONFIDENCE", "0.58"))       # minimum prediction confidence
-RETRAIN_INTERVAL: int = int(os.getenv("RETRAIN_INTERVAL", "7200"))       # seconds (2 hours)
 
 # ─── Data ───────────────────────────────────────────────────────────────────
 CANDLE_INTERVAL: str = os.getenv("CANDLE_INTERVAL", "1h")
 DATA_DIR: str = os.getenv("DATA_DIR", "data")
 
-# ─── Coins to trade ────────────────────────────────────────────────────────
+# ─── Coins to trade (must match trained model) ───────────────────────────
 COINS: list[str] = [
-    "BTC", "ETH", "SOL", "DOGE", "AVAX",
-    "LINK", "ARB", "OP", "SUI", "INJ",
-    "MATIC", "APT", "SEI", "TIA", "WIF",
-    "PEPE", "ONDO", "RENDER", "FET", "JUP",
+    "BTC", "ETH", "SOL", "BNB", "DOGE", "AVAX", "LINK", "ARB", "OP", "APT",
+    "SUI", "INJ", "TIA", "WLD", "NEAR", "FET", "AAVE", "DOT", "ADA", "XRP",
+    "LTC", "BCH", "CRV", "ONDO", "ENA", "JUP", "RENDER",
 ]
 
 # ─── Loop timing ───────────────────────────────────────────────────────────
