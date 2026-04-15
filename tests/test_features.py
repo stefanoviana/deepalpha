@@ -1,186 +1,156 @@
 """
 Tests for DeepAlpha feature engineering (features.py).
+Updated for v1.4+ (62-feature pipeline matching train_ai_v2.py).
 """
 
 import numpy as np
 import pytest
 
-from features import build_features, FEATURE_NAMES, _rsi, _atr, _ema
+from features import build_features, FEATURE_NAMES
+
+
+def _make_candles(n=200):
+    """Generate n synthetic OHLCV candle dicts."""
+    np.random.seed(42)
+    base = 50000.0
+    returns = np.random.normal(0, 0.005, n)
+    close = base * np.cumprod(1 + returns)
+    open_ = np.roll(close, 1)
+    open_[0] = base
+    high = np.maximum(open_, close) * (1 + np.random.uniform(0, 0.003, n))
+    low = np.minimum(open_, close) * (1 - np.random.uniform(0, 0.003, n))
+    volume = np.random.uniform(100, 5000, n)
+
+    t0 = 1700000000
+    candles = []
+    for i in range(n):
+        candles.append({
+            "t": (t0 + i * 3600) * 1000,  # ms timestamps
+            "o": float(open_[i]),
+            "h": float(high[i]),
+            "l": float(low[i]),
+            "c": float(close[i]),
+            "v": float(volume[i]),
+        })
+    return candles
 
 
 class TestBuildFeatures:
     """Tests for the main build_features function."""
 
-    def test_output_shape_15_features(self, sample_ohlcv):
-        """build_features should produce exactly 15 feature columns."""
-        result = build_features(
-            sample_ohlcv["open"],
-            sample_ohlcv["high"],
-            sample_ohlcv["low"],
-            sample_ohlcv["close"],
-            sample_ohlcv["volume"],
-        )
-        assert result.shape == (100, 15)
+    def test_output_shape_62_features(self):
+        """build_features should produce exactly 62 feature columns."""
+        candles = _make_candles(200)
+        result = build_features(candles)
+        assert result.shape[1] == 62
 
     def test_feature_names_count(self):
-        """FEATURE_NAMES list should have exactly 15 entries."""
-        assert len(FEATURE_NAMES) == 15
+        """FEATURE_NAMES list should have exactly 62 entries."""
+        assert len(FEATURE_NAMES) == 62
 
-    def test_no_nan_in_output(self, sample_ohlcv):
+    def test_feature_names_unique(self):
+        """All feature names should be unique."""
+        assert len(FEATURE_NAMES) == len(set(FEATURE_NAMES))
+
+    def test_no_nan_in_output(self):
         """Feature matrix should not contain NaN values after processing."""
-        result = build_features(
-            sample_ohlcv["open"],
-            sample_ohlcv["high"],
-            sample_ohlcv["low"],
-            sample_ohlcv["close"],
-            sample_ohlcv["volume"],
-        )
+        candles = _make_candles(200)
+        result = build_features(candles)
         assert not np.any(np.isnan(result)), "Feature matrix contains NaN values"
 
-    def test_no_inf_in_output(self, sample_ohlcv):
+    def test_no_inf_in_output(self):
         """Feature matrix should not contain infinite values."""
-        result = build_features(
-            sample_ohlcv["open"],
-            sample_ohlcv["high"],
-            sample_ohlcv["low"],
-            sample_ohlcv["close"],
-            sample_ohlcv["volume"],
-        )
+        candles = _make_candles(200)
+        result = build_features(candles)
         assert not np.any(np.isinf(result)), "Feature matrix contains Inf values"
 
-    def test_with_btc_close(self, sample_ohlcv, btc_close):
-        """build_features with btc_close should still produce (N, 15)."""
+    def test_row_count_matches_candles(self):
+        """Output rows should match input candle count."""
+        candles = _make_candles(200)
+        result = build_features(candles)
+        assert result.shape[0] == 200
+
+    def test_with_btc_closes(self):
+        """build_features with btc_closes should still produce (N, 62)."""
+        candles = _make_candles(200)
+        btc = np.array([c["c"] for c in candles]) * 1.01  # slightly different
+        result = build_features(candles, btc_closes=btc)
+        assert result.shape == (200, 62)
+
+    def test_with_all_optional_data(self):
+        """build_features with all optional maps should produce (N, 62)."""
+        candles = _make_candles(200)
+        btc = np.array([c["c"] for c in candles])
+        funding = {c["t"] // 1000: 0.0001 for c in candles}
+        taker_vols = np.random.uniform(50, 2500, 200)
+        taker_ratio = {c["t"]: 1.5 for c in candles}
+        fg = {c["t"] // 1000: 50 for c in candles}
+
         result = build_features(
-            sample_ohlcv["open"],
-            sample_ohlcv["high"],
-            sample_ohlcv["low"],
-            sample_ohlcv["close"],
-            sample_ohlcv["volume"],
-            btc_close=btc_close,
-            funding=0.0001,
+            candles,
+            btc_closes=btc,
+            funding_map=funding,
+            taker_buy_volumes=taker_vols,
+            taker_ratio_map=taker_ratio,
+            fear_greed_map=fg,
         )
-        assert result.shape == (100, 15)
+        assert result.shape == (200, 62)
+        assert not np.any(np.isnan(result))
 
-    def test_funding_rate_broadcast(self, sample_ohlcv):
-        """Last column (funding_rate) should be the scalar broadcast to all rows."""
-        funding = 0.00035
-        result = build_features(
-            sample_ohlcv["open"],
-            sample_ohlcv["high"],
-            sample_ohlcv["low"],
-            sample_ohlcv["close"],
-            sample_ohlcv["volume"],
-            funding=funding,
-        )
-        np.testing.assert_allclose(result[:, 14], funding)
+    def test_defaults_without_optional_data(self):
+        """Without optional data, features should use safe defaults (not crash)."""
+        candles = _make_candles(200)
+        result = build_features(candles)
+        # Funding features (indices 0-3) should be 0.0
+        assert np.all(result[:, 0] == 0.0), "funding_rate should default to 0.0"
 
-    def test_btc_correlation_zero_when_none(self, sample_ohlcv):
-        """When btc_close is None, btc_correlation column should be all zeros."""
-        result = build_features(
-            sample_ohlcv["open"],
-            sample_ohlcv["high"],
-            sample_ohlcv["low"],
-            sample_ohlcv["close"],
-            sample_ohlcv["volume"],
-            btc_close=None,
-        )
-        np.testing.assert_array_equal(result[:, 13], 0.0)
+    def test_minimum_candles(self):
+        """Should handle the minimum number of candles without crashing."""
+        candles = _make_candles(50)
+        result = build_features(candles)
+        assert result.shape == (50, 62)
 
+    def test_rsi_in_valid_range(self):
+        """RSI feature (index 12) should be between 0 and 100."""
+        candles = _make_candles(200)
+        result = build_features(candles)
+        rsi_col = FEATURE_NAMES.index("rsi_14")
+        rsi = result[20:, rsi_col]  # skip warmup period
+        assert np.all(rsi >= 0) and np.all(rsi <= 100), f"RSI out of range: min={rsi.min()}, max={rsi.max()}"
 
-class TestRSI:
-    """Tests for the _rsi helper."""
+    def test_atr_non_negative(self):
+        """ATR feature should always be non-negative."""
+        candles = _make_candles(200)
+        result = build_features(candles)
+        atr_col = FEATURE_NAMES.index("atr_14")
+        assert np.all(result[:, atr_col] >= 0)
 
-    def test_rsi_range(self, sample_ohlcv):
-        """RSI values should be between 0 and 100."""
-        rsi = _rsi(sample_ohlcv["close"], 14)
-        assert np.all(rsi >= 0) and np.all(rsi <= 100)
+    def test_hour_of_day_range(self):
+        """hour_of_day should be 0-23."""
+        candles = _make_candles(200)
+        result = build_features(candles)
+        hour_col = FEATURE_NAMES.index("hour_of_day")
+        hours = result[:, hour_col]
+        assert np.all(hours >= 0) and np.all(hours <= 23)
 
-    def test_rsi_constant_price(self):
-        """RSI of a constant price series: no price changes means no losses,
-        so RSI drifts toward 100 as the initial gain fades but avg_loss stays
-        near zero. With a long enough series, it should be above 50."""
-        constant = np.full(200, 100.0)
-        rsi = _rsi(constant, 14)
-        # All values should stay in valid range
-        assert np.all(rsi >= 0) and np.all(rsi <= 100)
+    def test_day_of_week_range(self):
+        """day_of_week should be 0-6."""
+        candles = _make_candles(200)
+        result = build_features(candles)
+        dow_col = FEATURE_NAMES.index("day_of_week")
+        days = result[:, dow_col]
+        assert np.all(days >= 0) and np.all(days <= 6)
 
-    def test_rsi_rising_prices(self):
-        """RSI of a steadily rising series should be close to 100."""
-        rising = np.linspace(100, 200, 100)
-        rsi = _rsi(rising, 14)
-        assert rsi[-1] > 90
+    def test_order_flow_ratio_default(self):
+        """Without taker data, order_flow_ratio should default to 0.5."""
+        candles = _make_candles(200)
+        result = build_features(candles)
+        ofr_col = FEATURE_NAMES.index("order_flow_ratio")
+        assert np.allclose(result[:, ofr_col], 0.5)
 
-    def test_rsi_falling_prices(self):
-        """RSI of a steadily falling series should be close to 0."""
-        falling = np.linspace(200, 100, 100)
-        rsi = _rsi(falling, 14)
-        assert rsi[-1] < 10
-
-
-class TestATR:
-    """Tests for the _atr helper."""
-
-    def test_atr_positive(self, sample_ohlcv):
-        """ATR should always be non-negative."""
-        atr = _atr(sample_ohlcv["high"], sample_ohlcv["low"], sample_ohlcv["close"], 14)
-        assert np.all(atr >= 0)
-
-    def test_atr_zero_for_flat_market(self):
-        """ATR of identical H/L/C series should be zero."""
-        n = 50
-        flat = np.full(n, 100.0)
-        atr = _atr(flat, flat, flat, 14)
-        np.testing.assert_allclose(atr, 0.0, atol=1e-10)
-
-    def test_atr_increases_with_volatility(self):
-        """Higher spread between high and low should produce larger ATR."""
-        n = 50
-        close = np.full(n, 100.0)
-        low_vol_high = close + 1
-        low_vol_low = close - 1
-        high_vol_high = close + 10
-        high_vol_low = close - 10
-
-        atr_low = _atr(low_vol_high, low_vol_low, close, 14)
-        atr_high = _atr(high_vol_high, high_vol_low, close, 14)
-        assert atr_high[-1] > atr_low[-1]
-
-
-class TestMomentum:
-    """Tests for momentum features within build_features."""
-
-    def test_momentum_3_first_elements_zero(self, sample_ohlcv):
-        """price_momentum_3 (column index 3) first 3 values should be zero."""
-        result = build_features(
-            sample_ohlcv["open"],
-            sample_ohlcv["high"],
-            sample_ohlcv["low"],
-            sample_ohlcv["close"],
-            sample_ohlcv["volume"],
-        )
-        np.testing.assert_array_equal(result[:3, 3], 0.0)
-
-    def test_momentum_7_first_elements_zero(self, sample_ohlcv):
-        """price_momentum_7 (column index 4) first 7 values should be zero."""
-        result = build_features(
-            sample_ohlcv["open"],
-            sample_ohlcv["high"],
-            sample_ohlcv["low"],
-            sample_ohlcv["close"],
-            sample_ohlcv["volume"],
-        )
-        np.testing.assert_array_equal(result[:7, 4], 0.0)
-
-    def test_momentum_calculation(self):
-        """Verify momentum is (close[i] - close[i-3]) / close[i-3]."""
-        close = np.array([100.0, 102.0, 104.0, 110.0, 108.0, 105.0, 115.0,
-                          120.0, 118.0, 125.0])
-        open_ = close.copy()
-        high = close + 1
-        low = close - 1
-        volume = np.ones(10) * 1000
-
-        result = build_features(open_, high, low, close, volume)
-        # mom3 at index 3 = (110 - 100) / 100 = 0.10
-        expected_mom3_idx3 = (110.0 - 100.0) / 100.0
-        assert abs(result[3, 3] - expected_mom3_idx3) < 1e-10
+    def test_fear_greed_default(self):
+        """Without fear_greed data, fear_greed_index should default to 0.5 (neutral)."""
+        candles = _make_candles(200)
+        result = build_features(candles)
+        fg_col = FEATURE_NAMES.index("fear_greed_index")
+        assert np.allclose(result[:, fg_col], 0.5)
