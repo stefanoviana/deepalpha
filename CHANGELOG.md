@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.5.0 (2026-04-15)
+- **HMM regime detection** — 3-state Hidden Markov Model (bull/sideways/bear) corrects direction bias
+- **SHORT bias fix** — filters >90% same-direction clusters in bearish regimes
+- **Asymmetric reversal removed** — disabled reversal strategy that conflicted with AI signals
+- **Telegram hold decisions** — interactive hold/close prompt at 4h trade expiry
+- **SHORT bias protection** — >90% same-direction signals filtered as noise
+
 ## v1.3.0 (2026-04-15)
 - **Auto-update models** — AI models auto-download from license server every 24h (no manual retraining)
 - **Setup wizard** — `setup.bat` (Windows) / `setup.sh` (Mac/Linux) for 2-minute install with guided prompts

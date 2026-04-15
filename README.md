@@ -68,6 +68,13 @@ Trade Execution (Bitget API)
 
 ## What's New
 
+**v1.5.0** — HMM regime detection & bias correction:
+- 3-state Gaussian HMM (bull/sideways/bear) trained on BTC hourly data auto-detects market regime
+- Regime-aware bias correction: when >90% signals are one direction but regime opposes, minority signals get boosted (threshold 60%) while weak majority signals are filtered
+- HMM auto-retrains every 24h on fresh data — no manual intervention needed
+- Position sizing is never affected by regime — only direction filtering
+- Interactive Telegram hold/close decisions at 4h expiry
+
 **v1.3.0** — Auto-update & setup wizard:
 - Auto-update models from license server every 24h (no manual retraining)
 - Setup wizard (`setup.bat` / `setup.sh`) for 2-minute install
