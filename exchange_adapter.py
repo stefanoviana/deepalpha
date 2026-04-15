@@ -12,11 +12,18 @@ Usage:
     balance = exchange.get_balance()
 """
 
+import logging
 import os
 import time
 from abc import ABC, abstractmethod
 
 import requests
+
+logger = logging.getLogger(__name__)
+
+# Slippage for simulated market orders (IOC limit).
+# Higher values fill more reliably but at a worse price.
+DEFAULT_SLIPPAGE = 0.002
 from eth_account import Account
 from hyperliquid.utils import constants
 from hyperliquid.exchange import Exchange as HLExchange
@@ -176,6 +183,7 @@ class HyperliquidAdapter(ExchangeAdapter):
             state = self.info.user_state(self.wallet)
             return float(state["marginSummary"]["accountValue"])
         except Exception:
+            logger.error("HyperliquidAdapter.get_balance failed", exc_info=True)
             return 0.0
 
     def get_positions(self) -> list[dict]:
@@ -195,6 +203,7 @@ class HyperliquidAdapter(ExchangeAdapter):
                     })
             return positions
         except Exception:
+            logger.error("HyperliquidAdapter.get_positions failed", exc_info=True)
             return []
 
     # -- market data --------------------------------------------------------
@@ -240,7 +249,7 @@ class HyperliquidAdapter(ExchangeAdapter):
                 if asset["name"] == coin:
                     return float(ctxs[i]["funding"])
         except Exception:
-            pass
+            logger.error("HyperliquidAdapter.get_funding_rate failed", exc_info=True)
         return 0.0
 
     # -- order execution ----------------------------------------------------
@@ -265,7 +274,7 @@ class HyperliquidAdapter(ExchangeAdapter):
             is_buy = side == "buy"
             # Use IOC limit with slippage to simulate market order
             book = self.get_orderbook(coin)
-            slippage = 0.002
+            slippage = DEFAULT_SLIPPAGE
             if is_buy:
                 price = book["ask"] * (1 + slippage)
             else:
@@ -352,6 +361,7 @@ class BinanceAdapter(ExchangeAdapter):
             bal = self.client.fetch_balance({"type": "future"})
             return float(bal["total"].get("USDT", 0))
         except Exception:
+            logger.error("BinanceAdapter.get_balance failed", exc_info=True)
             return 0.0
 
     def get_positions(self) -> list[dict]:
@@ -373,6 +383,7 @@ class BinanceAdapter(ExchangeAdapter):
                 })
             return positions
         except Exception:
+            logger.error("BinanceAdapter.get_positions failed", exc_info=True)
             return []
 
     # -- market data --------------------------------------------------------
@@ -396,6 +407,7 @@ class BinanceAdapter(ExchangeAdapter):
             data = self.client.fetch_funding_rate(self._symbol(coin))
             return float(data.get("fundingRate", 0))
         except Exception:
+            logger.error("BinanceAdapter.get_funding_rate failed", exc_info=True)
             return 0.0
 
     # -- order execution ----------------------------------------------------
@@ -450,7 +462,7 @@ class BinanceAdapter(ExchangeAdapter):
         try:
             self.client.set_leverage(leverage, self._symbol(coin))
         except Exception:
-            pass
+            logger.error("BinanceAdapter.set_leverage failed for %s", coin, exc_info=True)
 
 
 # ---------------------------------------------------------------------------
@@ -501,6 +513,7 @@ class BybitAdapter(ExchangeAdapter):
             bal = self.client.fetch_balance({"type": "contract"})
             return float(bal["total"].get("USDT", 0))
         except Exception:
+            logger.error("BybitAdapter.get_balance failed", exc_info=True)
             return 0.0
 
     def get_positions(self) -> list[dict]:
@@ -522,6 +535,7 @@ class BybitAdapter(ExchangeAdapter):
                 })
             return positions
         except Exception:
+            logger.error("BybitAdapter.get_positions failed", exc_info=True)
             return []
 
     # -- market data --------------------------------------------------------
@@ -545,6 +559,7 @@ class BybitAdapter(ExchangeAdapter):
             data = self.client.fetch_funding_rate(self._symbol(coin))
             return float(data.get("fundingRate", 0))
         except Exception:
+            logger.error("BybitAdapter.get_funding_rate failed", exc_info=True)
             return 0.0
 
     # -- order execution ----------------------------------------------------
@@ -599,7 +614,7 @@ class BybitAdapter(ExchangeAdapter):
         try:
             self.client.set_leverage(leverage, self._symbol(coin))
         except Exception:
-            pass
+            logger.error("BybitAdapter.set_leverage failed for %s", coin, exc_info=True)
 
 
 # ---------------------------------------------------------------------------
@@ -649,6 +664,7 @@ class BitgetAdapter(ExchangeAdapter):
             bal = self.client.fetch_balance({"type": "swap"})
             return float(bal["total"].get("USDT", 0))
         except Exception:
+            logger.error("BitgetAdapter.get_balance failed", exc_info=True)
             return 0.0
 
     def get_positions(self) -> list[dict]:
@@ -656,7 +672,7 @@ class BitgetAdapter(ExchangeAdapter):
             raw = self.client.fetch_positions()
             positions: list[dict] = []
             for p in raw:
-                size = abs(float(p.get("contracts", 0) or 0))
+                size = abs(float(p.get("contracts", 0) or 0)) * float(p.get("contractSize", 1) or 1)
                 if size == 0:
                     continue
                 side_str = p.get("side", "long")
@@ -669,6 +685,7 @@ class BitgetAdapter(ExchangeAdapter):
                 })
             return positions
         except Exception:
+            logger.error("BitgetAdapter.get_positions failed", exc_info=True)
             return []
 
     # -- market data --------------------------------------------------------
@@ -692,6 +709,7 @@ class BitgetAdapter(ExchangeAdapter):
             data = self.client.fetch_funding_rate(self._symbol(coin))
             return float(data.get("fundingRate", 0))
         except Exception:
+            logger.error("BitgetAdapter.get_funding_rate failed", exc_info=True)
             return 0.0
 
     # -- order execution ----------------------------------------------------
@@ -747,7 +765,7 @@ class BitgetAdapter(ExchangeAdapter):
             self.client.set_leverage(leverage, self._symbol(coin),
                                      params={"marginCoin": "USDT"})
         except Exception:
-            pass
+            logger.error("BitgetAdapter.set_leverage failed for %s", coin, exc_info=True)
 
 
 # ---------------------------------------------------------------------------

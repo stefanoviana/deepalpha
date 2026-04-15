@@ -68,6 +68,12 @@ Trade Execution (Bitget API)
 
 ## What's New
 
+**v1.3.0** — Auto-update & setup wizard:
+- Auto-update models from license server every 24h (no manual retraining)
+- Setup wizard (`setup.bat` / `setup.sh`) for 2-minute install
+- License key integration with Gumroad webhook
+- Bitget copy trading referral integration
+
 **v2.0** — Major ML overhaul:
 - Triple Barrier Labeling (labels based on real TP/SL outcomes, not price direction)
 - SHAP feature selection (removed noise features, kept top 13-14)
@@ -265,6 +271,20 @@ TELEGRAM_CHAT_ID=your_chat_id
 - **Daily loss limit**: 5% of equity
 - **Circuit breaker**: Pauses after 3 consecutive losses
 
+## Performance
+
+Backtest results on **true out-of-sample data** (3 years, zero lookahead, walk-forward validation):
+
+| Metric | Value |
+|--------|-------|
+| Win Rate | 73.1% |
+| Sharpe Ratio | 5.43 |
+| Max Drawdown | 8.05% |
+| Profit Factor | 2.49 |
+| Total Return (3Y OOS) | 12,964% |
+
+> **Methodology:** Purged walk-forward cross-validation with 24h embargo. Test data is strictly chronological and never seen during training. No future data leakage.
+
 ## Model Performance
 
 The AI model uses walk-forward validation (no overfitting):
@@ -276,7 +296,7 @@ Typical accuracy: **55-80%** on out-of-sample data. Combined with 2:1+ reward-to
 
 ## Disclaimer
 
-**Trading involves significant risk of loss.** This software is provided as-is, with no guarantees of profitability. Past performance does not indicate future results. Only trade with money you can afford to lose.
+**Trading involves significant risk of loss.** This software is provided as-is, with no guarantees of profitability. Past backtest performance does not indicate future results. The performance metrics above are from historical backtests and may not reflect live trading conditions. Only trade with money you can afford to lose.
 
 ## Contributing
 
@@ -299,6 +319,12 @@ High-impact areas: new technical indicators, exchange adapters (Binance, Bybit, 
 
 MIT License — see [LICENSE](LICENSE)
 
+## Integrations
+
+- **[FreqAI](https://www.freqtrade.io/en/stable/freqai/)** — Use DeepAlpha's ML pipeline as a drop-in FreqAI prediction model. See [freqai-plugin/](freqai-plugin/) for setup.
+- **[Bitget Copy Trading](https://www.bitget.com/referral/register?clacCode=LAM6LQEJ)** — Follow DeepAlpha trades directly on Bitget with one click.
+- **Telegram** — Real-time trade alerts and portfolio updates via bot.
+
 ## Links
 
 - [Discord Server](https://discord.gg/P4yX686m)
@@ -306,3 +332,11 @@ MIT License — see [LICENSE](LICENSE)
 - [Blog: How I Built DeepAlpha](blog/how-i-built-deepalpha.md)
 - [Documentation](https://stefanoviana.github.io/deepalpha/)
 - [DeepAlpha Pro](https://stefanocrypto.gumroad.com/l/ezilv) — 3 strategies, ensemble model, 50 features, PPO agent, ATR stops
+
+---
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=stefanoviana/deepalpha&type=Date)](https://star-history.com/#stefanoviana/deepalpha&Date)
+
+<!-- Keywords: crypto trading bot, ai trading, machine learning trading, lightgbm crypto, bitget bot, algorithmic trading, freqai, xgboost crypto, automated trading, quant trading bot -->

@@ -5,7 +5,10 @@ and circuit breaker logic.
 """
 
 import time
+from datetime import datetime, timezone
+
 import config
+from config import FEE_RATE
 
 
 class RiskManager:
@@ -13,7 +16,7 @@ class RiskManager:
 
     def __init__(self):
         self.daily_pnl: float = 0.0
-        self.daily_reset_ts: float = time.time()
+        self._last_reset_date: str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
         self.consecutive_losses: int = 0
         self.circuit_breaker_until: float = 0.0
         self.open_positions: dict[str, dict] = {}  # coin -> position info
@@ -21,11 +24,11 @@ class RiskManager:
     # ─── Daily reset ────────────────────────────────────────────────────
 
     def _check_daily_reset(self) -> None:
-        """Reset daily counters at midnight UTC."""
-        now = time.time()
-        if now - self.daily_reset_ts >= 86_400:
+        """Reset daily counters at UTC midnight."""
+        today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+        if today != self._last_reset_date:
             self.daily_pnl = 0.0
-            self.daily_reset_ts = now
+            self._last_reset_date = today
 
     # ─── Can we open a new trade? ───────────────────────────────────────
 
@@ -119,9 +122,15 @@ class RiskManager:
 
         pos = self.open_positions.pop(coin)
         if pos["side"] == "long":
-            pnl = (exit_price - pos["entry"]) * pos["qty"]
+            raw_pnl = (exit_price - pos["entry"]) * pos["qty"]
         else:
-            pnl = (pos["entry"] - exit_price) * pos["qty"]
+            raw_pnl = (pos["entry"] - exit_price) * pos["qty"]
+
+        # Subtract fees on both entry and exit (2 sides)
+        notional_entry = pos["entry"] * pos["qty"]
+        notional_exit = exit_price * pos["qty"]
+        fees = FEE_RATE * notional_entry + FEE_RATE * notional_exit
+        pnl = raw_pnl - fees
 
         self.daily_pnl += pnl
 

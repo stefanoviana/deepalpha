@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.3.0 (2026-04-15)
+- **Auto-update models** — AI models auto-download from license server every 24h (no manual retraining)
+- **Setup wizard** — `setup.bat` (Windows) / `setup.sh` (Mac/Linux) for 2-minute install with guided prompts
+- **License key integration** — Gumroad webhook auto-provisions license keys on purchase
+- **Bitget copy trading referral** — referral integration for copy trading signups
+
 ## v1.2.0 (2026-04-14)
 - **Clean confidence**: removed 5 ad-hoc modifiers (mean-rev, PPO, OFI, regime, VPIN/liq sizing). Model probability is now used raw
 - **Cost-aware trading**: trades only open when expected edge > 1.5x transaction costs

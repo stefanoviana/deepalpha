@@ -36,7 +36,8 @@ TELEGRAM_TOKEN: str = os.getenv("TELEGRAM_TOKEN", "")
 TELEGRAM_CHAT_ID: str = os.getenv("TELEGRAM_CHAT_ID", "")
 
 # ─── Fee rates (per side) ─────────────────────────────────────────────────
-FEE_RATE: float = 0.0006 if EXCHANGE == "bitget" else 0.00035  # taker fee
+FEE_RATE: float = 0.0006 if EXCHANGE == "bitget" else 0.00035       # taker fee
+MAKER_FEE_RATE: float = 0.0002 if EXCHANGE == "bitget" else 0.0002  # maker fee
 
 # ─── Trading parameters ────────────────────────────────────────────────────
 LEVERAGE: int = int(os.getenv("LEVERAGE", "5"))
