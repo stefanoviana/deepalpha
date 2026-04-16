@@ -2,11 +2,11 @@
 
 # DeepAlpha
 
-### AI-Powered Autonomous Trading on Bitget — Copy Trading Ready
+### AI-Powered Autonomous Trading on Bybit — Copy Trading Ready
 
 [![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://python.org)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Bitget](https://img.shields.io/badge/Exchange-Bitget-00E0B0.svg)](https://www.bitget.com/referral/register?clacCode=LAM6LQEJ)
+[![Bybit](https://img.shields.io/badge/Exchange-Bybit-F7A600.svg)](https://www.bybit.com/invite?ref=LN1XOX)
 [![LightGBM](https://img.shields.io/badge/ML-LightGBM-orange.svg)](https://lightgbm.readthedocs.io)
 [![XGBoost](https://img.shields.io/badge/ML-XGBoost-red.svg)](https://xgboost.readthedocs.io)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
@@ -24,7 +24,7 @@
 
 ## What is DeepAlpha?
 
-DeepAlpha is an open-source AI trading bot that uses machine learning to trade perpetual futures on [Bitget](https://www.bitget.com/referral/register?clacCode=LAM6LQEJ). It trains on years of historical data, generates predictions, and executes trades autonomously.
+DeepAlpha is an open-source AI trading bot that uses machine learning to trade perpetual futures on [Bybit](https://www.bybit.com/invite?ref=LN1XOX). It trains on years of historical data, generates predictions, and executes trades autonomously.
 
 **This is not a toy.** DeepAlpha is a production system designed to survive bear markets.
 
@@ -42,7 +42,7 @@ DeepAlpha is an open-source AI trading bot that uses machine learning to trade p
 | Kelly Criterion Sizing | ❌ | ❌ | ✅ | ✅ |
 | ATR Dynamic Trailing Stop | ❌ | ❌ | ✅ | ✅ |
 | Risk Management | Basic | Fixed SL/TP | Dynamic ATR | Dynamic ATR |
-| Exchanges | 1 | 1 | 4 (Bitget + HL + Binance + Bybit) | 4 (All) |
+| Exchanges | 1 | 1 | 4 (Bybit + HL + Binance + Bitget) | 4 (All) |
 | AI Model Updates | Manual | Manual | Auto (daily) | Auto (daily) |
 | Bloomberg Dashboard | ❌ | ❌ | ✅ | ✅ |
 | FreqAI Plugin | ❌ | ❌ | ❌ | ✅ |
@@ -53,7 +53,7 @@ DeepAlpha is an open-source AI trading bot that uses machine learning to trade p
 ## How It Works
 
 ```
-Market Data (Bitget API)
+Market Data (Bybit API)
     ↓
 Feature Engineering (RSI, ATR, EMA, Momentum, Volume)
     ↓
@@ -63,7 +63,7 @@ Signal Generation (LONG/SHORT with confidence %)
     ↓
 Risk Management (position sizing, stop-loss, max positions)
     ↓
-Trade Execution (Bitget API)
+Trade Execution (Bybit API)
 ```
 
 ## What's New
@@ -79,7 +79,7 @@ Trade Execution (Bitget API)
 - Auto-update models from license server every 24h (no manual retraining)
 - Setup wizard (`setup.bat` / `setup.sh`) for 2-minute install
 - License key integration with Gumroad webhook
-- Bitget copy trading referral integration
+- Bybit copy trading referral integration
 
 **v2.0** — Major ML overhaul:
 - Triple Barrier Labeling (labels based on real TP/SL outcomes, not price direction)
@@ -121,7 +121,7 @@ The Pro version adds XGBoost ensemble, PPO reinforcement learning, 50 features, 
 **Windows:** double-click `setup.bat`
 **Mac/Linux:** run `bash setup.sh`
 
-The setup wizard asks for your license key and Bitget API keys, then starts trading automatically. The AI model is downloaded from our server — no training needed.
+The setup wizard asks for your license key and Bybit API keys, then starts trading automatically. The AI model is downloaded from our server — no training needed.
 
 ### Manual Install
 ```bash
@@ -209,7 +209,7 @@ DeepAlpha supports multiple exchanges through a unified adapter layer. Set the `
 
 | Exchange | Type | Status |
 |----------|------|--------|
-| [Hyperliquid](https://www.bitget.com/referral/register?clacCode=LAM6LQEJ) | L1 Perps | Default |
+| [Hyperliquid](https://www.bybit.com/invite?ref=LN1XOX) | L1 Perps | Default |
 | [Binance Futures](https://www.binance.com/en/futures) | USDT-M Perpetual | Supported |
 | [Bybit](https://www.bybit.com) | USDT Perpetual | Supported |
 
@@ -218,7 +218,7 @@ DeepAlpha supports multiple exchanges through a unified adapter layer. Set the `
 Set the `EXCHANGE` environment variable in your `.env` file:
 
 ```bash
-EXCHANGE=bitget   # default
+EXCHANGE=bybit   # default
 EXCHANGE=binance
 EXCHANGE=bybit
 ```
@@ -227,7 +227,7 @@ EXCHANGE=bybit
 
 **Hyperliquid** (default -- no extra dependency):
 ```bash
-EXCHANGE=bitget
+EXCHANGE=bybit
 PRIVATE_KEY=0xYOUR_PRIVATE_KEY
 WALLET_ADDRESS=0xYOUR_WALLET_ADDRESS
 ```
@@ -329,7 +329,7 @@ MIT License — see [LICENSE](LICENSE)
 ## Integrations
 
 - **[FreqAI](https://www.freqtrade.io/en/stable/freqai/)** — Use DeepAlpha's ML pipeline as a drop-in FreqAI prediction model. See [freqai-plugin/](freqai-plugin/) for setup.
-- **[Bitget Copy Trading](https://www.bitget.com/referral/register?clacCode=LAM6LQEJ)** — Follow DeepAlpha trades directly on Bitget with one click.
+- **[Bybit Copy Trading](https://www.bybit.com/invite?ref=LN1XOX)** — Follow DeepAlpha trades directly on Bybit with one click.
 - **Telegram** — Real-time trade alerts and portfolio updates via bot.
 
 ## Links
@@ -346,4 +346,4 @@ MIT License — see [LICENSE](LICENSE)
 
 [![Star History Chart](https://api.star-history.com/svg?repos=stefanoviana/deepalpha&type=Date)](https://star-history.com/#stefanoviana/deepalpha&Date)
 
-<!-- Keywords: crypto trading bot, ai trading, machine learning trading, lightgbm crypto, bitget bot, algorithmic trading, freqai, xgboost crypto, automated trading, quant trading bot -->
+<!-- Keywords: crypto trading bot, ai trading, machine learning trading, lightgbm crypto, bybit bot, bitget bot, algorithmic trading, freqai, xgboost crypto, automated trading, quant trading bot -->
