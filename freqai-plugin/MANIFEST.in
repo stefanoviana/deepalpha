@@ -1,3 +1,7 @@
 include README.md
+include CHANGELOG.md
 include LICENSE
+include config_example.json
+include example_strategy.py
 recursive-include deepalpha_freqai *.py
+recursive-include examples *.py *.ipynb

@@ -27,8 +27,23 @@ from lightgbm import LGBMClassifier
 from sklearn.model_selection import BaseCrossValidator
 from sklearn.metrics import accuracy_score, log_loss
 
-from freqtrade.freqai.base_models.BaseClassifierModel import BaseClassifierModel
-from freqtrade.freqai.data_kitchen import FreqaiDataKitchen
+# Freqtrade imports — only needed for DeepAlphaModel class.
+# Kept as try/except so utilities (PurgedWalkForwardCV, apply_triple_barrier, select_features_by_shap)
+# work without freqtrade installed.
+try:
+    from freqtrade.freqai.base_models.BaseClassifierModel import BaseClassifierModel
+    from freqtrade.freqai.data_kitchen import FreqaiDataKitchen
+    _HAS_FREQTRADE = True
+except ImportError:
+    _HAS_FREQTRADE = False
+    # Create stub base class so module still parses. DeepAlphaModel will raise at instantiation.
+    class BaseClassifierModel:  # type: ignore[no-redef]
+        def __init__(self, *args, **kwargs):
+            raise ImportError(
+                "DeepAlphaModel requires freqtrade. Install with: pip install freqtrade"
+            )
+    class FreqaiDataKitchen:  # type: ignore[no-redef]
+        pass
 
 logger = logging.getLogger(__name__)
 
@@ -97,13 +112,19 @@ class PurgedWalkForwardCV(BaseCrossValidator):
 def apply_triple_barrier(
     df: pd.DataFrame,
     close_col: str = "close",
-    profit_taking: float = 2.0,
-    stop_loss: float = 1.0,
+    profit_taking: float = 1.5,
+    stop_loss: float = 1.5,
     max_holding_period: int = 48,
     volatility_window: int = 20,
 ) -> pd.Series:
     """
     Apply the Triple Barrier labeling method.
+
+    NOTE (SHORT-bias fix, 2026-04-16): defaults were previously asymmetric
+    (profit_taking=2.0, stop_loss=1.0). With pt=2*sigma, sl=1*sigma and a
+    random walk, the lower barrier is hit first roughly twice as often as
+    the upper barrier, producing a strong DOWN/SHORT label skew even in
+    bull markets. Defaults are now symmetric (1.5 / 1.5).
 
     For each bar, compute a volatility-scaled upper (profit) and lower (loss)
     barrier.  The label is determined by which barrier is touched first:
@@ -259,8 +280,9 @@ class DeepAlphaModel(BaseClassifierModel):
         da_cfg = self.freqai_info.get("deepalpha", {})
         defaults = {
             "triple_barrier": {
-                "profit_taking": 2.0,
-                "stop_loss": 1.0,
+                # SHORT-bias fix: symmetric barriers (was 2.0 / 1.0).
+                "profit_taking": 1.5,
+                "stop_loss": 1.5,
                 "max_holding_period": 48,
                 "volatility_window": 20,
             },
@@ -288,8 +310,16 @@ class DeepAlphaModel(BaseClassifierModel):
         return da_cfg
 
     def _build_lgbm(self, params: Dict[str, Any]) -> LGBMClassifier:
-        """Instantiate a LightGBM classifier from training parameters."""
+        """Instantiate a LightGBM classifier from training parameters.
+
+        Configured as 3-class multiclass (SHORT=0, FLAT=1, LONG=2) so the
+        model can output P_short / P_flat / P_long probabilities instead
+        of a collapsed binary {0,1} signal.
+        """
         default_params = {
+            "objective": "multiclass",
+            "num_class": 3,
+            "metric": "multi_logloss",
             "n_estimators": 2000,
             "learning_rate": 0.02,
             "max_depth": 6,
@@ -302,6 +332,9 @@ class DeepAlphaModel(BaseClassifierModel):
             "random_state": 42,
             "n_jobs": -1,
             "verbose": -1,
+            # Keeps training balanced across the 3 classes in regimes where
+            # one class dominates (e.g. FLAT in low-volatility periods).
+            "class_weight": "balanced",
         }
         default_params.update(params)
         return LGBMClassifier(**default_params)
@@ -478,6 +511,7 @@ class DeepAlphaModel(BaseClassifierModel):
             X_test_sel = X_test
 
         self.primary_model = primary
+        self.model = primary  # FreqAI stores the fitted object as self.model
 
         # --- 5. Meta-labeling ---
         meta_cfg = da_cfg["meta_labeling"]
@@ -537,33 +571,21 @@ class DeepAlphaModel(BaseClassifierModel):
 
     def predict(
         self, unfiltered_df: pd.DataFrame, dk: FreqaiDataKitchen, **kwargs
-    ) -> Tuple[pd.DataFrame, pd.DataFrame]:
+    ) -> Tuple[pd.DataFrame, np.ndarray]:
         """
         Generate predictions using the trained DeepAlpha pipeline.
 
-        Steps:
-        1. Apply SHAP feature filtering (if enabled)
-        2. Get primary model predictions and probabilities
-        3. Apply meta-labeling filter (if enabled)
-        4. Return predictions and do-not-act mask
+        This method mirrors the schema produced by BaseClassifierModel.predict():
+          * pred_df columns = dk.label_list + list(primary_model.classes_)
+          * do_predict = 1D numpy int array (1 = trust, 0 = skip)
 
-        Parameters
-        ----------
-        unfiltered_df : pd.DataFrame
-            Raw feature DataFrame from the strategy.
-        dk : FreqaiDataKitchen
-            The data kitchen instance.
-
-        Returns
-        -------
-        Tuple[pd.DataFrame, pd.DataFrame]
-            (predictions_df, do_not_act_df) where predictions_df contains
-            the predicted labels and probabilities, and do_not_act_df
-            contains a boolean mask for rows the model is uncertain about.
+        Returning any other shape (e.g. a DataFrame for do_predict, or extra
+        columns on pred_df) breaks FreqaiDataKitchen.get_predictions_to_append(),
+        which builds a dict-of-columns and calls DataFrame(append_dict).
         """
         da_cfg = self._get_deepalpha_config()
 
-        # Prepare features through the data kitchen
+        # Prepare features through the data kitchen (same pipeline as fit)
         dk.find_features(unfiltered_df)
         filtered_df, _ = dk.filter_features(
             unfiltered_df,
@@ -571,48 +593,76 @@ class DeepAlphaModel(BaseClassifierModel):
             training_filter=False,
         )
 
-        # Apply SHAP feature selection if active
+        # Apply SHAP feature selection so we feed the primary model the same
+        # columns it was trained on.
         if self.selected_features is not None:
             available = [f for f in self.selected_features if f in filtered_df.columns]
             filtered_df = filtered_df[available]
 
-        # Primary predictions
-        predictions = self.primary_model.predict(filtered_df)
-        probabilities = self.primary_model.predict_proba(filtered_df)
+        # Persist the prediction feature frame so the framework / meta-labeling
+        # can reference it (matches BaseClassifierModel behaviour).
+        dk.data_dictionary["prediction_features"] = filtered_df
 
-        # Build predictions DataFrame
-        pred_df = pd.DataFrame(index=filtered_df.index)
-        pred_df["prediction"] = predictions
+        # FreqAI persists only self.model across runs (via dd.load_data).
+        # Fall back to self.model if self.primary_model wasn't restored.
+        primary_model = self.primary_model or self.model
+        if primary_model is None:
+            raise RuntimeError("DeepAlphaModel.predict called before fit/load of primary model")
 
-        # Add class probabilities
-        for i, cls in enumerate(self.primary_model.classes_):
-            pred_df[f"probability_{cls}"] = probabilities[:, i]
+        # Primary predictions and probabilities
+        predictions = primary_model.predict(filtered_df)
+        probabilities = primary_model.predict_proba(filtered_df)
 
-        # Do-not-act mask (default: no masking)
-        dna_df = pd.DataFrame(
-            np.zeros(len(filtered_df), dtype=bool),
-            index=filtered_df.index,
-            columns=["do_not_act"],
+        # Build pred_df with the EXACT schema BaseClassifierModel.predict returns:
+        #   first column(s) = dk.label_list, then one column per class.
+        label_list = list(dk.label_list) if dk.label_list else ["&label"]
+        pred_df = pd.DataFrame(
+            np.reshape(predictions, (-1, len(label_list))),
+            columns=label_list,
         )
+        # Convert class labels to strings so downstream freqtrade code
+        # (e.g. remove_features_from_df -> col.startswith) doesn't choke
+        # on integer column names produced by int-valued classifiers.
+        pred_df_prob = pd.DataFrame(
+            probabilities,
+            columns=[str(c) for c in primary_model.classes_],
+        )
+        pred_df = pd.concat([pred_df, pred_df_prob], axis=1)
 
-        # Meta-labeling filter
+        # do_predict must be a 1D numpy array of ints (1 = use, 0 = skip).
+        do_predict = np.ones(len(pred_df), dtype=np.int_)
+
+        # DI values – we don't compute DI here, so provide zeros (same shape
+        # convention BaseClassifierModel uses when DI is disabled).
+        dk.DI_values = np.zeros(len(pred_df))
+        dk.do_predict = do_predict
+
+        # Meta-labeling filter: ONLY modify do_predict. Do NOT add extra
+        # columns to pred_df — that would desynchronise append_dict lengths
+        # in get_predictions_to_append and raise
+        # "ValueError: array length 0 does not match index length ...".
         meta_cfg = da_cfg["meta_labeling"]
         if meta_cfg["enabled"] and self.meta_model is not None:
-            meta_features = filtered_df.copy()
-            meta_features["primary_prediction"] = predictions
-            meta_proba = self.meta_model.predict_proba(meta_features)
+            try:
+                meta_features = filtered_df.copy()
+                meta_features["primary_prediction"] = predictions
+                meta_proba = self.meta_model.predict_proba(meta_features)
+                confidence = (
+                    meta_proba[:, 1] if meta_proba.shape[1] > 1 else meta_proba[:, 0]
+                )
 
-            # Probability that the primary prediction is correct
-            confidence = meta_proba[:, 1] if meta_proba.shape[1] > 1 else meta_proba[:, 0]
-            pred_df["meta_confidence"] = confidence
+                threshold = meta_cfg.get("threshold", 0.55)
+                low_conf = confidence < threshold
+                do_predict = np.where(low_conf, 0, do_predict).astype(np.int_)
+                dk.do_predict = do_predict
 
-            threshold = meta_cfg.get("threshold", 0.55)
-            dna_df["do_not_act"] = confidence < threshold
+                logger.info(
+                    "Meta-labeling filtered %d / %d predictions (threshold=%.2f).",
+                    int(low_conf.sum()), len(pred_df), threshold,
+                )
+            except Exception as e:
+                logger.warning(
+                    "Meta-labeling post-processing failed, using base predictions: %s", e
+                )
 
-            n_filtered = dna_df["do_not_act"].sum()
-            logger.info(
-                "Meta-labeling filtered %d / %d predictions (threshold=%.2f).",
-                n_filtered, len(dna_df), threshold,
-            )
-
-        return pred_df, dna_df
+        return pred_df, do_predict

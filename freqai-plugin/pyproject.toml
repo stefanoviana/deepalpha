@@ -4,19 +4,58 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "deepalpha-freqai"
-version = "1.0.0"
-description = "DeepAlpha ML pipeline as a FreqAI plugin for Freqtrade"
-readme = "README.md"
+version = "1.1.0"
+description = "Quant-grade ML plugin for Freqtrade/FreqAI: Triple Barrier labels, SHAP selection, meta-labeling, purged walk-forward CV, LightGBM."
+readme = {file = "README.md", content-type = "text/markdown"}
 license = {text = "MIT"}
 requires-python = ">=3.9"
-authors = [{name = "DeepAlpha Team"}]
-keywords = ["crypto", "trading", "freqtrade", "freqai", "machine-learning", "lightgbm", "bitget"]
+authors = [{name = "DeepAlpha Team", email = "hello@deepalphabot.com"}]
+maintainers = [{name = "DeepAlpha Team", email = "hello@deepalphabot.com"}]
+keywords = [
+    "crypto",
+    "cryptocurrency",
+    "trading",
+    "algorithmic-trading",
+    "quant",
+    "quantitative-finance",
+    "freqtrade",
+    "freqai",
+    "machine-learning",
+    "deep-learning",
+    "lightgbm",
+    "gradient-boosting",
+    "shap",
+    "feature-selection",
+    "triple-barrier",
+    "meta-labeling",
+    "walk-forward-validation",
+    "backtesting",
+    "bitget",
+    "binance",
+    "bybit",
+    "hyperliquid",
+    "financial-machine-learning",
+    "de-prado",
+]
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Financial and Insurance Industry",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
     "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Office/Business :: Financial",
     "Topic :: Office/Business :: Financial :: Investment",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+    "Typing :: Typed",
 ]
 dependencies = [
     "lightgbm>=3.3",
@@ -26,8 +65,18 @@ dependencies = [
     "pandas>=1.3",
 ]
 
+[project.optional-dependencies]
+dev = ["pytest>=7.0", "pytest-cov", "ruff", "black"]
+examples = ["matplotlib>=3.5", "jupyter"]
+
 [project.urls]
-Homepage = "https://deepalphabot.com"
-Repository = "https://github.com/stefanoviana/deepalpha"
-Documentation = "https://github.com/stefanoviana/deepalpha/tree/main/freqai-plugin"
-Discord = "https://discord.gg/P4yX686m"
+Homepage       = "https://deepalphabot.com"
+Documentation  = "https://github.com/stefanoviana/deepalpha/tree/main/freqai-plugin#readme"
+Repository     = "https://github.com/stefanoviana/deepalpha"
+Changelog      = "https://github.com/stefanoviana/deepalpha/blob/main/freqai-plugin/CHANGELOG.md"
+Issues         = "https://github.com/stefanoviana/deepalpha/issues"
+Discord        = "https://discord.gg/P4yX686m"
+
+[tool.setuptools.packages.find]
+include = ["deepalpha_freqai*"]
+exclude = ["tests*", "dist*", "build*", "examples*"]

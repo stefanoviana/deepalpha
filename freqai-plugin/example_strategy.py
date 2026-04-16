@@ -20,7 +20,7 @@ License: MIT
 from __future__ import annotations
 
 import logging
-from functools import reduce
+from typing import Dict
 
 import numpy as np
 import pandas as pd
@@ -49,37 +49,48 @@ class DeepAlphaStrategy(IStrategy):
 
     INTERFACE_VERSION = 3
 
-    # Minimal ROI table — the ML model handles exits primarily
+    # Minimal ROI table tuned for 1h bars — less aggressive take-profit
+    # so winners have room to compound over multiple bars.
     minimal_roi = {
-        "0": 0.05,
-        "30": 0.03,
-        "60": 0.02,
-        "120": 0.01,
+        "0": 0.06,
+        "240": 0.04,
+        "480": 0.025,
+        "1440": 0.015,
     }
 
-    stoploss = -0.03
-    trailing_stop = True
-    trailing_stop_positive = 0.01
-    trailing_stop_positive_offset = 0.02
+    # 1h timeframe: reduces intraday noise that dominated 5m tests and
+    # lets Triple Barrier capture real directional moves.
+    stoploss = -0.04
+    trailing_stop = False
+    trailing_stop_positive = 0.015
+    trailing_stop_positive_offset = 0.03
 
-    timeframe = "5m"
+    timeframe = "1h"
 
     # FreqAI configuration
     freqai_info = {
         "enabled": True,
     }
 
-    # Strategy parameters (optimizable)
+    # Strategy parameters (optimizable).
+    # SHORT threshold higher than LONG (0.60 vs 0.55) to compensate for
+    # the residual downside skew of Triple Barrier on volatile intraday data.
     buy_prediction_threshold = DecimalParameter(
         0.5, 0.8, default=0.55, decimals=2, space="buy",
         optimize=True, load=True,
     )
     sell_prediction_threshold = DecimalParameter(
-        0.5, 0.8, default=0.55, decimals=2, space="sell",
+        0.5, 0.8, default=0.60, decimals=2, space="sell",
         optimize=True, load=True,
     )
     meta_confidence_threshold = DecimalParameter(
         0.5, 0.8, default=0.55, decimals=2, space="buy",
+        optimize=True, load=True,
+    )
+    # Confidence level that unlocks counter-trend entries (e.g. take a
+    # short while EMA24 > EMA96 only if P_short exceeds this).
+    counter_trend_override = DecimalParameter(
+        0.6, 0.9, default=0.70, decimals=2, space="buy",
         optimize=True, load=True,
     )
 
@@ -103,7 +114,7 @@ class DeepAlphaStrategy(IStrategy):
         dataframe[f"%-cci-period_{period}"] = ta.CCI(dataframe, timeperiod=period)
 
         # Volatility
-        bollinger = ta.BBANDS(dataframe, timeperiod=period, nbdevup=2, nbdevdn=2)
+        bollinger = ta.BBANDS(dataframe, timeperiod=period, nbdevup=2.0, nbdevdn=2.0)
         dataframe[f"%-bb-width-period_{period}"] = (
             (bollinger["upperband"] - bollinger["lowerband"]) / bollinger["middleband"]
         )
@@ -169,6 +180,38 @@ class DeepAlphaStrategy(IStrategy):
             - dataframe[["close", "open"]].max(axis=1)
         ) / (dataframe["high"] - dataframe["low"] + 1e-10)
 
+        # --- Sequential / memory features (poor-man's LSTM) --------------
+        # Rolling log-return statistics over multiple horizons give the
+        # tree model temporal context without needing a recurrent network.
+        log_ret = dataframe["%-log-return"]
+        for win in (4, 12, 24, 48):
+            dataframe[f"%-logret-mean-{win}"] = log_ret.rolling(win).mean()
+            dataframe[f"%-logret-std-{win}"] = log_ret.rolling(win).std()
+            dataframe[f"%-logret-sum-{win}"] = log_ret.rolling(win).sum()
+            dataframe[f"%-logret-skew-{win}"] = log_ret.rolling(win).skew()
+
+        # Return z-score: how extreme is the current bar's move vs recent history
+        roll_std_24 = log_ret.rolling(24).std()
+        dataframe["%-logret-zscore-24"] = log_ret / (roll_std_24 + 1e-10)
+
+        # Volatility-of-volatility: regime-change signal
+        dataframe["%-vol-of-vol-48"] = (
+            roll_std_24.rolling(48).std() / (roll_std_24.rolling(48).mean() + 1e-10)
+        )
+
+        # Momentum-of-momentum: acceleration features
+        for lag in (1, 3, 6, 12):
+            dataframe[f"%-close-lag-{lag}"] = (
+                dataframe["close"] / dataframe["close"].shift(lag) - 1
+            )
+            dataframe[f"%-vol-lag-{lag}"] = (
+                dataframe["volume"] / (dataframe["volume"].shift(lag) + 1e-10)
+            )
+
+        # High-Low range momentum
+        hl_range = (dataframe["high"] - dataframe["low"]) / dataframe["close"]
+        dataframe["%-hl-range-ratio-24"] = hl_range / (hl_range.rolling(24).mean() + 1e-10)
+
         return dataframe
 
     def feature_engineering_standard(
@@ -182,27 +225,101 @@ class DeepAlphaStrategy(IStrategy):
         dataframe["%-day-of-week"] = dataframe["date"].dt.dayofweek
         dataframe["%-hour"] = dataframe["date"].dt.hour
 
-        # Target label: the DeepAlpha model generates Triple Barrier labels
-        # internally, but we provide a default directional label here as
-        # a fallback.
-        dataframe["&-label"] = (
-            dataframe["close"].shift(-1) > dataframe["close"]
-        ).astype(int)
+        # NOTE: Do NOT define a "&-label" column here. Target generation is
+        # handled exclusively in set_freqai_targets() with Triple Barrier
+        # labels. If both "&-label" and "&-target" exist, FreqAI's
+        # BaseClassifierModel.fit uses the first one alphabetically
+        # ("&-label"), which would bypass our Triple Barrier labels.
 
         return dataframe
 
-    def set_freqai_targets(self, dataframe: DataFrame, metadata: dict, **kwargs) -> DataFrame:
+    def set_freqai_targets(self, dataframe: DataFrame, metadata: Dict, **kwargs) -> DataFrame:
         """
-        Define the target variable for FreqAI training.
+        Generate regime-aware Triple Barrier labels.
 
-        The DeepAlpha model overrides this with Triple Barrier labels
-        when configured, but we provide a simple directional target
-        as the default.
+        Class mapping (3-class, LightGBM-friendly non-negative ints):
+            0 = SHORT (-1), 1 = FLAT (0), 2 = LONG (+1)
+
+        The previous symmetric (1.5 / 1.5 ATR) version produced too many
+        SHORT labels in bull markets because intraday pullbacks hit the
+        lower barrier first even when the overall drift was positive.
+        This version detects the local regime via EMA24 vs EMA96 on the
+        training timeframe and adapts the barrier multipliers:
+
+          * BULL    (EMA24 > EMA96 * 1.002): pt=1.2, sl=2.0 (favour LONG)
+          * BEAR    (EMA24 < EMA96 * 0.998): pt=2.0, sl=1.2 (favour SHORT)
+          * SIDEWAYS: pt=1.5, sl=1.5 (symmetric)
+
+        Horizon raised 12 -> 24 candles (2h on 5m) to let directional
+        moves play out before the time-barrier fallback triggers.
         """
-        dataframe["&-target"] = (
-            dataframe["close"].shift(-1) > dataframe["close"]
-        ).astype(int)
+        import numpy as np
+        closes = dataframe["close"].values
+        highs = dataframe["high"].values
+        lows = dataframe["low"].values
 
+        # Regime detection via EMA slope
+        close_s = pd.Series(closes)
+        ema_fast = close_s.ewm(span=24, adjust=False).mean().values
+        ema_slow = close_s.ewm(span=96, adjust=False).mean().values
+        regime = np.zeros(len(closes), dtype=int)
+        regime[ema_fast > ema_slow * 1.002] = 1   # BULL
+        regime[ema_fast < ema_slow * 0.998] = -1  # BEAR
+
+        # ATR for adaptive barrier sizing
+        atr_period = 14
+        tr = np.maximum.reduce([
+            highs - lows,
+            np.abs(highs - np.roll(closes, 1)),
+            np.abs(lows - np.roll(closes, 1))
+        ])
+        atr = np.zeros(len(closes))
+        if len(tr) >= atr_period:
+            atr[atr_period:] = np.convolve(
+                tr, np.ones(atr_period) / atr_period, mode='valid'
+            )[:len(closes) - atr_period]
+
+        horizon = 12  # 12 hours on a 1h timeframe
+        labels = np.zeros(len(closes), dtype=int)
+        for i in range(len(closes) - horizon):
+            if atr[i] <= 0:
+                continue
+            entry = closes[i]
+            atr_pct = atr[i] / entry if entry > 0 else 0
+            if atr_pct == 0:
+                continue
+
+            # Regime-aware asymmetric barriers
+            if regime[i] == 1:
+                pt_mult, sl_mult = 1.2, 2.0
+            elif regime[i] == -1:
+                pt_mult, sl_mult = 2.0, 1.2
+            else:
+                pt_mult, sl_mult = 1.5, 1.5
+
+            pt_long = entry * (1 + pt_mult * atr_pct)
+            sl_long = entry * (1 - sl_mult * atr_pct)
+            end = min(i + horizon, len(closes) - 1)
+
+            hit = 0
+            for j in range(i + 1, end + 1):
+                if highs[j] >= pt_long:
+                    hit = 1  # LONG wins
+                    break
+                if lows[j] <= sl_long:
+                    hit = -1  # SHORT wins
+                    break
+            if hit == 0:
+                # Time barrier: use sign of return vs regime-aware dead-zone
+                ret = (closes[end] - entry) / entry
+                if ret > atr_pct * 0.3:
+                    hit = 1
+                elif ret < -atr_pct * 0.3:
+                    hit = -1
+            labels[i] = hit
+
+        target_3class = (labels + 1).astype(int)
+        dataframe["&-target"] = target_3class
         return dataframe
 
     # ---------------------------------------------------------------
@@ -220,69 +337,119 @@ class DeepAlphaStrategy(IStrategy):
 
     def populate_entry_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         """
-        Generate entry signals from DeepAlpha model predictions.
+        Generate entry signals from DeepAlpha 3-class model predictions,
+        gated by a same-timeframe EMA regime filter.
 
-        A long entry requires:
-        1. Model predicts class 1 (bullish)
-        2. Meta-labeling confidence above threshold (if available)
-        3. Model is not in do_not_act state
+        Class mapping (LightGBM multi-class, non-negative ints):
+          "0" -> P(SHORT)
+          "1" -> P(FLAT)
+          "2" -> P(LONG)
+
+        Entry rules:
+          * LONG  if P_long  > long_thr  AND P_long  > P_short
+                  AND (uptrend OR P_long  > counter_trend_override)
+          * SHORT if P_short > short_thr AND P_short > P_long
+                  AND (downtrend OR P_short > counter_trend_override)
         """
-        conditions_long = []
+        n = len(dataframe)
+        p_short = dataframe["0"] if "0" in dataframe.columns else pd.Series([0.0] * n, index=dataframe.index)
+        p_long = dataframe["2"] if "2" in dataframe.columns else pd.Series([0.0] * n, index=dataframe.index)
+        do_predict = (
+            dataframe["do_predict"] if "do_predict" in dataframe.columns
+            else pd.Series([1] * n, index=dataframe.index)
+        )
 
-        # Primary prediction: bullish
-        if "prediction" in dataframe.columns:
-            conditions_long.append(dataframe["prediction"] == 1)
+        # Regime filter on the trading timeframe (EMA24 vs EMA96 on 5m)
+        ema_fast = dataframe["close"].ewm(span=24, adjust=False).mean()
+        ema_slow = dataframe["close"].ewm(span=96, adjust=False).mean()
+        uptrend = ema_fast > ema_slow
+        downtrend = ema_fast < ema_slow
 
-        # Meta-labeling confidence filter
-        if "meta_confidence" in dataframe.columns:
-            conditions_long.append(
-                dataframe["meta_confidence"] >= self.meta_confidence_threshold.value
-            )
+        long_thr = self.buy_prediction_threshold.value
+        short_thr = self.sell_prediction_threshold.value
+        override = self.counter_trend_override.value
 
-        # Do-not-act filter
-        if "do_not_act" in dataframe.columns:
-            conditions_long.append(dataframe["do_not_act"] == 0)
+        # Hard regime gate: never counter-trend. Counter-trend shorts in
+        # bull markets produced a 3% stop-loss carnage in our Q1 2024
+        # tests (112 stop-losses = -36.6% total). The override was too
+        # permissive even at 0.70 confidence. Force alignment with
+        # same-timeframe EMA regime.
+        long_entry = (
+            (p_long > long_thr)
+            & (p_long > p_short)
+            & (do_predict == 1)
+            & uptrend
+        )
+        short_entry = (
+            (p_short > short_thr)
+            & (p_short > p_long)
+            & (do_predict == 1)
+            & downtrend
+        )
+        _ = override  # kept for hyperopt compatibility; currently unused
 
-        if conditions_long:
-            dataframe.loc[
-                reduce(lambda a, b: a & b, conditions_long),
-                "enter_long",
-            ] = 1
-
-        # Short entries (if enabled)
-        conditions_short = []
-        if "prediction" in dataframe.columns:
-            conditions_short.append(dataframe["prediction"] == -1)
-        if "meta_confidence" in dataframe.columns:
-            conditions_short.append(
-                dataframe["meta_confidence"] >= self.meta_confidence_threshold.value
-            )
-        if "do_not_act" in dataframe.columns:
-            conditions_short.append(dataframe["do_not_act"] == 0)
-
-        if conditions_short:
-            dataframe.loc[
-                reduce(lambda a, b: a & b, conditions_short),
-                "enter_short",
-            ] = 1
+        dataframe.loc[long_entry, "enter_long"] = 1
+        dataframe.loc[long_entry, "enter_tag"] = "DeepAlpha-LONG"
+        dataframe.loc[short_entry, "enter_short"] = 1
+        dataframe.loc[short_entry, "enter_tag"] = "DeepAlpha-SHORT"
 
         return dataframe
 
+    # ---------------------------------------------------------------
+    # Dynamic position sizing based on prediction confidence
+    # ---------------------------------------------------------------
+
+    def custom_stake_amount(
+        self,
+        pair: str,
+        current_time,
+        current_rate: float,
+        proposed_stake: float,
+        min_stake,
+        max_stake: float,
+        leverage: float,
+        entry_tag,
+        side: str,
+        **kwargs,
+    ) -> float:
+        """
+        Scale the stake linearly with the winning-class probability.
+
+        A P_max of 0.55 (just above the gate) uses 50% of the default
+        stake; a P_max of 0.80+ uses 150%. This concentrates risk on
+        high-confidence signals and reduces bleed on marginal calls.
+        """
+        try:
+            df, _ = self.dp.get_analyzed_dataframe(pair=pair, timeframe=self.timeframe)
+            if df is None or df.empty:
+                return proposed_stake
+            last = df.iloc[-1]
+            p_short = float(last.get("0", 0.0) or 0.0)
+            p_long = float(last.get("2", 0.0) or 0.0)
+            p_max = p_long if side == "long" else p_short
+            # Linear scaling: 0.55 -> 0.5x, 0.80 -> 1.5x (clipped)
+            scale = 0.5 + (p_max - 0.55) * 4.0
+            scale = max(0.25, min(scale, 1.75))
+            stake = proposed_stake * scale
+            if min_stake is not None:
+                stake = max(stake, float(min_stake))
+            stake = min(stake, float(max_stake))
+            return stake
+        except Exception as e:
+            logger.warning("custom_stake_amount fallback (%s): %s", pair, e)
+            return proposed_stake
+
     def populate_exit_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         """
-        Generate exit signals. The strategy primarily relies on
-        ROI / stoploss / trailing stop for exits, with model-based
-        exits as an additional layer.
+        3-class exits: close longs when P_short dominates, close shorts
+        when P_long dominates. ROI / stoploss / trailing stop remain the
+        primary risk-management layer.
         """
-        # Exit long when model predicts bearish
-        if "prediction" in dataframe.columns:
-            dataframe.loc[
-                dataframe["prediction"] == -1,
-                "exit_long",
-            ] = 1
-            dataframe.loc[
-                dataframe["prediction"] == 1,
-                "exit_short",
-            ] = 1
+        n = len(dataframe)
+        p_short = dataframe["0"] if "0" in dataframe.columns else pd.Series([0.0] * n, index=dataframe.index)
+        p_long = dataframe["2"] if "2" in dataframe.columns else pd.Series([0.0] * n, index=dataframe.index)
+
+        dataframe.loc[(p_short > 0.50) & (p_short > p_long), "exit_long"] = 1
+        dataframe.loc[(p_long > 0.50) & (p_long > p_short), "exit_short"] = 1
 
         return dataframe
