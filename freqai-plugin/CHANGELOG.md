@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.1.1] - 2026-04-16
+
+Docs-only release. No functional or API changes.
+
+### Changed
+- Project URLs updated to the new canonical GitHub organisation: `quantumApha/deepalpha` (previously `stefanoviana/deepalpha`)
+- README badges and links refreshed
+
+No upgrade required if you are on 1.1.0 — behaviour is identical. `pip install --upgrade deepalpha-freqai` to pull the updated metadata.
+
+---
+
 ## [1.1.0] - 2026-04-16
 
 First release with **honest, reproducible profitability** on both bull and bear backtests.

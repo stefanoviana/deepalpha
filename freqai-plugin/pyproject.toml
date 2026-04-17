@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "deepalpha-freqai"
-version = "1.1.0"
+version = "1.1.4"
 description = "Quant-grade ML plugin for Freqtrade/FreqAI: Triple Barrier labels, SHAP selection, meta-labeling, purged walk-forward CV, LightGBM."
 readme = {file = "README.md", content-type = "text/markdown"}
 license = {text = "MIT"}
