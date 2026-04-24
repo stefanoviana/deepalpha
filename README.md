@@ -1,22 +1,18 @@
 <div align="center">
 
-# DeepAlpha
+# DeepAlpha V11.0
 
-### AI-Powered Autonomous Trading on Bybit — Copy Trading Ready
+### AI-Powered Crypto Trading Bot for Bybit
 
-[![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://python.org)
+[![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://python.org)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Bybit](https://img.shields.io/badge/Exchange-Bybit-F7A600.svg)](https://www.bybit.com/invite?ref=LN1XOX)
+[![Bybit](https://img.shields.io/badge/Exchange-Bybit-F7A600.svg)](https://www.bybit.com)
 [![LightGBM](https://img.shields.io/badge/ML-LightGBM-orange.svg)](https://lightgbm.readthedocs.io)
 [![XGBoost](https://img.shields.io/badge/ML-XGBoost-red.svg)](https://xgboost.readthedocs.io)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 [![Discord](https://img.shields.io/badge/Discord-Join-7289da.svg)](https://discord.gg/P4yX686m)
 
-[Telegram](https://t.me/DeepAlphaVault) · [Discord](https://discord.gg/P4yX686m) · [Blog](blog/how-i-built-deepalpha.md) · [Docs](docs/index.md) · [Get Pro](https://stefanocrypto.gumroad.com/l/ezilv)
-
-**If you find this useful, please give it a star — it helps a lot!**
-
-[![GitHub stars](https://img.shields.io/github/stars/stefanoviana/deepalpha?style=social)](https://github.com/stefanoviana/deepalpha/stargazers)
+[Website](https://deepalphabot.com) · [Dashboard](https://deepalphabot.com/cloud) · [Discord](https://discord.gg/P4yX686m) · [Telegram](https://t.me/DeepAlphaVault)
 
 </div>
 
@@ -24,31 +20,28 @@
 
 ## What is DeepAlpha?
 
-DeepAlpha is an open-source AI trading bot that uses machine learning to trade perpetual futures on [Bybit](https://www.bybit.com/invite?ref=LN1XOX). It trains on years of historical data, generates predictions, and executes trades autonomously.
+DeepAlpha is an open-source ML trading system that predicts crypto price direction on Bybit perpetual futures. It uses 72 engineered features from L2 orderbook data, funding rates, and market microstructure signals.
 
-**This is not a toy.** DeepAlpha is a production system designed to survive bear markets.
+The core model achieves **70.9% directional accuracy** on walk-forward validated out-of-sample data.
 
 ## Plans
 
-| Feature | Free | [Starter $49/mo](https://stefanocrypto.gumroad.com/l/ezilv) | [Pro $99/mo](https://stefanocrypto.gumroad.com/l/ezilv) | [Lifetime $499](https://stefanocrypto.gumroad.com/l/ezilv) |
-|---------|------|---------|-----|----------|
-| AI Model (LightGBM) | ✅ | ✅ | ✅ | ✅ |
-| XGBoost + PPO RL Ensemble | ❌ | ❌ | ✅ | ✅ |
-| Walk-Forward Validation | ✅ | ✅ | ✅ | ✅ |
-| Technical Features | 15 | 15 | 50+ (SHAP selected) | 50+ (SHAP selected) |
-| Triple Barrier Labeling | ❌ | ❌ | ✅ | ✅ |
-| Meta-Labeling (68.4% acc) | ❌ | ❌ | ✅ | ✅ |
-| Cross-venue Order Flow | ❌ | ❌ | ✅ | ✅ |
-| Kelly Criterion Sizing | ❌ | ❌ | ✅ | ✅ |
-| ATR Dynamic Trailing Stop | ❌ | ❌ | ✅ | ✅ |
-| Risk Management | Basic | Fixed SL/TP | Dynamic ATR | Dynamic ATR |
-| Exchanges | 1 | 1 | 4 (Bybit + HL + Binance + Bitget) | 4 (All) |
-| AI Model Updates | Manual | Manual | Auto (daily) | Auto (daily) |
-| Bloomberg Dashboard | ❌ | ❌ | ✅ | ✅ |
-| FreqAI Plugin | ❌ | ❌ | ❌ | ✅ |
-| Telegram Notifications | ❌ | ✅ | Priority | Priority |
-| Support | Community | Discord | Priority TG | Direct Developer |
-| Future Updates | — | — | ✅ | ✅ Forever |
+| Feature | Free | [Pro $39/mo](https://deepalphabot.com/cloud) | [Lifetime $199](https://deepalphabot.com/cloud) |
+|---------|------|------|----------|
+| AI Model (LightGBM) | ✅ | ✅ | ✅ |
+| XGBoost + RF Ensemble | ❌ | ✅ | ✅ |
+| Walk-Forward Validation | ✅ | ✅ | ✅ |
+| Features | 15 | 72 (V11) | 72 (V11) |
+| TFT + TransformerGRU | ❌ | ✅ | ✅ |
+| HMM Regime Detection | ❌ | ✅ | ✅ |
+| Meta-Labeling | ❌ | ✅ | ✅ |
+| ATR Dynamic TP/SL | ❌ | ✅ | ✅ |
+| Cloud Dashboard | ❌ | ✅ | ✅ |
+| Auto Retraining (daily) | ❌ | ✅ | ✅ |
+| Telegram Alerts | ❌ | ✅ | ✅ |
+| Source Code Download | ❌ | ✅ | ✅ |
+| Support | Community | Discord | Direct Developer |
+| Future Updates | — | ✅ | ✅ Forever |
 
 ## How It Works
 
@@ -68,32 +61,15 @@ Trade Execution (Bybit API)
 
 ## What's New
 
-**v1.5.0** — HMM regime detection & bias correction:
-- 3-state Gaussian HMM (bull/sideways/bear) trained on BTC hourly data auto-detects market regime
-- Regime-aware bias correction: when >90% signals are one direction but regime opposes, minority signals get boosted (threshold 60%) while weak majority signals are filtered
-- HMM auto-retrains every 24h on fresh data — no manual intervention needed
-- Position sizing is never affected by regime — only direction filtering
-- Interactive Telegram hold/close decisions at 4h expiry
-
-**v1.3.0** — Auto-update & setup wizard:
-- Auto-update models from license server every 24h (no manual retraining)
-- Setup wizard (`setup.bat` / `setup.sh`) for 2-minute install
-- License key integration with Gumroad webhook
-- Bybit copy trading referral integration
-
-**v2.0** — Major ML overhaul:
-- Triple Barrier Labeling (labels based on real TP/SL outcomes, not price direction)
-- SHAP feature selection (removed noise features, kept top 13-14)
-- Purged 5-fold Walk-Forward CV with 24h embargo (no overfitting)
-- Multi-exchange support (Hyperliquid + Binance + Bybit)
-- Docker + Streamlit dashboard
-- 42 automated tests
-
-**v1.2** — Chronological walk-forward split, updated feature table.
-
-**v1.1** — Improved prediction target, wider stop-loss, faster execution.
-
-The Pro version (v9.0) includes: Triple Barrier + Meta-labeling (68.4% accuracy), PPO reinforcement learning, SHAP selection, maker-only orders, 27 liquid markets.
+**V11.0** (April 2026) — Major accuracy upgrade:
+- 72 features (10 new: Hurst exponent, VPIN, volatility regime, fractal efficiency, multi-timeframe alignment)
+- 70.9% walk-forward validated accuracy (up from 60%)
+- TFT (Temporal Fusion Transformer) + TransformerGRU neural models
+- HMM 3-state regime detection (bull/bear/sideways)
+- Dynamic ATR-based TP/SL with multi-target take profit
+- Pump scanner for new listing detection
+- Cloud dashboard with backtest and live signals
+- Daily LSTM auto-retraining
 
 
 ## How the AI Works
@@ -203,70 +179,26 @@ See [freqai-plugin/README.md](freqai-plugin/README.md) for full setup guide.
 
 ---
 
-## Supported Exchanges
+## Supported Exchange
 
-DeepAlpha supports multiple exchanges through a unified adapter layer. Set the `EXCHANGE` variable in your `.env` file to switch between them.
+DeepAlpha is optimized for **Bybit** perpetual futures. We focus on one exchange to maximize prediction accuracy.
 
 | Exchange | Type | Status |
 |----------|------|--------|
-| [Hyperliquid](https://www.bybit.com/invite?ref=LN1XOX) | L1 Perps | Default |
-| [Binance Futures](https://www.binance.com/en/futures) | USDT-M Perpetual | Supported |
 | [Bybit](https://www.bybit.com) | USDT Perpetual | Supported |
 
-### Switching Exchanges
+### Configuration
 
-Set the `EXCHANGE` environment variable in your `.env` file:
-
-```bash
-EXCHANGE=bybit   # default
-EXCHANGE=binance
-EXCHANGE=bybit
-```
-
-### Environment Variables per Exchange
-
-**Hyperliquid** (default -- no extra dependency):
-```bash
-EXCHANGE=bybit
-PRIVATE_KEY=0xYOUR_PRIVATE_KEY
-WALLET_ADDRESS=0xYOUR_WALLET_ADDRESS
-```
-
-**Binance Futures** (requires `pip install ccxt`):
-```bash
-EXCHANGE=binance
-BINANCE_API_KEY=your_api_key
-BINANCE_API_SECRET=your_api_secret
-BINANCE_TESTNET=false          # set to true for testnet
-```
-
-**Bybit** (requires `pip install ccxt`):
 ```bash
 EXCHANGE=bybit
 BYBIT_API_KEY=your_api_key
 BYBIT_API_SECRET=your_api_secret
-BYBIT_TESTNET=false            # set to true for testnet
-```
-
-### Example `.env` for Binance
-
-```bash
-# Exchange
-EXCHANGE=binance
-BINANCE_API_KEY=abc123
-BINANCE_API_SECRET=secret456
-
-# Trading
+BYBIT_TESTNET=false
 LEVERAGE=5
-MAX_POSITIONS=3
-RISK_PER_TRADE=0.10
-
-# Telegram (optional)
-TELEGRAM_TOKEN=your_bot_token
-TELEGRAM_CHAT_ID=your_chat_id
+MAX_POSITIONS=5
+TELEGRAM_TOKEN=your_bot_token     # optional
+TELEGRAM_CHAT_ID=your_chat_id     # optional
 ```
-
-> **Note:** Binance and Bybit adapters require the `ccxt` library. Install it with `pip install ccxt`. Hyperliquid uses its own SDK and does not need ccxt.
 
 ## Risk Management
 
@@ -280,26 +212,29 @@ TELEGRAM_CHAT_ID=your_chat_id
 
 ## Performance
 
-Backtest results on **true out-of-sample data** (3 years, zero lookahead, walk-forward validation):
+Walk-forward validated results (V11 model, out-of-sample):
 
 | Metric | Value |
 |--------|-------|
-| Win Rate | 73.1% |
-| Sharpe Ratio | 5.43 |
-| Max Drawdown | 8.05% |
-| Profit Factor | 2.49 |
-| Total Return (3Y OOS) | 12,964% |
+| Directional Accuracy | 70.9% |
+| Profit Factor | 2.91 |
+| Max Drawdown | 20.7% |
+| Sharpe Ratio | 0.97 |
+| Avg Win / Avg Loss | 4.6:1 |
 
-> **Methodology:** Purged walk-forward cross-validation with 24h embargo. Test data is strictly chronological and never seen during training. No future data leakage.
+> **Methodology:** Walk-forward validation with expanding window and 24h embargo between train/test. All metrics are on strictly out-of-sample data, never seen during training.
 
-## Model Performance
+## Model Architecture
 
-The AI model uses walk-forward validation (no overfitting):
-- Training: 70% of data (oldest)
-- Validation: 15% (for early stopping)
-- Test: 15% (newest, never seen during training)
+| Model | Accuracy | Role |
+|-------|----------|------|
+| LightGBM | 70.9% | Primary |
+| XGBoost | 70.8% | Ensemble |
+| Random Forest | 69.3% | Ensemble |
+| TransformerGRU | 65.8% | Neural |
+| TFT | 63.7% | Neural |
 
-Typical accuracy: **55-80%** on out-of-sample data. Combined with 2:1+ reward-to-risk, this generates positive expected value.
+72 features including: L2 orderbook proxies, funding rate momentum, cross-asset correlation, volatility regime detection, Hurst exponent, VPIN, multi-timeframe alignment.
 
 ## Disclaimer
 
@@ -338,7 +273,7 @@ MIT License — see [LICENSE](LICENSE)
 - [Telegram Channel](https://t.me/DeepAlphaVault)
 - [Blog: How I Built DeepAlpha](blog/how-i-built-deepalpha.md)
 - [Documentation](https://stefanoviana.github.io/deepalpha/)
-- [DeepAlpha Pro](https://stefanocrypto.gumroad.com/l/ezilv) — 3 strategies, ensemble model, 50 features, PPO agent, ATR stops
+- [DeepAlpha Pro](https://deepalphabot.com/cloud) — 3 strategies, ensemble model, 50 features, PPO agent, ATR stops
 
 ---
 
