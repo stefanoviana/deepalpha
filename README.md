@@ -142,40 +142,62 @@ deepalpha/
 └── requirements.txt      # Dependencies
 ```
 
-## Dashboard
+## Cloud Platform
 
-Professional Bloomberg-style dark terminal built with Streamlit.
+Don't want to self-host? Use DeepAlpha Cloud — we run the bot for you.
 
-- Real-time USDC balance, PnL, fee ratio, margin usage
-- Live cross-venue order flow (Hyperliquid + Binance)
-- AI model status with timestamps
-- Recent trades with PnL
-- Auto-refresh every 30 seconds
+**[deepalphabot.com/cloud](https://deepalphabot.com/cloud)**
 
-```bash
-export WALLET_ADDRESS=your_wallet
-streamlit run dashboard.py
-# Open http://localhost:8501
-```
+### What you get:
+- **Live AI signals** — see every prediction in real-time
+- **Auto-trading** — connect your Bybit API, the bot trades for you
+- **Backtest viewer** — test the AI on historical data with custom parameters
+- **Equity curve** — track your portfolio performance over time
+- **Trade history** — every trade logged with PnL and exit reason
+- **Email alerts** — welcome sequence + trial expiry notifications
+
+### How it works:
+1. Register at [deepalphabot.com/cloud](https://deepalphabot.com/cloud) (7-day free trial)
+2. Connect your Bybit API keys (read-only supported)
+3. Configure risk settings (leverage, max positions, confidence threshold)
+4. The AI trades automatically — check your dashboard anytime
+
+### Security:
+- API keys encrypted with **AES-256 Fernet** encryption
+- **Read-only API** supported — the bot can trade but never withdraw
+- Keys stored only on our server, never shared
+- SSL/TLS 1.3 + HSTS on all connections
+
+### Cloud Stack:
+- **Backend**: FastAPI + PostgreSQL + JWT auth
+- **AI Engine**: Same V11 models as self-hosted (LightGBM + XGBoost + TFT)
+- **Hosting**: Dedicated VPS with PM2 process management
+- **Email**: Resend transactional email service
+
+### Pricing:
+| Plan | Price | Features |
+|------|-------|----------|
+| Free Trial | $0 for 7 days | Full access, no credit card |
+| Pro | $39/month | Auto-trading + dashboard + signals |
+| Lifetime | $199 one-time | Everything forever + source code |
 
 ---
 
 ## FreqAI Plugin
 
-Already using Freqtrade? Use DeepAlpha's ML pipeline as a FreqAI plugin — no need to switch platforms.
+Already using Freqtrade? Use DeepAlpha's ML pipeline as a FreqAI plugin.
 
 ```bash
-# Copy the plugin into your Freqtrade project
 cp freqai-plugin/deepalpha_model.py your_freqtrade/freqai/prediction_models/
 ```
 
-Features included:
-- **Triple Barrier Labeling** (68.4% accuracy vs ~55-60% standard FreqAI)
+Features:
+- **Triple Barrier Labeling** (70.9% accuracy vs ~55-60% standard FreqAI)
 - **SHAP Feature Selection** (auto-removes noise features)
-- **Meta-Labeling** (filters bad trades, 21% rejection rate)
-- **Purged Walk-Forward CV** (no overfitting)
+- **Meta-Labeling** (filters bad trades)
+- **Walk-Forward CV** with 24h embargo
 
-See [freqai-plugin/README.md](freqai-plugin/README.md) for full setup guide.
+See [freqai-plugin/README.md](freqai-plugin/README.md) for setup guide.
 
 ---
 
