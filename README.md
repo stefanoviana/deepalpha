@@ -2,11 +2,12 @@
 
 # DeepAlpha V11.0
 
-### AI-Powered Crypto Trading Bot for Bybit
+### AI-Powered Crypto Trading Bot for Bybit & Binance Futures
 
 [![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://python.org)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Bybit](https://img.shields.io/badge/Exchange-Bybit-F7A600.svg)](https://www.bybit.com)
+[![Binance](https://img.shields.io/badge/Exchange-Binance-F3BA2F.svg)](https://www.binance.com)
 [![LightGBM](https://img.shields.io/badge/ML-LightGBM-orange.svg)](https://lightgbm.readthedocs.io)
 [![XGBoost](https://img.shields.io/badge/ML-XGBoost-red.svg)](https://xgboost.readthedocs.io)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
@@ -20,7 +21,7 @@
 
 ## What is DeepAlpha?
 
-DeepAlpha is an open-source ML trading system that predicts crypto price direction on Bybit perpetual futures. It uses 72 engineered features from L2 orderbook data, funding rates, and market microstructure signals.
+DeepAlpha is an open-source ML trading system that predicts crypto price direction on **Bybit** and **Binance** perpetual futures. It uses 72 engineered features from L2 orderbook data, funding rates, and market microstructure signals.
 
 The core model achieves **70.9% directional accuracy** on walk-forward validated out-of-sample data.
 
@@ -46,7 +47,7 @@ The core model achieves **70.9% directional accuracy** on walk-forward validated
 ## How It Works
 
 ```
-Market Data (Bybit API)
+Market Data (Bybit / Binance API via ccxt)
     ↓
 Feature Engineering (RSI, ATR, EMA, Momentum, Volume)
     ↓
@@ -56,7 +57,7 @@ Signal Generation (LONG/SHORT with confidence %)
     ↓
 Risk Management (position sizing, stop-loss, max positions)
     ↓
-Trade Execution (Bybit API)
+Trade Execution (Bybit / Binance API via ccxt)
 ```
 
 ## What's New
@@ -97,7 +98,7 @@ The Pro version adds XGBoost ensemble, PPO reinforcement learning, 50 features, 
 **Windows:** double-click `setup.bat`
 **Mac/Linux:** run `bash setup.sh`
 
-The setup wizard asks for your license key and Bybit API keys, then starts trading automatically. The AI model is downloaded from our server — no training needed.
+The setup wizard asks for your license key and exchange API keys (Bybit, Binance, or Bitget), then starts trading automatically. The AI model is downloaded from our server — no training needed.
 
 ### Manual Install
 ```bash
@@ -150,7 +151,7 @@ Don't want to self-host? Use DeepAlpha Cloud — we run the bot for you.
 
 ### What you get:
 - **Live AI signals** — see every prediction in real-time
-- **Auto-trading** — connect your Bybit API, the bot trades for you
+- **Auto-trading** — connect your Bybit or Binance API, the bot trades for you
 - **Backtest viewer** — test the AI on historical data with custom parameters
 - **Equity curve** — track your portfolio performance over time
 - **Trade history** — every trade logged with PnL and exit reason
@@ -158,7 +159,7 @@ Don't want to self-host? Use DeepAlpha Cloud — we run the bot for you.
 
 ### How it works:
 1. Register at [deepalphabot.com/cloud](https://deepalphabot.com/cloud) (7-day free trial)
-2. Connect your Bybit API keys (read-only supported)
+2. Connect your exchange API keys (Bybit, Binance, Bitget — read-only supported)
 3. Configure risk settings (leverage, max positions, confidence threshold)
 4. The AI trades automatically — check your dashboard anytime
 
@@ -201,15 +202,18 @@ See [freqai-plugin/README.md](freqai-plugin/README.md) for setup guide.
 
 ---
 
-## Supported Exchange
+## Supported Exchanges
 
-DeepAlpha is optimized for **Bybit** perpetual futures. We focus on one exchange to maximize prediction accuracy.
+DeepAlpha supports multiple exchanges via the [ccxt](https://github.com/ccxt/ccxt) library. Switch exchanges with a single env var.
 
 | Exchange | Type | Status |
 |----------|------|--------|
 | [Bybit](https://www.bybit.com) | USDT Perpetual | Supported |
+| [Binance](https://www.binance.com) | USDT-M Futures | Supported |
+| [Bitget](https://www.bitget.com) | USDT-M Futures | Supported |
+| [Hyperliquid](https://hyperliquid.xyz) | Perpetual (L1) | Supported |
 
-### Configuration
+### Configuration — Bybit (default)
 
 ```bash
 EXCHANGE=bybit
@@ -220,6 +224,28 @@ LEVERAGE=5
 MAX_POSITIONS=5
 TELEGRAM_TOKEN=your_bot_token     # optional
 TELEGRAM_CHAT_ID=your_chat_id     # optional
+```
+
+### Configuration — Binance Futures
+
+```bash
+EXCHANGE=binance
+BINANCE_API_KEY=your_api_key
+BINANCE_API_SECRET=your_api_secret
+BINANCE_TESTNET=false
+LEVERAGE=5
+MAX_POSITIONS=5
+```
+
+### Configuration — Bitget
+
+```bash
+EXCHANGE=bitget
+BITGET_API_KEY=your_api_key
+BITGET_SECRET=your_api_secret
+BITGET_PASSPHRASE=your_passphrase
+LEVERAGE=5
+MAX_POSITIONS=5
 ```
 
 ## Risk Management
@@ -270,7 +296,7 @@ We welcome contributions! Whether it's new features, bug fixes, documentation, o
 2. Check [open issues](https://github.com/stefanoviana/deepalpha/issues) for ideas
 3. Fork, branch, code, and submit a PR
 
-High-impact areas: new technical indicators, exchange adapters (Binance, Bybit, dYdX), tests, and documentation.
+High-impact areas: new technical indicators, exchange adapters (dYdX, OKX), tests, and documentation.
 
 ## Community
 
@@ -286,6 +312,7 @@ MIT License — see [LICENSE](LICENSE)
 ## Integrations
 
 - **[FreqAI](https://www.freqtrade.io/en/stable/freqai/)** — Use DeepAlpha's ML pipeline as a drop-in FreqAI prediction model. See [freqai-plugin/](freqai-plugin/) for setup.
+- **[Binance Futures](https://www.binance.com)** — Full support for Binance USDT-M perpetual futures via ccxt.
 - **[Bybit Copy Trading](https://www.bybit.com/invite?ref=LN1XOX)** — Follow DeepAlpha trades directly on Bybit with one click.
 - **Telegram** — Real-time trade alerts and portfolio updates via bot.
 
@@ -303,4 +330,4 @@ MIT License — see [LICENSE](LICENSE)
 
 [![Star History Chart](https://api.star-history.com/svg?repos=stefanoviana/deepalpha&type=Date)](https://star-history.com/#stefanoviana/deepalpha&Date)
 
-<!-- Keywords: crypto trading bot, ai trading, machine learning trading, lightgbm crypto, bybit bot, bitget bot, algorithmic trading, freqai, xgboost crypto, automated trading, quant trading bot -->
+<!-- Keywords: crypto trading bot, ai trading, machine learning trading, lightgbm crypto, bybit bot, binance bot, binance futures, bitget bot, algorithmic trading, freqai, xgboost crypto, automated trading, quant trading bot -->
