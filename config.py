@@ -53,7 +53,7 @@ CIRCUIT_BREAKER_COOLDOWN: int = int(os.getenv("CIRCUIT_BREAKER_COOLDOWN", "3600"
 
 # ─── License & Model Server ───────────────────────────────────────────────
 LICENSE_KEY: str = os.getenv("LICENSE_KEY", "")
-LICENSE_SERVER: str = os.getenv("LICENSE_SERVER", "http://217.15.163.134:8090")
+LICENSE_SERVER: str = os.getenv("LICENSE_SERVER", "https://api.deepalphabot.com")
 MODEL_UPDATE_HOURS: int = int(os.getenv("MODEL_UPDATE_HOURS", "24"))  # check for new models every N hours
 
 # ─── Model / AI ────────────────────────────────────────────────────────────
