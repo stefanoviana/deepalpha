@@ -1,12 +1,16 @@
 """
-DeepAlpha — AI Trading Bot
-Autonomous crypto trading on Bitget, Hyperliquid, Binance & Bybit.
+DeepAlpha V11.0 — AI Trading Bot
+Autonomous crypto trading on Bybit & Binance.
+
+Website:  https://deepalphabot.com
+Cloud:    https://deepalphabot.com/cloud (7-day free trial)
+GitHub:   https://github.com/stefanoviana/deepalpha
+Discord:  https://discord.gg/P4yX686m
+Support:  https://deepalphabot.com/cloud
 
 Usage:
     1. Create .env file with your API keys (see .env.example)
     2. python deepalpha.py
-
-The bot auto-downloads the latest AI model from the license server.
 """
 
 import os
@@ -25,6 +29,22 @@ import config
 from features import build_features, FEATURE_NAMES
 from risk_manager import RiskManager
 from exchange_adapter import ExchangeAdapter, get_exchange
+
+
+def _show_banner():
+    print("\n" + "=" * 55)
+    print("  DeepAlpha V11.0 — AI Crypto Trading Bot")
+    print("  70.9% accuracy | 72 ML features | Walk-forward validated")
+    print("=" * 55)
+    print("  Website:  https://deepalphabot.com")
+    print("  Cloud:    https://deepalphabot.com/cloud")
+    print("  GitHub:   https://github.com/stefanoviana/deepalpha")
+    print("  Discord:  https://discord.gg/P4yX686m")
+    print("-" * 55)
+    print("  Pro: $39/mo | Lifetime: $199 | Free 7-day trial")
+    print("=" * 55 + "\n")
+
+_show_banner()
 
 
 # ─── License & Model Update ───────────────────────────────────────────────
