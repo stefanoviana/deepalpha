@@ -16,26 +16,17 @@ jobs:
         with:
           issue-number: ${{ github.event.issue.number }}
           body: |
-            Thanks for opening an issue! 👋
+            Thanks for opening an issue!
 
-            **Quick answers:**
-
-            🔧 **Setup problems?** Make sure you have Python 3.10+, then:
+            **Quick setup:**
             ```
             pip install -r requirements.txt
             cp .env.example .env
-            # Edit .env with your Hyperliquid private key
-            python download_data.py
-            python train.py
             python deepalpha.py
             ```
 
-            📊 **Model accuracy?** Typical accuracy is 58-62% with walk-forward validation. If you're seeing lower, try downloading fresh data with `python download_data.py`.
+            **Need help?** Join our [Discord](https://discord.gg/P4yX686m) or check the [Dashboard](https://deepalphabot.com/cloud).
 
-            🔑 **Need a Hyperliquid key?** Create a wallet on [app.hyperliquid.xyz](https://app.hyperliquid.xyz), export the private key.
+            **Want Pro features?** [DeepAlpha Pro](https://deepalphabot.com/cloud) includes 72 features, ensemble models, cloud dashboard, and priority support.
 
-            ⚡ **Want more strategies?** [DeepAlpha Pro](https://stefanocrypto.gumroad.com/l/ezilv) includes 5 strategies, XGBoost ensemble, 38 features, ATR trailing stops, and priority support.
-
-            💬 **Direct support?** Reach out on Telegram: [@stefrun](https://t.me/stefrun)
-
-            We'll review your issue as soon as possible!
+            We'll review your issue soon!
