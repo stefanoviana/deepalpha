@@ -62,13 +62,17 @@ Trade Execution (Bybit / Binance API via ccxt)
 
 ## What's New
 
+**V11.1** (April 2026) — Liquidation map + pump scanner:
+- **Liquidation level estimator** — detects where stop-loss clusters are, optimizes TP/SL placement
+- **Pump scanner** — real-time detection of volume spikes and new listings on Bybit + Binance
+- **Binance cross-exchange alerts** — detects Binance listings that pump on Bybit
+
 **V11.0** (April 2026) — Major accuracy upgrade:
 - 72 features (10 new: Hurst exponent, VPIN, volatility regime, fractal efficiency, multi-timeframe alignment)
 - 70.9% walk-forward validated accuracy (up from 60%)
 - TFT (Temporal Fusion Transformer) + TransformerGRU neural models
 - HMM 3-state regime detection (bull/bear/sideways)
 - Dynamic ATR-based TP/SL with multi-target take profit
-- Pump scanner for new listing detection
 - Cloud dashboard with backtest and live signals
 - Daily LSTM auto-retraining
 
@@ -123,6 +127,33 @@ python download_data.py      # download historical data
 python train.py              # train model (~5 min)
 python deepalpha.py           # start trading
 ```
+
+## Trading Strategies
+
+DeepAlpha combines multiple strategies for maximum edge:
+
+### 1. AI Directional Prediction (Primary)
+XGBoost + LightGBM ensemble predicts price direction with 70.9% accuracy using 72 features from L2 orderbook data, funding rates, and market microstructure.
+
+### 2. HMM Regime Detection
+Hidden Markov Model identifies bull/bear/sideways regimes. The bot adapts: wider TP in bull, tighter SL in bear, reduced activity in sideways.
+
+### 3. Liquidation Level Analysis
+Estimates where stop-loss clusters are based on open interest and leverage distribution. Uses liquidation zones to:
+- Place TP before liquidation cascades (take profit before bounce)
+- Place SL beyond danger zones (avoid getting caught in cascades)
+- Boost confidence when liquidation cascades favor our direction
+
+### 4. Pump Scanner
+Real-time detection of volume spikes and new listings across Bybit and Binance. Auto-enters pumps with tight risk management (5% equity, 2h max hold).
+
+### 5. Multi-Target Take Profit
+- **T1** (0.8x ATR): Close 33% — lock some profit early
+- **T2** (1.3x ATR): Close 33% — let winner run
+- **Trailing**: ATR-based trailing stop on remaining 34%
+
+### 6. Auto-Unstuck
+Graduated exit when trade goes wrong: -2% close 25%, -3% close 25%, -4% close 25%, -5% hard cap close all.
 
 ### 4. Run
 ```bash
