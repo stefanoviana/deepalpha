@@ -1,14 +1,7 @@
-# DeepAlpha - Core Dependencies
 numpy>=1.24.0
 lightgbm>=4.0.0
 scikit-learn>=1.3.0
 ccxt>=4.0.0
 python-dotenv>=1.0.0
 requests>=2.31.0
-
-# Optional - Neural Models (requires PyTorch)
-# torch>=2.0.0
-# xgboost>=2.0.0
-
-# Optional - Telegram Alerts
-# python-telegram-bot>=20.0
+xgboost>=2.0.0
