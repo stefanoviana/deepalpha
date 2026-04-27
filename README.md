@@ -296,12 +296,15 @@ See [freqai-plugin/README.md](freqai-plugin/README.md) for setup guide.
 
 DeepAlpha supports multiple exchanges via the [ccxt](https://github.com/ccxt/ccxt) library. Switch exchanges with a single env var.
 
-| Exchange | Type | Status |
-|----------|------|--------|
-| [Bybit](https://www.bybit.com) | USDT Perpetual | Supported |
-| [Binance](https://www.binance.com) | USDT-M Futures | Supported |
-| [Bitget](https://www.bitget.com) | USDT-M Futures | Supported |
-| [Hyperliquid](https://hyperliquid.xyz) | Perpetual (L1) | Supported |
+| Exchange | Type | Status | Markets |
+|----------|------|--------|---------|
+| [Bybit](https://www.bybit.com) | USDT Perpetual | Supported | 3,200+ |
+| [Binance](https://www.binance.com) | USDT-M Futures | Supported | 4,300+ |
+| [OKX](https://www.okx.com) | USDT Perpetual | **New** | 3,000+ |
+| [Gate.io](https://www.gate.io) | USDT Perpetual | **New** | 6,300+ |
+| [KuCoin](https://www.kucoin.com) | USDT Perpetual | **New** | 1,600+ |
+| [Bitget](https://www.bitget.com) | USDT-M Futures | Supported | 1,300+ |
+| [Hyperliquid](https://hyperliquid.xyz) | Perpetual (L1) | Supported | 100+ |
 
 ### Configuration — Bybit (default)
 
@@ -323,6 +326,38 @@ EXCHANGE=binance
 BINANCE_API_KEY=your_api_key
 BINANCE_API_SECRET=your_api_secret
 BINANCE_TESTNET=false
+LEVERAGE=5
+MAX_POSITIONS=5
+```
+
+### Configuration — OKX
+
+```bash
+EXCHANGE=okx
+OKX_API_KEY=your_api_key
+OKX_API_SECRET=your_api_secret
+OKX_PASSPHRASE=your_passphrase
+LEVERAGE=5
+MAX_POSITIONS=5
+```
+
+### Configuration — Gate.io
+
+```bash
+EXCHANGE=gateio
+GATEIO_API_KEY=your_api_key
+GATEIO_API_SECRET=your_api_secret
+LEVERAGE=5
+MAX_POSITIONS=5
+```
+
+### Configuration — KuCoin
+
+```bash
+EXCHANGE=kucoin
+KUCOIN_API_KEY=your_api_key
+KUCOIN_API_SECRET=your_api_secret
+KUCOIN_PASSPHRASE=your_passphrase
 LEVERAGE=5
 MAX_POSITIONS=5
 ```

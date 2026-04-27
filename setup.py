@@ -2,8 +2,8 @@ from setuptools import setup, find_packages
 
 setup(
     name="deepalpha",
-    version="11.2.0",
-    description="AI crypto trading bot for Bybit & Binance — 70.9% accuracy, 72 ML features, walk-forward validated",
+    version="11.3.0",
+    description="AI crypto trading bot for Bybit, Binance, OKX, Gate.io, KuCoin, Bitget — 70.9% accuracy, 72 ML features, pump scanner",
     long_description=open("README.md", encoding="utf-8").read() if __import__("os").path.exists("README.md") else "",
     long_description_content_type="text/markdown",
     author="DeepAlpha",
