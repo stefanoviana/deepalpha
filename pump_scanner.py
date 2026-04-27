@@ -157,6 +157,23 @@ class PumpScanner:
         # Thread lock for shared state (Fix #5)
         self._lock = threading.Lock()
 
+        # Blacklist: stock/pre-market tokens that aren't real crypto perps
+        self._blacklist = {
+            'TSLA', 'TSM', 'INTC', 'HOOD', 'CHIP', 'OPG', 'AAPL', 'AMZN', 'GOOG',
+            'MSFT', 'NVDA', 'META', 'NFLX', 'AMD', 'COIN', 'MSTR', 'PLTR', 'UBER',
+            'SQ', 'PYPL', 'SHOP', 'SNOW', 'CRWD', 'NET', 'DDOG', 'ZS',
+        }
+
+        # Persistent set of already-seen listings (survives restarts)
+        self._seen_listings_file = os.path.join(os.path.dirname(__file__), "pump_seen_listings.json")
+        self._seen_listings: set[str] = set()
+        try:
+            import json as _json
+            with open(self._seen_listings_file, "r") as f:
+                self._seen_listings = set(_json.load(f))
+        except Exception:
+            pass
+
         # State
         self.volume_baselines: dict[str, list[float]] = defaultdict(list)  # coin -> rolling volumes
         self.price_history: dict[str, list[float]] = defaultdict(list)     # coin -> recent closes
@@ -176,6 +193,12 @@ class PumpScanner:
         self._all_symbols: list[str] = []
 
     # ─── Lifecycle ──────────────────────────────────────────────────────
+
+    def _safe_fetch_ohlcv(self, symbol, *args, **kwargs):
+        try:
+            return self.client.fetch_ohlcv(symbol, *args, **kwargs)
+        except Exception:
+            return []
 
     def start(self):
         """Start the pump scanner in a background thread."""
@@ -200,9 +223,9 @@ class PumpScanner:
 
     def _load_all_symbols(self):
         """Load all active USDT linear perpetual symbols from Bybit."""
-        markets = self.client.markets
+        markets = self.client.markets or self.client.load_markets()
         self._all_symbols = []
-        for sym, info in markets.items():
+        for sym, info in (markets or {}).items():
             if (info.get("linear") and
                 info.get("active") and
                 info.get("quote") == "USDT" and
@@ -330,7 +353,7 @@ class PumpScanner:
 
                 # Fetch 1m OHLCV for per-candle volume detection
                 try:
-                    candles = self.client.fetch_ohlcv(symbol, "1m", limit=20)
+                    candles = self._safe_fetch_ohlcv(symbol, "1m", limit=20)
                 except Exception:
                     continue
                 if not candles or len(candles) < 5:
@@ -386,7 +409,7 @@ class PumpScanner:
         4. ATR for stop-loss calculation
         """
         try:
-            candles = self.client.fetch_ohlcv(symbol, "1m", limit=30)
+            candles = self._safe_fetch_ohlcv(symbol, "1m", limit=30)
             if not candles or len(candles) < 15:
                 return None
 
@@ -468,7 +491,7 @@ class PumpScanner:
         4. Long upper wicks on recent candles (rejection)
         """
         try:
-            candles = self.client.fetch_ohlcv(symbol, "1m", limit=30)
+            candles = self._safe_fetch_ohlcv(symbol, "1m", limit=30)
             if not candles or len(candles) < 20:
                 return None
 
@@ -564,6 +587,31 @@ class PumpScanner:
             logger.warning(f"Daily pump loss limit reached (${self._daily_pump_pnl:.2f}), skipping {signal.coin}")
             return
 
+        # Verify coin has a tradable linear perpetual contract on Bybit FIRST
+        symbol = f"{signal.coin}/USDT:USDT"
+        markets = self.client.markets or {}
+        if symbol not in markets:
+            try:
+                self.client.load_markets(True)
+                markets = self.client.markets or {}
+            except Exception:
+                pass
+        market_info = markets.get(symbol, {})
+        is_tradable = (
+            symbol in markets
+            and market_info.get("active", False)
+            and market_info.get("linear", False)
+        )
+        if not is_tradable:
+            # Try a test fetch to be sure
+            try:
+                self.client.fetch_ticker(symbol)
+            except Exception:
+                logger.info(f"No tradable perpetual for {signal.coin}, skipping (24h cooldown)")
+                with self._lock:
+                    self.cooldowns[signal.coin] = time.time() + 86400
+                return
+
         # Fix #18: Position conflict with main bot
         if self._main_bot_has_position(signal.coin):
             logger.info(f"Main bot already has position on {signal.coin}, skipping")
@@ -582,7 +630,13 @@ class PumpScanner:
                 self._open_listing_long(signal, equity)
 
         except Exception as e:
-            logger.error(f"Failed to execute signal for {signal.coin}: {e}", exc_info=True)
+            logger.error(f"Failed to execute signal for {signal.coin}: {e}")
+            # Set cooldown on failure to stop retrying every 3 seconds
+            with self._lock:
+                if "not supported" in str(e) or "not allowed" in str(e):
+                    self.cooldowns[signal.coin] = time.time() + 86400  # 24h for unsupported symbols
+                else:
+                    self.cooldowns[signal.coin] = time.time() + 300  # 5min for other errors
 
     def _main_bot_has_position(self, coin: str) -> bool:
         """Fix #18: Check if the main bot already has a position on this coin."""
@@ -919,6 +973,31 @@ class PumpScanner:
             logger.info(msg)
             self._alert(msg)
 
+            # Save trade to file for verification
+            try:
+                import json as _json
+                trade_record = {
+                    "coin": coin, "side": pos.side,
+                    "entry_price": pos.entry_price, "exit_price": exit_price,
+                    "quantity": pos.original_quantity, "pnl": round(pnl, 2),
+                    "pnl_pct": round(pnl_pct, 1), "reason": reason,
+                    "duration_min": round(duration / 60, 1),
+                    "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
+                }
+                pump_log_path = os.path.join(os.path.dirname(__file__), "pump_trades.json")
+                try:
+                    with open(pump_log_path, "r") as f:
+                        pump_log = _json.load(f)
+                except Exception:
+                    pump_log = []
+                pump_log.append(trade_record)
+                if len(pump_log) > 200:
+                    pump_log = pump_log[-200:]
+                with open(pump_log_path, "w") as f:
+                    _json.dump(pump_log, f, indent=2)
+            except Exception as _le:
+                logger.debug(f"Pump trade log save failed: {_le}")
+
         except Exception as e:
             logger.error(f"Close pump position failed for {coin}: {e}")
 
@@ -1012,8 +1091,52 @@ class PumpScanner:
         except Exception as e:
             logger.debug(f"Symbol check failed: {e}")
 
+
+    def _check_binance_announcements(self):
+        """Check Binance for new listing announcements. If a coin lists on Binance, it often pumps on Bybit too."""
+        try:
+            import requests
+            url = "https://www.binance.com/bapi/composite/v1/public/cms/article/list/query"
+            params = {"type": 1, "catalogId": 48, "pageNo": 1, "pageSize": 5}
+            r = requests.get(url, params=params, timeout=10)
+            if r.status_code == 200:
+                data = r.json()
+                articles = data.get("data", {}).get("catalogs", [{}])[0].get("articles", [])
+                for article in articles[:3]:
+                    title = article.get("title", "").upper()
+                    if "LIST" in title and ("PERPETUAL" in title or "FUTURES" in title):
+                        # Extract coin symbol from title
+                        import re
+                        match = re.search(r"\b([A-Z]{2,10})USDT\b", title)
+                        if match:
+                            coin = match.group(1)
+                            # Check if this coin exists on Bybit
+                            sym = f"{coin}/USDT:USDT"
+                            if sym in (self.client.markets or {}):
+                                if self._tg:
+                                    self._tg(f"BINANCE LISTING DETECTED: {coin} - also available on Bybit!")
+                                logger.info(f"[LISTING] Binance listed {coin}, available on Bybit")
+        except Exception as e:
+            logger.debug(f"Binance announcement check failed: {e}")
+
+
     def _handle_new_listing(self, coin: str):
         """Handle a detected new listing (non-blocking, Fix #4)."""
+        # Skip blacklisted stock tokens
+        if coin in self._blacklist:
+            logger.info(f"Skipping blacklisted stock token: {coin}")
+            return
+        # Skip already-seen listings
+        if coin in self._seen_listings:
+            return
+        self._seen_listings.add(coin)
+        # Persist seen listings
+        try:
+            import json as _json
+            with open(self._seen_listings_file, "w") as f:
+                _json.dump(list(self._seen_listings), f)
+        except Exception:
+            pass
         self._alert(f"NEW LISTING DETECTED: {coin} -- preparing to buy in {LISTING_BUY_DELAY_SEC}s")
 
         # Fix #4: Set pending listing flag instead of blocking with sleep
@@ -1197,3 +1320,36 @@ def create_pump_scanner_from_config():
     except Exception as e:
         logger.error(f"Failed to create pump scanner: {e}")
         return None
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# STANDALONE MODE — run directly: python pump_scanner.py
+# ═══════════════════════════════════════════════════════════════════════════
+
+if __name__ == "__main__":
+    import dotenv
+    dotenv.load_dotenv()
+
+    print("""
+    ╔═══════════════════════════════════════════╗
+    ║   DeepAlpha Pump Scanner                  ║
+    ║   Real-time pump detection on Bybit       ║
+    ║   https://deepalphabot.com                ║
+    ╚═══════════════════════════════════════════╝
+    """)
+
+    scanner = create_pump_scanner_from_config()
+    if scanner:
+        print(f"Pump Scanner initialized. Starting...")
+        scanner.start()
+        # Keep main thread alive
+        try:
+            while True:
+                time.sleep(60)
+        except KeyboardInterrupt:
+            print("\nShutting down...")
+            scanner.stop()
+    else:
+        print("Failed to initialize. Check your .env file:")
+        print("  BYBIT_API_KEY=your_key")
+        print("  BYBIT_API_SECRET=your_secret")

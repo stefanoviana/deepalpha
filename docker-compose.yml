@@ -17,6 +17,13 @@ services:
     command: python train.py
     profiles: ["train"]
 
+  pump-scanner:
+    build: .
+    container_name: deepalpha-pump-scanner
+    restart: unless-stopped
+    env_file: .env
+    command: python pump_scanner.py
+
   dashboard:
     build: .
     container_name: deepalpha-dashboard

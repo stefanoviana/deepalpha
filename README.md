@@ -157,20 +157,79 @@ Graduated exit when trade goes wrong: -2% close 25%, -3% close 25%, -4% close 25
 
 ### 4. Run
 ```bash
-python deepalpha.py        # Start trading
+python deepalpha.py        # Start AI trading bot
+python pump_scanner.py     # Start pump scanner (standalone)
 ```
+
+---
+
+## Pump Scanner
+
+Real-time pump detection system that monitors **all 500+ Bybit USDT perpetual pairs** every 3 seconds.
+
+### What it detects
+- **Volume spikes**: 5x+ normal volume in a single candle
+- **Price momentum**: +3% move with 3+ consecutive green candles
+- **New listings**: Monitors Bybit announcements API for new perpetual contracts
+- **Dump exhaustion**: RSI > 80 + volume decline for short entries
+
+### How it trades
+1. Detects pump signal (volume + price + RSI + buy ratio confirmation)
+2. Opens long with 5x leverage, ATR-based stop loss
+3. **TP cascade**: TP1 (+5%) close 40% | TP2 (+10%) close 30% + trailing | TP3 (+20%) close rest
+4. Circuit breaker: stops after -$50 daily loss
+
+### Quick Start
+```bash
+# 1. Add to your .env file:
+BYBIT_API_KEY=your_api_key
+BYBIT_API_SECRET=your_api_secret
+
+# 2. Optional: Telegram alerts
+TELEGRAM_TOKEN=your_bot_token
+TELEGRAM_CHAT_ID=your_chat_id
+
+# 3. Run standalone:
+pip install ccxt numpy requests python-dotenv
+python pump_scanner.py
+```
+
+### Configuration
+See [`pump_config_example.env`](pump_config_example.env) for all tunable parameters:
+- Detection thresholds (volume multiplier, price spike %, RSI range)
+- Position sizing (leverage, risk budget, max positions)
+- TP/SL levels (ATR-based SL, cascade TP at 5%/10%/20%)
+- Fakeout filters (consecutive candles, buy ratio, minimum volume)
+
+### Run with Docker
+```bash
+docker compose up -d pump-scanner
+```
+
+### Run alongside the AI bot
+```python
+from pump_scanner import create_pump_scanner_from_config
+
+scanner = create_pump_scanner_from_config()
+if scanner:
+    scanner.start()  # runs in background thread
+```
+
+---
 
 ## Architecture
 
 ```
 deepalpha/
-├── deepalpha.py          # Main trading bot
+├── deepalpha.py          # Main AI trading bot
+├── pump_scanner.py       # Real-time pump detection (standalone)
 ├── exchange_adapter.py   # Multi-exchange adapter layer
 ├── train.py              # AI training pipeline
 ├── download_data.py      # Data downloader
-├── features.py           # Feature engineering
+├── features.py           # Feature engineering (72 features)
 ├── risk_manager.py       # Position sizing & risk
 ├── config.py             # Configuration
+├── pump_config_example.env  # Pump scanner config template
 └── requirements.txt      # Dependencies
 ```
 
