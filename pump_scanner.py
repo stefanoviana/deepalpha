@@ -159,9 +159,12 @@ class PumpScanner:
 
         # Blacklist: stock/pre-market tokens that aren't real crypto perps
         self._blacklist = {
-            'TSLA', 'TSM', 'INTC', 'HOOD', 'CHIP', 'OPG', 'AAPL', 'AMZN', 'GOOG',
+            'TSLA', 'TSM', 'INTC', 'HOOD', 'CHIP', 'OPG', 'AAPL', 'AMZN', 'GOOG', 'GOOGL',
             'MSFT', 'NVDA', 'META', 'NFLX', 'AMD', 'COIN', 'MSTR', 'PLTR', 'UBER',
             'SQ', 'PYPL', 'SHOP', 'SNOW', 'CRWD', 'NET', 'DDOG', 'ZS',
+            'BABA', 'DIS', 'BA', 'JPM', 'V', 'MA', 'WMT', 'PFE', 'KO', 'PEP',
+            'COST', 'CSCO', 'ORCL', 'CRM', 'ABNB', 'SNAP', 'PINS', 'ROKU', 'SQ',
+            'TSLAX', 'GOOGLX', 'AAPLX', 'AMZNX', 'MSFTX', 'NVDAX', 'METAX',
         }
 
         # Persistent set of already-seen listings (survives restarts)
