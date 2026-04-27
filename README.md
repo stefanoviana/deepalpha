@@ -401,6 +401,7 @@ MIT License — see [LICENSE](LICENSE)
 
 ## Integrations
 
+- **[Crypto Pump Scanner](https://github.com/stefanoviana/crypto-pump-scanner)** — Real-time pump detection for Bybit. Monitors 500+ pairs, auto-trades volume spikes. Standalone or integrated.
 - **[FreqAI](https://www.freqtrade.io/en/stable/freqai/)** — Use DeepAlpha's ML pipeline as a drop-in FreqAI prediction model. See [freqai-plugin/](freqai-plugin/) for setup.
 - **[Binance Futures](https://www.binance.com)** — Full support for Binance USDT-M perpetual futures via ccxt.
 - **[Bybit Copy Trading](https://www.bybit.com/invite?ref=LN1XOX)** — Follow DeepAlpha trades directly on Bybit with one click.
