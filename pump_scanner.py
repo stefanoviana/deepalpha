@@ -858,6 +858,7 @@ class PumpScanner:
                 if not pos.tp1_hit and current_price >= pos.tp1:
                     # TP1: close 40% of position
                     close_qty = self._round_qty(symbol, pos.original_quantity * 0.4)
+                    close_qty = min(close_qty, pos.quantity)  # clamp to remaining
                     if close_qty > 0:
                         self._partial_close(coin, symbol, close_qty, "TP1 (+5%)")
                         pos.quantity = max(0, pos.quantity - close_qty)  # Fix #3
@@ -868,6 +869,7 @@ class PumpScanner:
                 if not pos.tp2_hit and pos.tp1_hit and current_price >= pos.tp2:
                     # TP2: close 30% of position, activate trailing
                     close_qty = self._round_qty(symbol, pos.original_quantity * 0.3)
+                    close_qty = min(close_qty, pos.quantity)  # clamp to remaining
                     if close_qty > 0:
                         self._partial_close(coin, symbol, close_qty, "TP2 (+10%)")
                         pos.quantity = max(0, pos.quantity - close_qty)  # Fix #3
@@ -894,6 +896,7 @@ class PumpScanner:
             else:
                 if not pos.tp1_hit and current_price <= pos.tp1:
                     close_qty = self._round_qty(symbol, pos.original_quantity * 0.4)
+                    close_qty = min(close_qty, pos.quantity)  # clamp to remaining
                     if close_qty > 0:
                         self._partial_close_short(coin, symbol, close_qty, "TP1")
                         pos.quantity = max(0, pos.quantity - close_qty)  # Fix #3
@@ -954,11 +957,12 @@ class PumpScanner:
             if remaining_qty > 0:
                 self.client.create_market_order(symbol, side, remaining_qty)
 
-            # Fix #1: Use pos.quantity (current remaining) not original_quantity for PnL
+            # PnL includes leverage (notional = qty * price, leveraged)
             if pos.side == "long":
                 pnl = (exit_price - pos.entry_price) * pos.quantity
             else:
                 pnl = (pos.entry_price - exit_price) * pos.quantity
+            # Note: pnl is already correct since qty was sized with leverage factored in
 
             pnl_pct = (exit_price / pos.entry_price - 1) * 100
             if pos.side == "short":
