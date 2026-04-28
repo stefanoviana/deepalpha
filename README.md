@@ -247,8 +247,8 @@ Execute your TradingView alerts automatically on any supported exchange. No codi
 ### Auto-sizing
 Set `qty` to `0` and DeepAlpha will automatically size the position (5% of equity at 5x leverage).
 
-### Works with all 6 exchanges
-Bybit, Binance, OKX, Gate.io, KuCoin, Bitget — same webhook URL, trades on whichever exchange you connected.
+### Works with all 12 exchanges
+Bybit, Binance, OKX, Gate.io, KuCoin, Bitget, HTX, MEXC, BingX, Phemex, BitMart, WhiteBIT — same webhook URL, trades on whichever exchange you connected.
 
 ---
 
