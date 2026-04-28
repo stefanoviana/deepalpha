@@ -217,6 +217,41 @@ if scanner:
 
 ---
 
+## TradingView Webhook
+
+Execute your TradingView alerts automatically on any supported exchange. No coding needed.
+
+### Setup (2 minutes)
+1. Get your webhook key from the [Dashboard](https://deepalphabot.com/cloud/dashboard)
+2. In TradingView, create an alert and set the webhook URL:
+   ```
+   https://deepalphabot.com/api/webhook/tradingview
+   ```
+3. Set the alert message (JSON):
+   ```json
+   {
+     "action": "buy",
+     "symbol": "BTC",
+     "qty": 0.01,
+     "key": "your_webhook_key"
+   }
+   ```
+
+### Supported Actions
+| Action | Description |
+|--------|-------------|
+| `buy` | Open long / buy market order |
+| `sell` | Open short / sell market order |
+| `close` | Close entire position |
+
+### Auto-sizing
+Set `qty` to `0` and DeepAlpha will automatically size the position (5% of equity at 5x leverage).
+
+### Works with all 6 exchanges
+Bybit, Binance, OKX, Gate.io, KuCoin, Bitget — same webhook URL, trades on whichever exchange you connected.
+
+---
+
 ## Architecture
 
 ```
