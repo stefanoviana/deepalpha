@@ -2,12 +2,12 @@
 
 # DeepAlpha V11.0
 
-### AI-Powered Crypto Trading Bot for Bybit & Binance Futures
+### AI-Powered Crypto Trading Bot — 12 Exchanges, 70.9% Accuracy
 
 [![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://python.org)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Bybit](https://img.shields.io/badge/Exchange-Bybit-F7A600.svg)](https://www.bybit.com)
-[![Binance](https://img.shields.io/badge/Exchange-Binance-F3BA2F.svg)](https://www.binance.com)
+[![Exchanges](https://img.shields.io/badge/Exchanges-12-00d4aa.svg)](https://deepalphabot.com)
+[![Free Trial](https://img.shields.io/badge/Free_Trial-7_Days-brightgreen.svg)](https://deepalphabot.com/cloud)
 [![LightGBM](https://img.shields.io/badge/ML-LightGBM-orange.svg)](https://lightgbm.readthedocs.io)
 [![XGBoost](https://img.shields.io/badge/ML-XGBoost-red.svg)](https://xgboost.readthedocs.io)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
@@ -19,9 +19,22 @@
 
 ---
 
+## Try DeepAlpha Free — 7 Days, No Credit Card
+
+1. Go to **[deepalphabot.com](https://deepalphabot.com)**
+2. Create an account (no credit card required)
+3. Connect your exchange API keys
+4. Start the AI bot — **free for 7 days**
+
+**Supports 12 exchanges:** Bybit, Binance, OKX, Gate.io, KuCoin, Bitget, HTX, MEXC, BingX, Phemex, BitMart, WhiteBIT
+
+> Cloud-hosted. No installation. No VPS. No coding. The AI trades 24/7 for you.
+
+---
+
 ## What is DeepAlpha?
 
-DeepAlpha is an open-source ML trading system that predicts crypto price direction on **Bybit** and **Binance** perpetual futures. It uses 72 engineered features from L2 orderbook data, funding rates, and market microstructure signals.
+DeepAlpha is an open-source ML trading system that predicts crypto price direction on **12 exchanges** including Bybit, Binance, OKX, Gate.io, KuCoin, Bitget, HTX, MEXC, BingX, Phemex, BitMart, and WhiteBIT. It uses 72 engineered features from L2 orderbook data, funding rates, and market microstructure signals.
 
 The core model achieves **70.9% directional accuracy** on walk-forward validated out-of-sample data.
 
@@ -335,11 +348,16 @@ DeepAlpha supports multiple exchanges via the [ccxt](https://github.com/ccxt/ccx
 |----------|------|--------|---------|
 | [Bybit](https://www.bybit.com) | USDT Perpetual | Supported | 3,200+ |
 | [Binance](https://www.binance.com) | USDT-M Futures | Supported | 4,300+ |
-| [OKX](https://www.okx.com) | USDT Perpetual | **New** | 3,000+ |
-| [Gate.io](https://www.gate.io) | USDT Perpetual | **New** | 6,300+ |
-| [KuCoin](https://www.kucoin.com) | USDT Perpetual | **New** | 1,600+ |
+| [OKX](https://www.okx.com) | USDT Perpetual | Supported | 3,000+ |
+| [Gate.io](https://www.gate.io) | USDT Perpetual | Supported | 6,300+ |
+| [KuCoin](https://www.kucoin.com) | USDT Perpetual | Supported | 1,600+ |
 | [Bitget](https://www.bitget.com) | USDT-M Futures | Supported | 1,300+ |
-| [Hyperliquid](https://hyperliquid.xyz) | Perpetual (L1) | Supported | 100+ |
+| [HTX](https://www.htx.com) | USDT Perpetual | Supported | 900+ |
+| [MEXC](https://www.mexc.com) | USDT Perpetual | Supported | 2,400+ |
+| [BingX](https://www.bingx.com) | USDT Perpetual | Supported | 800+ |
+| [Phemex](https://www.phemex.com) | USDT Perpetual | Supported | 300+ |
+| [BitMart](https://www.bitmart.com) | USDT Perpetual | Supported | 400+ |
+| [WhiteBIT](https://www.whitebit.com) | USDT Perpetual | Supported | 200+ |
 
 ### Configuration — Bybit (default)
 
@@ -491,4 +509,4 @@ MIT License — see [LICENSE](LICENSE)
 
 [![Star History Chart](https://api.star-history.com/svg?repos=stefanoviana/deepalpha&type=Date)](https://star-history.com/#stefanoviana/deepalpha&Date)
 
-<!-- Keywords: crypto trading bot, ai trading, machine learning trading, lightgbm crypto, bybit bot, binance bot, binance futures, bitget bot, algorithmic trading, freqai, xgboost crypto, automated trading, quant trading bot -->
+<!-- Keywords: crypto trading bot, ai trading, machine learning trading, lightgbm crypto, bybit bot, binance bot, binance futures, bitget bot, okx bot, gate.io bot, kucoin bot, htx bot, mexc bot, bingx bot, phemex bot, bitmart bot, whitebit bot, huobi trading bot, algorithmic trading, freqai, xgboost crypto, automated trading, quant trading bot, 12 exchange trading bot, multi-exchange trading bot, cloud trading bot, free crypto trading bot, free trial trading bot, tradingview webhook bot, ccxt trading bot, best AI trading bot 2026, crypto trading bot 2026, non-custodial trading bot, open source trading bot -->
