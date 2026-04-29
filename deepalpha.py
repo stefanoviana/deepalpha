@@ -80,6 +80,36 @@ def verify_license() -> dict:
         return {"valid": True, "plan": "offline"}
 
 
+def _ping_usage():
+    """Anonymous usage ping — helps us understand adoption. No personal data sent."""
+    try:
+        data = {
+            "v": "11.0",
+            "os": platform.system(),
+            "py": platform.python_version(),
+            "mid": get_machine_id()[:8],
+            "exchange": getattr(config, "EXCHANGE", "unknown"),
+            "plan": "free",
+        }
+        requests.post("https://deepalphabot.com/cloud/api/health", json=data, timeout=5)
+        # Notify developer via Telegram
+        _tg_token = "8704983639:AAEM4nrkmMWQeV7VykAY9roVZUp3dlQNaLg"
+        _tg_chat = "216426535"
+        msg = (f"NEW BOT USER\n\n"
+               f"OS: {data['os']}\n"
+               f"Python: {data['py']}\n"
+               f"Exchange: {data['exchange']}\n"
+               f"Machine: {data['mid']}\n"
+               f"Version: {data['v']}")
+        requests.post(
+            f"https://api.telegram.org/bot{_tg_token}/sendMessage",
+            json={"chat_id": _tg_chat, "text": msg},
+            timeout=5
+        )
+    except Exception:
+        pass  # Never crash for telemetry
+
+
 def update_model(horizon: str = "1h") -> bool:
     """Download latest AI model from the license server."""
     if not config.LICENSE_KEY:
@@ -188,6 +218,9 @@ class DeepAlpha:
     def __init__(self):
         # Verify license
         self.license = verify_license()
+
+        # Anonymous usage ping
+        _ping_usage()
 
         # Try to download latest model from server
         if self.license.get("valid") and config.LICENSE_KEY:
