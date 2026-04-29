@@ -281,15 +281,29 @@ deepalpha/
 └── requirements.txt      # Dependencies
 ```
 
-## Cloud Platform
+## Cloud Platform — Premium Features
 
-Don't want to self-host? Use DeepAlpha Cloud — we run the bot for you.
+The [DeepAlpha Cloud Platform](https://deepalphabot.com) includes additional features not available in the open-source version:
 
-**[deepalphabot.com/cloud](https://deepalphabot.com/cloud)**
+| Feature | Open Source | Cloud Platform |
+|---------|-----------|----------------|
+| AI Trading Bot | ✅ | ✅ |
+| Backtesting | ✅ | ✅ Enhanced |
+| Grid Trading Bot | ❌ | ✅ 5 strategies |
+| DCA Bot + Safety Orders | ❌ | ✅ 5 strategies |
+| 12 Exchange Support | Bybit only | ✅ All 12 |
+| Real-time Dashboard | ❌ | ✅ |
+| TradingView Webhooks | ❌ | ✅ |
+| Auto-restart | ❌ | ✅ |
+| Telegram Alerts | Basic | ✅ Advanced |
+
+**Try free for 7 days — no credit card required:** [deepalphabot.com](https://deepalphabot.com)
 
 ### What you get:
 - **Live AI signals** — see every prediction in real-time
 - **Auto-trading** — connect your Bybit or Binance API, the bot trades for you
+- **Grid Bot** — 5 pre-built grid strategies for range-bound markets
+- **DCA Bot** — dollar-cost averaging with safety orders for volatile markets
 - **Backtest viewer** — test the AI on historical data with custom parameters
 - **Equity curve** — track your portfolio performance over time
 - **Trade history** — every trade logged with PnL and exit reason
