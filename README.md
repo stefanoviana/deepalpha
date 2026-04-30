@@ -12,8 +12,9 @@
 [![XGBoost](https://img.shields.io/badge/ML-XGBoost-red.svg)](https://xgboost.readthedocs.io)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 [![Discord](https://img.shields.io/badge/Discord-Join-7289da.svg)](https://discord.gg/P4yX686m)
+[![Telegram Bot](https://img.shields.io/badge/Telegram-Bot-0088cc.svg)](https://t.me/DeepAlphaVault_bot)
 
-[Website](https://deepalphabot.com) · [Dashboard](https://deepalphabot.com/cloud) · [Discord](https://discord.gg/P4yX686m) · [Telegram](https://t.me/DeepAlphaVault)
+[Website](https://deepalphabot.com) · [Dashboard](https://deepalphabot.com/cloud) · [Telegram Bot](https://t.me/DeepAlphaVault_bot) · [Discord](https://discord.gg/P4yX686m) · [Channel](https://t.me/DeepAlphaVault)
 
 </div>
 
@@ -29,6 +30,24 @@
 **Supports 12 exchanges:** Bybit, Binance, OKX, Gate.io, KuCoin, Bitget, HTX, MEXC, BingX, Phemex, BitMart, WhiteBIT
 
 > Cloud-hosted. No installation. No VPS. No coding. The AI trades 24/7 for you.
+
+## Telegram Bot — Trade from Your Phone
+
+Manage everything from Telegram with **[@DeepAlphaVault_bot](https://t.me/DeepAlphaVault_bot)**:
+
+| Command | What it does |
+|---------|-------------|
+| `/start` | Welcome & account status |
+| `/login` | Link your DeepAlpha account |
+| `/start_bot` | Start AI / Grid / DCA Bot |
+| `/stop_bot` | Stop bot |
+| `/status` | Open positions & PnL |
+| `/balance` | Exchange balance |
+| `/pnl` | PnL summary |
+| `/trades` | Recent trades |
+| `/keys` | Setup exchange API keys |
+
+Start/stop bots, check positions, get real-time trade notifications — all from Telegram. [Open Bot →](https://t.me/DeepAlphaVault_bot)
 
 ---
 
