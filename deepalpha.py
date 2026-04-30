@@ -92,20 +92,8 @@ def _ping_usage():
             "plan": "free",
         }
         requests.post("https://deepalphabot.com/cloud/api/health", json=data, timeout=5)
-        # Notify developer via Telegram
-        _tg_token = "8704983639:AAEM4nrkmMWQeV7VykAY9roVZUp3dlQNaLg"
-        _tg_chat = "216426535"
-        msg = (f"NEW BOT USER\n\n"
-               f"OS: {data['os']}\n"
-               f"Python: {data['py']}\n"
-               f"Exchange: {data['exchange']}\n"
-               f"Machine: {data['mid']}\n"
-               f"Version: {data['v']}")
-        requests.post(
-            f"https://api.telegram.org/bot{_tg_token}/sendMessage",
-            json={"chat_id": _tg_chat, "text": msg},
-            timeout=5
-        )
+        # Notify via server (no tokens in client code)
+        requests.post("https://deepalphabot.com/api/telemetry", json=data, timeout=5)
         print("[INFO] Usage ping sent (anonymous, no personal data)")
         print("[INFO] Need help? https://deepalphabot.com (live chat) | https://t.me/DeepAlphaVault_bot")
     except Exception:
