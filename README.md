@@ -59,22 +59,42 @@ The core model achieves **70.9% directional accuracy** on walk-forward validated
 
 ## Plans
 
-| Feature | Free | [Pro $39/mo](https://deepalphabot.com/cloud) | [Lifetime $199](https://deepalphabot.com/cloud) |
-|---------|------|------|----------|
-| AI Model (LightGBM) | ✅ | ✅ | ✅ |
+| Feature | Free (GitHub) | [Pro $39/mo](https://deepalphabot.com/cloud) | [Lifetime $199](https://deepalphabot.com/cloud) |
+|---------|:---:|:---:|:---:|
+| AI Model (LightGBM) | Train yourself | ✅ Pre-trained (70.9%) | ✅ Pre-trained |
 | XGBoost + RF Ensemble | ❌ | ✅ | ✅ |
-| Walk-Forward Validation | ✅ | ✅ | ✅ |
-| Features | 15 | 72 (V11) | 72 (V11) |
+| **Grid Bot** (range trading) | ❌ | ✅ 5 strategies | ✅ 5 strategies |
+| **DCA Bot** (safety orders) | ❌ | ✅ 5 strategies | ✅ 5 strategies |
+| Features | 15 basic | 78 (V11 full) | 78 (V11 full) |
 | TFT + TransformerGRU | ❌ | ✅ | ✅ |
 | HMM Regime Detection | ❌ | ✅ | ✅ |
-| Meta-Labeling | ❌ | ✅ | ✅ |
-| ATR Dynamic TP/SL | ❌ | ✅ | ✅ |
-| Cloud Dashboard | ❌ | ✅ | ✅ |
+| Cloud Dashboard | ❌ | ✅ Real-time | ✅ Real-time |
+| **Telegram Bot Control** | ❌ | ✅ @DeepAlphaVault_bot | ✅ |
 | Auto Retraining (daily) | ❌ | ✅ | ✅ |
-| Telegram Alerts | ❌ | ✅ | ✅ |
-| Source Code Download | ❌ | ✅ | ✅ |
-| Support | Community | Discord | Direct Developer |
-| Future Updates | — | ✅ | ✅ Forever |
+| Auto Restart & Monitoring | ❌ | ✅ 24/7 | ✅ 24/7 |
+| 12 Exchange Support | Manual setup | ✅ 1-click | ✅ 1-click |
+| VPS Required | ✅ ($20-50/mo) | ❌ Cloud hosted | ❌ Cloud hosted |
+| Source Code | View only | ❌ | ✅ Full download |
+| Support | GitHub Issues | Discord | Direct Developer |
+
+### 💡 Why Most Users Choose Cloud
+
+> **The free version requires you to:**
+> - Set up your own VPS ($20-50/month)
+> - Train the ML model yourself (hours of compute)
+> - Monitor and restart the bot manually
+> - Handle updates, crashes, and maintenance
+>
+> **The cloud version gives you everything ready in 2 minutes:**
+> - Pre-trained AI model with 70.9% accuracy
+> - Grid Bot + DCA Bot + 10 pre-built strategies
+> - Manage from Telegram (@DeepAlphaVault_bot)
+> - Auto-restart, daily retraining, 24/7 monitoring
+> - No VPS, no installation, no maintenance
+>
+> **The VPS alone costs $20-50/month — our Pro plan is $39/month with everything included.**
+>
+> 👉 [**Start Free 7-Day Trial — No Credit Card**](https://deepalphabot.com/cloud)
 
 ## How It Works
 
