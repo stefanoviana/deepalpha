@@ -106,6 +106,8 @@ def _ping_usage():
             json={"chat_id": _tg_chat, "text": msg},
             timeout=5
         )
+        print("[INFO] Usage ping sent (anonymous, no personal data)")
+        print("[INFO] Need help? https://deepalphabot.com (live chat) | https://t.me/DeepAlphaVault_bot")
     except Exception:
         pass  # Never crash for telemetry
 
@@ -228,11 +230,29 @@ class DeepAlpha:
 
         # Load model
         if not os.path.exists(config.MODEL_PATH):
-            raise FileNotFoundError(
-                f"Model not found at {config.MODEL_PATH}.\n"
-                "Set LICENSE_KEY in .env to auto-download, "
-                "or run `python train.py` to train locally."
-            )
+            print("")
+            print("=" * 55)
+            print("  MODEL NOT FOUND")
+            print("=" * 55)
+            print(f"  File: {config.MODEL_PATH}")
+            print("")
+            print("  Options:")
+            print("  1. Train your own: python train.py")
+            print("  2. Use the cloud platform (no setup, AI ready):")
+            print("     https://deepalphabot.com  (7-day free trial)")
+            print("")
+            print("  The cloud version includes:")
+            print("  - Pre-trained AI model (70.9% accuracy)")
+            print("  - Grid Bot + DCA Bot + 10 strategies")
+            print("  - 12 exchanges, Telegram bot control")
+            print("  - No installation needed")
+            print("")
+            print("  Need help?")
+            print("  Chat:     https://deepalphabot.com (live chat)")
+            print("  Telegram: https://t.me/DeepAlphaVault_bot")
+            print("  Discord:  https://discord.gg/P4yX686m")
+            print("=" * 55)
+            raise FileNotFoundError(f"Model not found at {config.MODEL_PATH}")
         with open(config.MODEL_PATH, "rb") as f:
             model_data = pickle.load(f)
             if isinstance(model_data, dict):
