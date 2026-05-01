@@ -2,7 +2,7 @@
 
 # DeepAlpha V11.0
 
-### AI-Powered Crypto Trading Bot — 12 Exchanges, 70.9% Accuracy
+### AI-Powered Crypto Trading Bot — 18 Exchanges, 70.9% Accuracy
 
 [![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://python.org)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
@@ -27,7 +27,7 @@
 3. Connect your exchange API keys
 4. Start the AI bot — **free for 7 days**
 
-**Supports 12 exchanges:** Bybit, Binance, OKX, Gate.io, KuCoin, Bitget, HTX, MEXC, BingX, Phemex, BitMart, WhiteBIT
+**Supports 18 exchanges:** Bybit, Binance, OKX, Gate.io, KuCoin, Bitget, HTX, MEXC, BingX, Phemex, BitMart, WhiteBIT
 
 > Cloud-hosted. No installation. No VPS. No coding. The AI trades 24/7 for you.
 
@@ -70,7 +70,7 @@ The pump scanner runs automatically alongside the AI Bot. No extra configuration
 
 ## What is DeepAlpha?
 
-DeepAlpha is an open-source ML trading system that predicts crypto price direction on **12 exchanges** including Bybit, Binance, OKX, Gate.io, KuCoin, Bitget, HTX, MEXC, BingX, Phemex, BitMart, and WhiteBIT. It uses 72 engineered features from L2 orderbook data, funding rates, and market microstructure signals.
+DeepAlpha is an open-source ML trading system that predicts crypto price direction on **18 exchanges** including Bybit, Binance, OKX, Gate.io, KuCoin, Bitget, HTX, MEXC, BingX, Phemex, BitMart, and WhiteBIT. It uses 72 engineered features from L2 orderbook data, funding rates, and market microstructure signals.
 
 The core model achieves **70.9% directional accuracy** on walk-forward validated out-of-sample data.
 
@@ -317,7 +317,7 @@ Execute your TradingView alerts automatically on any supported exchange. No codi
 ### Auto-sizing
 Set `qty` to `0` and DeepAlpha will automatically size the position (5% of equity at 5x leverage).
 
-### Works with all 12 exchanges
+### Works with all 18 exchanges
 Bybit, Binance, OKX, Gate.io, KuCoin, Bitget, HTX, MEXC, BingX, Phemex, BitMart, WhiteBIT — same webhook URL, trades on whichever exchange you connected.
 
 ---
