@@ -49,6 +49,23 @@ Manage everything from Telegram with **[@DeepAlphaVault_bot](https://t.me/DeepAl
 
 Start/stop bots, check positions, get real-time trade notifications — all from Telegram. [Open Bot →](https://t.me/DeepAlphaVault_bot)
 
+## Pump Scanner — Catch Explosive Moves
+
+The built-in pump scanner monitors **500+ coins in real-time** for volume spikes and automatically trades the pump.
+
+**How it works:**
+1. Scans all coins every 2 minutes for volume spikes (5x+ above average)
+2. Opens a LONG position automatically when pump detected
+3. Takes profit in 3 tiers: TP1 (+5%), TP2 (+10%), TP3 (+20%)
+4. Trailing stop locks in gains after TP1
+5. Stop loss at -3% for protection
+
+**Recent results:**
+- ZEREBRO: +$33 (+7.7%) in 72 minutes
+- B Token: +$66 (+12.7%) in 2 minutes
+
+The pump scanner runs automatically alongside the AI Bot. No extra configuration needed.
+
 ---
 
 ## What is DeepAlpha?
@@ -65,6 +82,7 @@ The core model achieves **70.9% directional accuracy** on walk-forward validated
 | XGBoost + RF Ensemble | ❌ | ✅ | ✅ |
 | **Grid Bot** (range trading) | ❌ | ✅ 5 strategies | ✅ 5 strategies |
 | **DCA Bot** (safety orders) | ❌ | ✅ 5 strategies | ✅ 5 strategies |
+| Pump Scanner (500+ coins) | ❌ | ✅ Auto | ✅ Auto |
 | Features | 15 basic | 78 (V11 full) | 78 (V11 full) |
 | TFT + TransformerGRU | ❌ | ✅ | ✅ |
 | HMM Regime Detection | ❌ | ✅ | ✅ |
@@ -562,4 +580,4 @@ MIT License — see [LICENSE](LICENSE)
 
 [![Star History Chart](https://api.star-history.com/svg?repos=stefanoviana/deepalpha&type=Date)](https://star-history.com/#stefanoviana/deepalpha&Date)
 
-<!-- Keywords: crypto trading bot, ai trading, machine learning trading, lightgbm crypto, bybit bot, binance bot, binance futures, bitget bot, okx bot, gate.io bot, kucoin bot, htx bot, mexc bot, bingx bot, phemex bot, bitmart bot, whitebit bot, huobi trading bot, algorithmic trading, freqai, xgboost crypto, automated trading, quant trading bot, 12 exchange trading bot, multi-exchange trading bot, cloud trading bot, free crypto trading bot, free trial trading bot, tradingview webhook bot, ccxt trading bot, best AI trading bot 2026, crypto trading bot 2026, non-custodial trading bot, open source trading bot -->
+<!-- Keywords: crypto trading bot, ai trading, machine learning trading, lightgbm crypto, bybit bot, binance bot, binance futures, bitget bot, okx bot, gate.io bot, kucoin bot, htx bot, mexc bot, bingx bot, phemex bot, bitmart bot, whitebit bot, huobi trading bot, algorithmic trading, freqai, xgboost crypto, automated trading, quant trading bot, 12 exchange trading bot, multi-exchange trading bot, cloud trading bot, free crypto trading bot, free trial trading bot, tradingview webhook bot, ccxt trading bot, best AI trading bot 2026, crypto trading bot 2026, non-custodial trading bot, open source trading bot, pump scanner, crypto pump detector, volume spike bot -->
