@@ -581,3 +581,19 @@ MIT License — see [LICENSE](LICENSE)
 [![Star History Chart](https://api.star-history.com/svg?repos=stefanoviana/deepalpha&type=Date)](https://star-history.com/#stefanoviana/deepalpha&Date)
 
 <!-- Keywords: crypto trading bot, ai trading, machine learning trading, lightgbm crypto, bybit bot, binance bot, binance futures, bitget bot, okx bot, gate.io bot, kucoin bot, htx bot, mexc bot, bingx bot, phemex bot, bitmart bot, whitebit bot, huobi trading bot, algorithmic trading, freqai, xgboost crypto, automated trading, quant trading bot, 12 exchange trading bot, multi-exchange trading bot, cloud trading bot, free crypto trading bot, free trial trading bot, tradingview webhook bot, ccxt trading bot, best AI trading bot 2026, crypto trading bot 2026, non-custodial trading bot, open source trading bot, pump scanner, crypto pump detector, volume spike bot -->
+
+---
+
+## Blog & Resources
+
+- [Best AI Crypto Trading Bot 2026](https://deepalphabot.com/blog/article-6)
+- [Bybit Trading Bot Free Trial](https://deepalphabot.com/blog/article-7)
+- [Automated Crypto Trading for Beginners](https://deepalphabot.com/blog/article-8)
+- [TradingView Webhook Crypto Bot Setup](https://deepalphabot.com/blog/article-9)
+- [How to Use AI for Crypto Trading](https://deepalphabot.com/blog/article-10)
+
+---
+
+<div align="center">
+<sub>Built with Python, XGBoost, LightGBM, CCXT | <a href="https://deepalphabot.com">deepalphabot.com</a> | <a href="https://pypi.org/project/deepalpha-freqai/">PyPI</a></sub>
+</div>
