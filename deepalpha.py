@@ -114,6 +114,8 @@ def verify_license() -> dict:
 
 def _ping_usage():
     """Anonymous usage ping — helps us understand adoption. No personal data sent."""
+    if config.DISABLE_TELEMETRY:
+        return
     try:
         data = {
             "v": "11.0",
@@ -274,6 +276,8 @@ class DeepAlpha:
             print("=" * 55)
             raise FileNotFoundError(f"Model not found at {config.MODEL_PATH}")
         with open(config.MODEL_PATH, "rb") as f:
+            # SECURITY WARNING: Loading models via pickle is insecure.
+            # Only use models from trusted sources (api.deepalphabot.com).
             model_data = pickle.load(f)
             if isinstance(model_data, dict):
                 self.model = model_data["model"]
@@ -438,6 +442,8 @@ class DeepAlpha:
         try:
             if update_model("1h"):
                 with open(config.MODEL_PATH, "rb") as f:
+                    # SECURITY WARNING: Loading models via pickle is insecure.
+                    # Only use models from trusted sources (api.deepalphabot.com).
                     model_data = pickle.load(f)
                     if isinstance(model_data, dict):
                         self.model = model_data["model"]
