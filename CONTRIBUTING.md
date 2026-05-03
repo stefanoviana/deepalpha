@@ -1,168 +1,171 @@
 # Contributing to DeepAlpha
 
-Thanks for your interest in contributing to DeepAlpha! This document explains how to get involved.
+Thank you for your interest in contributing! This guide will help you get started.
 
-## Table of Contents
+## Project Structure
 
-- [Code of Conduct](#code-of-conduct)
-- [Getting Started](#getting-started)
-- [How to Contribute](#how-to-contribute)
-- [Development Setup](#development-setup)
-- [Pull Request Process](#pull-request-process)
-- [Coding Standards](#coding-standards)
-- [Areas We Need Help](#areas-we-need-help)
+```
+deepalpha/
+├── deepalpha.py          # Main bot entry point (self-hosted)
+├── config.py             # Configuration loader (.env)
+├── features.py           # ML feature engineering (72 features)
+├── train.py              # Model training script
+├── risk_manager.py       # Position sizing, SL/TP, drawdown limits
+├── exchange_adapter.py   # Exchange abstraction layer (CCXT)
+├── pump_scanner.py       # Real-time pump detection
+├── order_flow_analyzer.py # L2 orderbook analysis
+├── regime_detector.py    # Market regime (bull/bear/sideways)
+├── liquidation_levels.py # Liquidation heatmap
+├── gnn_model.py          # Graph Neural Network (experimental)
+├── tft_model.py          # Temporal Fusion Transformer
+├── transformer_gru_model.py # Transformer-GRU hybrid
+├── requirements.txt      # Python dependencies
+├── .env.example          # Config template
+├── Dockerfile            # Container setup
+└── tests/                # Unit tests (needs work!)
+```
 
-## Code of Conduct
+## How to Set Up Your Dev Environment
 
-By participating in this project, you agree to abide by our [Code of Conduct](CODE_OF_CONDUCT.md). Be respectful, constructive, and professional.
+```bash
+# 1. Fork the repo on GitHub, then:
+git clone https://github.com/YOUR_USERNAME/deepalpha.git
+cd deepalpha
 
-## Getting Started
+# 2. Create virtual environment
+python -m venv venv
+source venv/bin/activate  # Linux/Mac
+# or: venv\Scripts\activate  # Windows
 
-1. **Fork** the repository on GitHub
-2. **Clone** your fork locally:
-   ```bash
-   git clone https://github.com/YOUR_USERNAME/deepalpha.git
-   cd deepalpha
-   ```
-3. **Create a branch** for your work:
-   ```bash
-   git checkout -b feature/your-feature-name
-   ```
-4. **Install dependencies**:
-   ```bash
-   pip install -r requirements.txt
-   ```
+# 3. Install dependencies
+pip install -r requirements.txt
+
+# 4. Copy config
+cp .env.example .env
+# Edit .env with your exchange API keys
+
+# 5. Run tests (when available)
+pytest tests/ -v
+
+# 6. Run the bot
+python deepalpha.py
+```
 
 ## How to Contribute
 
-### Reporting Bugs
+### Step 1: Pick an Issue
+- Look for issues labeled `help wanted` or `good first issue`
+- Comment "I'd like to work on this" so others know
+- Wait for a maintainer to assign it to you
 
-Use the [Bug Report](https://github.com/stefanoviana/deepalpha/issues/new?template=bug_report.md) template. Include:
-- Steps to reproduce
-- Expected vs actual behavior
-- Error logs (redact any API keys or private data)
-- Your environment (OS, Python version, package versions)
-
-### Suggesting Features
-
-Use the [Feature Request](https://github.com/stefanoviana/deepalpha/issues/new?template=feature_request.md) template. Explain:
-- What problem the feature solves
-- How it would work
-- Whether you're willing to implement it
-
-### Submitting Code
-
-1. Check existing issues and PRs to avoid duplicate work
-2. For large changes, **open an issue first** to discuss the approach
-3. Write clean, tested code
-4. Submit a pull request
-
-## Development Setup
-
+### Step 2: Create a Branch
 ```bash
-# Clone and install
-git clone https://github.com/YOUR_USERNAME/deepalpha.git
-cd deepalpha
-python -m venv venv
-source venv/bin/activate  # or venv\Scripts\activate on Windows
-pip install -r requirements.txt
-
-# Download sample data for testing
-python download_data.py
-
-# Train a model locally
-python train.py
-
-# Run the bot in paper mode (no real trades)
-python deepalpha.py --paper
+git checkout -b feature/your-feature-name
 ```
 
-## Pull Request Process
+### Step 3: Write Your Code
+- Follow the existing code style
+- Add docstrings to new functions
+- Handle errors gracefully (no bare `except:`)
+- Use `logger` for logging, not `print()`
 
-1. **Branch naming**: Use `feature/`, `fix/`, or `docs/` prefixes
-   - `feature/add-bollinger-bands`
-   - `fix/stop-loss-calculation`
-   - `docs/update-architecture-diagram`
+### Step 4: Test Your Changes
+```bash
+# Run the bot in paper mode to test
+# In .env, set: PAPER_MODE=true
+python deepalpha.py
 
-2. **Commit messages**: Use clear, descriptive messages
-   - Good: `Add kurtosis feature to rolling window calculations`
-   - Bad: `update stuff`
+# Run unit tests
+pytest tests/ -v
+```
 
-3. **PR description**: Explain what changed and why. Include:
-   - What problem this solves
-   - How you tested it
-   - Any backtest results (if applicable)
+### Step 5: Submit a Pull Request
+```bash
+git add .
+git commit -m "Add: brief description of your change"
+git push origin feature/your-feature-name
+```
+Then go to GitHub and create a Pull Request.
 
-4. **Review**: A maintainer will review your PR. Be patient and responsive to feedback.
+## Contribution Areas
 
-5. **Merge**: Once approved, the PR will be squash-merged into `main`.
+### 1. ML Features (features.py)
+Add new features to improve prediction accuracy. Current: 72 features.
 
-## Coding Standards
+```python
+# Example: adding a new feature
+def build_features(candles, indicators):
+    features = {}
+    # ... existing features ...
 
-### Python Style
+    # YOUR NEW FEATURE:
+    features["my_new_feature"] = calculate_something(candles)
 
-- **Python 3.10+** required
-- **Type hints** encouraged for function signatures
-- **Docstrings** for public functions and classes
-- Keep functions focused and under 50 lines when possible
-- Use descriptive variable names (`rolling_window_size`, not `rws`)
+    return features
+```
 
-### Project Conventions
+**How to validate:** Run `python train.py` and compare accuracy before/after.
 
-- All features go in `features.py`
-- Risk management logic goes in `risk_manager.py`
-- Configuration constants go in `config.py`
-- Never hardcode API keys or secrets — use environment variables
+### 2. Exchange Support (exchange_adapter.py)
+Add support for new exchanges via CCXT.
 
-### Data and Model Safety
+```python
+# Test your exchange:
+import ccxt
+ex = ccxt.your_exchange({"apiKey": "...", "secret": "..."})
+ex.load_markets()
+print(ex.fetch_ticker("BTC/USDT"))
+print(ex.fetch_ohlcv("BTC/USDT", "1h", limit=10))
+```
 
-- Never commit trained model files (`.pkl`, `.joblib`, `.h5`)
-- Never commit API keys, private keys, or `.env` files
-- Never commit large data files — use `download_data.py` to fetch them
-- Always use walk-forward (chronological) data splits, never random splits
+### 3. Unit Tests (tests/)
+We need tests! Use pytest + pytest-asyncio.
 
-### Testing
+```python
+# tests/test_features.py
+import pytest
+from features import build_features
 
-- Test with historical data before submitting ML changes
-- Include backtest results in your PR if you modify features or model logic
-- Compare against the baseline model to show improvement
+def test_feature_count():
+    candles = [...]  # mock data
+    features = build_features(candles, {})
+    assert len(features) == 72
+```
 
-## Areas We Need Help
+### 4. Documentation
+- Translate README to other languages
+- Improve inline code comments
+- Write blog posts about strategies
 
-Here are the highest-impact areas where contributions are welcome:
+### 5. Docker & DevOps
+- Improve Dockerfile
+- Add docker-compose.yml
+- CI/CD pipeline with GitHub Actions
 
-### Features & Indicators
-- New technical indicators (Bollinger Bands, Ichimoku, VWAP)
-- Alternative data sources (social sentiment, on-chain metrics)
-- Cross-pair correlation features
+## Code Style
 
-### Infrastructure
-- Unit tests and integration tests
-- CI/CD pipeline setup
-- Docker containerization
-- Logging improvements
+- Python 3.9+
+- Use type hints where possible
+- Use `async/await` for exchange calls
+- Constants in UPPER_CASE
+- Max line length: 120 chars
+- Use f-strings for formatting
 
-### Documentation
-- Architecture diagrams
-- Feature engineering guide
-- Deployment tutorials (AWS, GCP, self-hosted)
+## Rewards
 
-### Exchange Support
-- Binance Futures adapter
-- Bybit adapter
-- dYdX v4 adapter
-
-### Research
-- Alternative ML models (CatBoost, TabNet, temporal fusion transformers)
-- Improved walk-forward validation schemes
-- Fee-aware backtesting framework
+| Contribution | Reward |
+|---|---|
+| Bug fix (PR merged) | Credit in README |
+| Small feature (PR merged) | 1 month Pro access |
+| Major feature (PR merged) | Lifetime access |
+| Translation | Credit in README |
 
 ## Questions?
 
-- Open an [issue](https://github.com/stefanoviana/deepalpha/issues)
-- Join the [Discord](https://discord.gg/deepalpha) (coming soon)
-- Reach out on [Telegram](https://t.me/DeepAlphaVault)
+- Open a [Discussion](https://github.com/stefanoviana/deepalpha/discussions)
+- Join [Discord](https://discord.gg/P4yX686m)
+- Message [@DeepAlphaVault_bot](https://t.me/DeepAlphaVault_bot) on Telegram
 
----
+## License
 
-Thank you for helping make DeepAlpha better!
+By contributing, you agree that your contributions will be licensed under the MIT License.
