@@ -20,14 +20,62 @@
 
 ---
 
-## Try DeepAlpha Free — 7 Days, No Credit Card
+## 🚀 Two Ways to Use DeepAlpha
 
-1. Go to **[deepalphabot.com](https://deepalphabot.com)**
-2. Create an account (no credit card required)
-3. Connect your exchange API keys
-4. Start the AI bot — **free for 7 days**
+### ☁️ Cloud Version (Recommended) — No Setup Required
+> **The easiest way to start. Bot runs 24/7 on our servers.**
 
-**Supports 18 exchanges:** Bybit, Binance, OKX, Gate.io, KuCoin, Bitget, HTX, MEXC, BingX, Phemex, BitMart, WhiteBIT
+| | |
+|---|---|
+| ✅ No VPS, no Docker, no Python | ✅ 12 exchanges supported |
+| ✅ Start in Paper Mode (zero risk) | ✅ Real-time dashboard |
+| ✅ Pump scanner included | ✅ TradingView webhooks |
+| ✅ Exchange-side stop-loss | ✅ Telegram bot control |
+
+<div align="center">
+
+### [**Start Free 7-Day Trial →**](https://deepalphabot.com/cloud/login)
+*No credit card required. Start in Paper Mode — switch to Live when ready.*
+
+</div>
+
+---
+
+### 🖥️ Self-Hosted Version — Full Control
+> **For developers who want to customize the code.**
+
+```bash
+git clone https://github.com/stefanoviana/deepalpha.git
+cd deepalpha
+pip install -r requirements.txt
+cp .env.example .env  # add your API keys
+python deepalpha.py
+```
+
+**Supports 12 exchanges:** Bybit, Binance, OKX, Gate.io, KuCoin, Bitget, HTX, MEXC, BingX, Phemex, BitMart, WhiteBIT
+
+---
+
+### Cloud vs Self-Hosted
+
+| Feature | Cloud (Pro) | Self-Hosted (Free) |
+|---|---|---|
+| **Setup time** | 30 seconds | 30+ minutes |
+| **AI Bot** | ✅ 24/7 managed | ✅ You manage |
+| **Pump Scanner** | ✅ Included | ✅ Included |
+| **Dashboard** | ✅ Web + Mobile | ❌ CLI only |
+| **Telegram Bot** | ✅ Full control | ❌ |
+| **TradingView Webhooks** | ✅ | ❌ |
+| **Auto-restart on crash** | ✅ | ❌ |
+| **Exchange-side SL** | ✅ | ❌ |
+| **Paper Mode** | ✅ | ❌ |
+| **Price** | $39/mo (7 days free) | Free forever |
+
+<div align="center">
+
+### [**Try Cloud Free →**](https://deepalphabot.com/cloud/login) &nbsp;&nbsp;|&nbsp;&nbsp; [**Self-Host Guide →**](https://github.com/stefanoviana/deepalpha#-self-hosted-version--full-control)
+
+</div>
 
 > Cloud-hosted. No installation. No VPS. No coding. The AI trades 24/7 for you.
 
