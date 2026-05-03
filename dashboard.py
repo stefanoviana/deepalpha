@@ -214,6 +214,10 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+import html
+def _escape(s):
+    return html.escape(str(s))
+
 
 # ──────────────────────────────────────────────────────────────────────────────
 # EXCHANGE CONNECTION (cached)
@@ -685,11 +689,11 @@ if connected and balance is not None:
 
         # Check for accuracy log
         acc_path = os.path.join(DATA_DIR, "model_accuracy.txt")
-        accuracy_str = "--"
+        accuracy_str = "OFFLINE"
         if os.path.exists(acc_path):
             try:
                 with open(acc_path) as f:
-                    accuracy_str = f.read().strip()[:10]
+                    accuracy_str = _escape(f.read().strip()[:10])
             except Exception:
                 pass
 
@@ -714,9 +718,9 @@ if connected and balance is not None:
                 # Expect columns: coin, confidence, direction
                 sig_df = sig_df.sort_values("confidence", ascending=False).head(5)
                 for _, row in sig_df.iterrows():
-                    coin = row.get("coin", "??")
+                    coin = _escape(row.get("coin", "??"))
                     conf = _safe_float(row.get("confidence")) * 100
-                    direction = str(row.get("direction", "")).upper()
+                    direction = _escape(str(row.get("direction", ""))).upper()
                     dir_clr = "#00d4aa" if direction == "LONG" else "#ff4757" if direction == "SHORT" else "#555a70"
                     bar_clr = dir_clr
                     signals_html += f"""
