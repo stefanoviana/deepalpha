@@ -533,6 +533,97 @@ Walk-forward validated results (V11 model, out-of-sample):
 
 72 features including: L2 orderbook proxies, funding rate momentum, cross-asset correlation, volatility regime detection, Hurst exponent, VPIN, multi-timeframe alignment.
 
+
+## Troubleshooting
+
+Having issues? Here are the most common problems and how to fix them.
+
+### Missing dependencies
+
+```
+[ERROR] Missing dependencies: lightgbm, ccxt
+```
+
+**Fix:** Install all required packages:
+```bash
+pip install -r requirements.txt
+```
+
+If you get permission errors, use `pip install --user -r requirements.txt` or a virtual environment:
+```bash
+python -m venv venv
+source venv/bin/activate   # Linux/Mac
+venv\Scripts\activate      # Windows
+pip install -r requirements.txt
+```
+
+### Missing .env file
+
+```
+[ERROR] No .env file found in current directory.
+```
+
+**Fix:** Copy the example and fill in your API keys:
+```bash
+cp .env.example .env
+nano .env   # or any text editor
+```
+
+You need at minimum:
+- `EXCHANGE=bybit` (or binance, okx, bitget, etc.)
+- The matching API key + secret for your exchange
+
+### Missing model files
+
+```
+[ERROR] Model not found at model_1h.pkl
+```
+
+**Fix:** You need a trained ML model. Two options:
+1. **Train your own** (free):
+   ```bash
+   python download_data.py   # download historical data
+   python train.py           # train model (~5 min)
+   ```
+2. **Use the cloud** (no model needed): [deepalphabot.com](https://deepalphabot.com) - 7-day free trial
+
+### API key errors
+
+```
+AuthenticationError: Invalid API key
+```
+
+**Fix:**
+- Double-check your API key and secret in `.env` (no extra spaces or quotes)
+- Make sure the API key has **trading permissions** enabled
+- For Bybit: enable "Contract - Trade" permission
+- For Binance: enable "Futures" permission and whitelist your IP
+- For Bitget/OKX/KuCoin: make sure you also set the passphrase
+
+### Exchange not supported
+
+```
+ValueError: Unsupported exchange: xxx
+```
+
+**Fix:** Set `EXCHANGE` in your `.env` to one of the supported values:
+`bybit`, `binance`, `okx`, `bitget`, `gateio`, `kucoin`, `htx`, `mexc`, `bingx`, `phemex`, `bitmart`, `whitebit`, `hyperliquid`
+
+### Bot crashes in a loop
+
+The bot waits 30 seconds before exiting after a crash to prevent restart-loop spam (PM2, Docker, systemd). Check the error message above the crash for the root cause.
+
+### Still stuck?
+
+- **Setup guide:** [deepalphabot.com/setup-guide](https://deepalphabot.com/setup-guide)
+- **Telegram support:** [@DeepAlphaVault_bot](https://t.me/DeepAlphaVault_bot)
+- **Discord:** [discord.gg/P4yX686m](https://discord.gg/P4yX686m)
+- **GitHub Issues:** [github.com/stefanoviana/deepalpha/issues](https://github.com/stefanoviana/deepalpha/issues)
+
+Or just use the **cloud version** — no installation, no setup, no crashes: [deepalphabot.com](https://deepalphabot.com)
+
+---
+
 ## Disclaimer
 
 **Trading involves significant risk of loss.** This software is provided as-is, with no guarantees of profitability. Past backtest performance does not indicate future results. The performance metrics above are from historical backtests and may not reflect live trading conditions. Only trade with money you can afford to lose.

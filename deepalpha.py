@@ -13,6 +13,38 @@ Usage:
     2. python deepalpha.py
 """
 
+# --- Dependency Check --------------------------------------------------------
+import sys
+
+_REQUIRED = {
+    "lightgbm": "lightgbm",
+    "ccxt": "ccxt",
+    "numpy": "numpy",
+    "xgboost": "xgboost",
+    "sklearn": "scikit-learn",
+    "dotenv": "python-dotenv",
+}
+_missing = []
+for _mod, _pkg in _REQUIRED.items():
+    try:
+        __import__(_mod)
+    except ImportError:
+        _missing.append(_pkg)
+if _missing:
+    print("[ERROR] Missing dependencies: " + ", ".join(_missing))
+    print("[ERROR] Run:  pip install -r requirements.txt")
+    print("[ERROR] Or:   pip install " + " ".join(_missing))
+    sys.exit(1)
+
+# --- .env Check --------------------------------------------------------------
+import os as _os
+if not _os.path.exists(".env") and not _os.environ.get("EXCHANGE"):
+    print("[ERROR] No .env file found in current directory.")
+    print("[ERROR] Copy the example:  cp .env.example .env")
+    print("[ERROR] Then edit it with your API keys (see .env.example for details).")
+    print("[ERROR] Docs: https://deepalphabot.com/setup-guide")
+    sys.exit(1)
+
 import os
 import pickle
 import time
@@ -474,5 +506,37 @@ if __name__ == "__main__":
                /_/            /_/
                               Free Edition
     """)
-    bot = DeepAlpha()
-    bot.run()
+    try:
+        bot = DeepAlpha()
+        bot.run()
+    except KeyboardInterrupt:
+        print("\nShutting down gracefully...")
+    except FileNotFoundError as e:
+        print(f"\n[ERROR] {e}")
+        print("")
+        print("=" * 60)
+        print("  HOW TO FIX: Download or train a model first.")
+        print("  Option 1:  python train.py")
+        print("  Option 2:  Use cloud (no setup): https://deepalphabot.com")
+        print("=" * 60)
+        time.sleep(30)
+        sys.exit(1)
+    except Exception as e:
+        print(f"\n[ERROR] Bot crashed: {e}")
+        traceback.print_exc()
+        print("")
+        print("=" * 60)
+        print("  COMMON FIXES:")
+        print("  1. Check your .env file (see .env.example)")
+        print("  2. Run: pip install -r requirements.txt")
+        print("  3. Make sure you have model files (.pkl) in the same directory")
+        print("  4. Need help?")
+        print("     - Setup guide: https://deepalphabot.com/setup-guide")
+        print("     - Telegram:    https://t.me/DeepAlphaVault_bot")
+        print("     - Discord:     https://discord.gg/P4yX686m")
+        print("=" * 60)
+        # Sleep before exit to prevent crash-loop spam (PM2, Docker, systemd)
+        print("")
+        print("[INFO] Waiting 30s before exit to prevent crash-loop spam...")
+        time.sleep(30)
+        sys.exit(1)
