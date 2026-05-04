@@ -54,6 +54,35 @@ python deepalpha.py
 
 **Supports 12 exchanges:** Bybit, Binance, OKX, Gate.io, KuCoin, Bitget, HTX, MEXC, BingX, Phemex, BitMart, WhiteBIT
 
+
+
+---
+
+### About AI Models
+
+The self-hosted version includes **training scripts** but does NOT include pre-trained models. You have two options:
+
+#### Option A: Train Your Own Models (Free)
+```bash
+python download_data.py   # Download historical data from Bybit
+python train.py           # Train XGBoost + LightGBM models (~2-4 hours)
+```
+This requires 8GB+ RAM and takes several hours. Your accuracy depends on data quality and parameters.
+
+#### Option B: Use Our Pre-Trained Models (Cloud Pro)
+Our production models achieve **70.9% walk-forward validated accuracy** after months of optimization:
+- 72 engineered features
+- 12 months of curated training data
+- Optuna hyperparameter tuning (200+ trials)
+- 4-window walk-forward validation
+- Weekly retraining with fresh market data
+
+These models are **exclusive to Cloud Pro** users — the same models powering our live trading.
+
+**[Get Pre-Trained Models — 7 Days Free (no credit card)](https://deepalphabot.com/cloud/login)**
+
+---
+
 ---
 
 ### Cloud vs Self-Hosted
