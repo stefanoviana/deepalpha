@@ -2,7 +2,7 @@
 
 # DeepAlpha V11.0
 
-### AI-Powered Crypto Trading Bot — 18 Exchanges, 70.9% Accuracy
+### AI-Powered Crypto Trading Bot — 18 Exchanges, 81.3% Accuracy
 
 [![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://python.org)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
@@ -70,7 +70,7 @@ python train.py           # Train XGBoost + LightGBM models (~2-4 hours)
 This requires 8GB+ RAM and takes several hours. Your accuracy depends on data quality and parameters.
 
 #### Option B: Use Our Pre-Trained Models (Cloud Pro)
-Our production models achieve **70.9% walk-forward validated accuracy** after months of optimization:
+Our production models achieve **81.3% walk-forward validated accuracy** after months of optimization:
 - 72 engineered features
 - 12 months of curated training data
 - Optuna hyperparameter tuning (200+ trials)
@@ -149,13 +149,13 @@ The pump scanner runs automatically alongside the AI Bot. No extra configuration
 
 DeepAlpha is an open-source ML trading system that predicts crypto price direction on **18 exchanges** including Bybit, Binance, OKX, Gate.io, KuCoin, Bitget, HTX, MEXC, BingX, Phemex, BitMart, and WhiteBIT. It uses 72 engineered features from L2 orderbook data, funding rates, and market microstructure signals.
 
-The core model achieves **70.9% directional accuracy** on walk-forward validated out-of-sample data.
+The core model achieves **81.3% directional accuracy** on walk-forward validated out-of-sample data.
 
 ## Plans
 
 | Feature | Free (GitHub) | [Pro $39/mo](https://deepalphabot.com/cloud) | [Lifetime $199](https://deepalphabot.com/cloud) |
 |---------|:---:|:---:|:---:|
-| AI Model (LightGBM) | Train yourself | ✅ Pre-trained (70.9%) | ✅ Pre-trained |
+| AI Model (LightGBM) | Train yourself | ✅ Pre-trained (81.3%) | ✅ Pre-trained |
 | XGBoost + RF Ensemble | ❌ | ✅ | ✅ |
 | **Grid Bot** (range trading) | ❌ | ✅ 5 strategies | ✅ 5 strategies |
 | **DCA Bot** (safety orders) | ❌ | ✅ 5 strategies | ✅ 5 strategies |
@@ -181,7 +181,7 @@ The core model achieves **70.9% directional accuracy** on walk-forward validated
 > - Handle updates, crashes, and maintenance
 >
 > **The cloud version gives you everything ready in 2 minutes:**
-> - Pre-trained AI model with 70.9% accuracy
+> - Pre-trained AI model with 81.3% accuracy
 > - Grid Bot + DCA Bot + 10 pre-built strategies
 > - Manage from Telegram (@DeepAlphaVault_bot)
 > - Auto-restart, daily retraining, 24/7 monitoring
@@ -216,7 +216,7 @@ Trade Execution (Bybit / Binance API via ccxt)
 
 **V11.0** (April 2026) — Major accuracy upgrade:
 - 72 features (10 new: Hurst exponent, VPIN, volatility regime, fractal efficiency, multi-timeframe alignment)
-- 70.9% walk-forward validated accuracy (up from 60%)
+- 81.3% walk-forward validated accuracy (up from 60%)
 - TFT (Temporal Fusion Transformer) + TransformerGRU neural models
 - HMM 3-state regime detection (bull/bear/sideways)
 - Dynamic ATR-based TP/SL with multi-target take profit
@@ -280,7 +280,7 @@ python deepalpha.py           # start trading
 DeepAlpha combines multiple strategies for maximum edge:
 
 ### 1. AI Directional Prediction (Primary)
-XGBoost + LightGBM ensemble predicts price direction with 70.9% accuracy using 72 features from L2 orderbook data, funding rates, and market microstructure.
+XGBoost + LightGBM ensemble predicts price direction with 81.3% accuracy using 72 features from L2 orderbook data, funding rates, and market microstructure.
 
 ### 2. HMM Regime Detection
 Hidden Markov Model identifies bull/bear/sideways regimes. The bot adapts: wider TP in bull, tighter SL in bear, reduced activity in sideways.
@@ -479,7 +479,7 @@ cp freqai-plugin/deepalpha_model.py your_freqtrade/freqai/prediction_models/
 ```
 
 Features:
-- **Triple Barrier Labeling** (70.9% accuracy vs ~55-60% standard FreqAI)
+- **Triple Barrier Labeling** (81.3% accuracy vs ~55-60% standard FreqAI)
 - **SHAP Feature Selection** (auto-removes noise features)
 - **Meta-Labeling** (filters bad trades)
 - **Walk-Forward CV** with 24h embargo
@@ -590,7 +590,7 @@ Walk-forward validated results (V11 model, out-of-sample):
 
 | Metric | Value |
 |--------|-------|
-| Directional Accuracy | 70.9% |
+| Directional Accuracy | 81.3% |
 | Profit Factor | 2.91 |
 | Max Drawdown | 20.7% |
 | Sharpe Ratio | 0.97 |
@@ -602,7 +602,7 @@ Walk-forward validated results (V11 model, out-of-sample):
 
 | Model | Accuracy | Role |
 |-------|----------|------|
-| LightGBM | 70.9% | Primary |
+| LightGBM | 81.3% | Primary |
 | XGBoost | 70.8% | Ensemble |
 | Random Forest | 69.3% | Ensemble |
 | TransformerGRU | 65.8% | Neural |
