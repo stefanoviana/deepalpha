@@ -5,7 +5,7 @@
 If you discover a security vulnerability, please report it responsibly:
 
 - **Do NOT** open a public issue
-- Email: **support@deepalphabot.com**
+- Email: **hello@deepalphabot.com**
 - Include: description, steps to reproduce, potential impact
 - We will respond within 48 hours
 
