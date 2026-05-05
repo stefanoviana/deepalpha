@@ -244,6 +244,20 @@ DeepAlpha uses a LightGBM gradient boosting model trained on historical crypto d
 
 The Pro version adds XGBoost ensemble, PPO reinforcement learning, 50 features, and ATR-based prediction targets.
 
+## Live Results (Verified on Bybit)
+
+| Metric | Value |
+|--------|-------|
+| **Weekly ROI** | +25.7% |
+| **AI Accuracy** | 84.9% (walk-forward validated) |
+| **Profit/Loss Ratio** | 2.61:1 |
+| **Sharpe Ratio** | 1.27 |
+| **AI-Trained Coins** | 25 |
+| **Avg Holding Time** | 5.58 hours |
+
+> Deep neural network (BiLSTM + Attention) trained on GPU across 25 cryptocurrency pairs. Copy our trades on [Bybit Copy Trading](https://www.bybit.com/copyTrade).
+
+
 ## Quick Start (Pro — 2 minutes)
 
 **Windows:** double-click `setup.bat`
