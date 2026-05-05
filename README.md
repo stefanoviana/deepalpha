@@ -58,6 +58,38 @@ python deepalpha.py
 
 ---
 
+### ⚠️ About AI Models
+
+The self-hosted version includes **training scripts** but does NOT include pre-trained models. You have two options:
+
+#### Option A: Train Your Own Models (Free)
+
+This requires a machine with 8GB+ RAM and takes several hours. Your model accuracy will depend on data quality and training parameters.
+
+#### Option B: Use Our Pre-Trained Models (Cloud Pro)
+Our production models achieve **70.9% walk-forward validated accuracy** after months of optimization with:
+- 72 engineered features
+- 12 months of training data
+- Optuna hyperparameter tuning (200+ trials)
+- 4-window walk-forward validation
+- Continuous weekly retraining
+
+These models are **exclusive to Cloud Pro** users and are the same models powering our live trading (verified +05 PnL this week).
+
+<div align=center>
+
+**[Get Pre-Trained Models — 7 Days Free →](https://deepalphabot.com/cloud/login)**
+
+*No credit card required. Includes models + dashboard + pump scanner + exchange stop-losses.*
+
+</div>
+
+---
+
+
+
+---
+
 ### About AI Models
 
 The self-hosted version includes **training scripts** but does NOT include pre-trained models. You have two options:
