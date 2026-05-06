@@ -1,6 +1,6 @@
 <div align="center">
 
-# DeepAlpha V11.0
+# DeepAlpha V12.0
 
 ### AI-Powered Crypto Trading Bot for Bybit & Binance Futures
 
@@ -13,7 +13,7 @@
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 [![Discord](https://img.shields.io/badge/Discord-Join-7289da.svg)](https://discord.gg/P4yX686m)
 
-[Website](https://deepalphabot.com) · [Dashboard](https://deepalphabot.com/cloud) · [Discord](https://discord.gg/P4yX686m) · [Telegram](https://t.me/DeepAlphaVault)
+[Website](https://deepalphabot.com) · [Live Results](https://deepalphabot.com/results) · [Copy Our Trades](https://bybit.onelink.me/EhY6/ehnxyceh) · [Dashboard](https://deepalphabot.com/cloud) · [Discord](https://discord.gg/P4yX686m) · [Telegram](https://t.me/DeepAlphaVault)
 
 </div>
 
@@ -23,7 +23,7 @@
 
 DeepAlpha is an open-source ML trading system that predicts crypto price direction on **Bybit** and **Binance** perpetual futures. It uses 72 engineered features from L2 orderbook data, funding rates, and market microstructure signals.
 
-The core model achieves **70.9% directional accuracy** on walk-forward validated out-of-sample data.
+The core model achieves **84.9% directional accuracy** on walk-forward validated out-of-sample data.
 
 ## Plans
 
@@ -67,7 +67,7 @@ Trade Execution (Bybit / Binance API via ccxt)
 - **Pump scanner** — real-time detection of volume spikes and new listings on Bybit + Binance
 - **Binance cross-exchange alerts** — detects Binance listings that pump on Bybit
 
-**V11.0** (April 2026) — Major accuracy upgrade:
+**V12.0** (April 2026) — Major accuracy upgrade:
 - 72 features (10 new: Hurst exponent, VPIN, volatility regime, fractal efficiency, multi-timeframe alignment)
 - 70.9% walk-forward validated accuracy (up from 60%)
 - TFT (Temporal Fusion Transformer) + TransformerGRU neural models
