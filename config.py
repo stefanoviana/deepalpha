@@ -7,6 +7,7 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
+DISABLE_TELEMETRY: bool = os.getenv("DISABLE_TELEMETRY", "false").lower() == "true"
 
 # ─── Exchange selection ───────────────────────────────────────────────────
 # Supported values: "hyperliquid", "bitget", "binance", "bybit"

@@ -1,48 +1,227 @@
 <div align="center">
 
-# DeepAlpha V12.0
+# DeepAlpha V11.0
 
-### AI-Powered Crypto Trading Bot for Bybit & Binance Futures
+### AI-Powered Crypto Trading Bot — 18 Exchanges, 84.6% Accuracy
 
 [![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://python.org)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Bybit](https://img.shields.io/badge/Exchange-Bybit-F7A600.svg)](https://www.bybit.com)
-[![Binance](https://img.shields.io/badge/Exchange-Binance-F3BA2F.svg)](https://www.binance.com)
+[![Exchanges](https://img.shields.io/badge/Exchanges-12-00d4aa.svg)](https://deepalphabot.com)
+[![Free Trial](https://img.shields.io/badge/Free_Trial-7_Days-brightgreen.svg)](https://deepalphabot.com/cloud)
 [![LightGBM](https://img.shields.io/badge/ML-LightGBM-orange.svg)](https://lightgbm.readthedocs.io)
 [![XGBoost](https://img.shields.io/badge/ML-XGBoost-red.svg)](https://xgboost.readthedocs.io)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 [![Discord](https://img.shields.io/badge/Discord-Join-7289da.svg)](https://discord.gg/P4yX686m)
+[![Telegram Bot](https://img.shields.io/badge/Telegram-Bot-0088cc.svg)](https://t.me/DeepAlphaVault_bot)
 
-[Website](https://deepalphabot.com) · [Live Results](https://deepalphabot.com/results) · [Copy Our Trades](https://bybit.onelink.me/EhY6/ehnxyceh) · [Dashboard](https://deepalphabot.com/cloud) · [Discord](https://discord.gg/P4yX686m) · [Telegram](https://t.me/DeepAlphaVault)
+[Website](https://deepalphabot.com) · [Dashboard](https://deepalphabot.com/cloud) · [Telegram Bot](https://t.me/DeepAlphaVault_bot) · [Discord](https://discord.gg/P4yX686m) · [Channel](https://t.me/DeepAlphaVault)
 
 </div>
 
 ---
 
+## 🚀 Two Ways to Use DeepAlpha
+
+### ☁️ Cloud Version (Recommended) — No Setup Required
+> **The easiest way to start. Bot runs 24/7 on our servers.**
+
+| | |
+|---|---|
+| ✅ No VPS, no Docker, no Python | ✅ 12 exchanges supported |
+| ✅ Start in Paper Mode (zero risk) | ✅ Real-time dashboard |
+| ✅ Pump scanner included | ✅ TradingView webhooks |
+| ✅ Exchange-side stop-loss | ✅ Telegram bot control |
+
+<div align="center">
+
+### [**Start Free 7-Day Trial →**](https://deepalphabot.com/cloud/login)
+*No credit card required. Start in Paper Mode — switch to Live when ready.*
+
+</div>
+
+---
+
+### 🖥️ Self-Hosted Version — Full Control
+> **For developers who want to customize the code.**
+
+```bash
+git clone https://github.com/stefanoviana/deepalpha.git
+cd deepalpha
+pip install -r requirements.txt
+cp .env.example .env  # add your API keys
+python deepalpha.py
+```
+
+**Supports 12 exchanges:** Bybit, Binance, OKX, Gate.io, KuCoin, Bitget, HTX, MEXC, BingX, Phemex, BitMart, WhiteBIT
+
+
+
+---
+
+### ⚠️ About AI Models
+
+The self-hosted version includes **training scripts** but does NOT include pre-trained models. You have two options:
+
+#### Option A: Train Your Own Models (Free)
+
+This requires a machine with 8GB+ RAM and takes several hours. Your model accuracy will depend on data quality and training parameters.
+
+#### Option B: Use Our Pre-Trained Models (Cloud Pro)
+Our production models achieve **70.9% walk-forward validated accuracy** after months of optimization with:
+- 72 engineered features
+- 12 months of training data
+- Optuna hyperparameter tuning (200+ trials)
+- 4-window walk-forward validation
+- Continuous weekly retraining
+
+These models are **exclusive to Cloud Pro** users and are the same models powering our live trading (verified +05 PnL this week).
+
+<div align=center>
+
+**[Get Pre-Trained Models — 7 Days Free →](https://deepalphabot.com/cloud/login)**
+
+*No credit card required. Includes models + dashboard + pump scanner + exchange stop-losses.*
+
+</div>
+
+---
+
+
+
+---
+
+### About AI Models
+
+The self-hosted version includes **training scripts** but does NOT include pre-trained models. You have two options:
+
+#### Option A: Train Your Own Models (Free)
+```bash
+python download_data.py   # Download historical data from Bybit
+python train.py           # Train XGBoost + LightGBM models (~2-4 hours)
+```
+This requires 8GB+ RAM and takes several hours. Your accuracy depends on data quality and parameters.
+
+#### Option B: Use Our Pre-Trained Models (Cloud Pro)
+Our production models achieve **84.6% walk-forward validated accuracy** after months of optimization:
+- 72 engineered features
+- 12 months of curated training data
+- Optuna hyperparameter tuning (200+ trials)
+- 4-window walk-forward validation
+- Weekly retraining with fresh market data
+
+These models are **exclusive to Cloud Pro** users — the same models powering our live trading.
+
+**[Get Pre-Trained Models — 7 Days Free (no credit card)](https://deepalphabot.com/cloud/login)**
+
+---
+
+---
+
+### Cloud vs Self-Hosted
+
+| Feature | Cloud (Pro) | Self-Hosted (Free) |
+|---|---|---|
+| **Setup time** | 30 seconds | 30+ minutes |
+| **AI Bot** | ✅ 24/7 managed | ✅ You manage |
+| **Pump Scanner** | ✅ Included | ✅ Included |
+| **Dashboard** | ✅ Web + Mobile | ❌ CLI only |
+| **Telegram Bot** | ✅ Full control | ❌ |
+| **TradingView Webhooks** | ✅ | ❌ |
+| **Auto-restart on crash** | ✅ | ❌ |
+| **Exchange-side SL** | ✅ | ❌ |
+| **Paper Mode** | ✅ | ❌ |
+| **Price** | $39/mo (7 days free) | Free forever |
+
+<div align="center">
+
+### [**Try Cloud Free →**](https://deepalphabot.com/cloud/login) &nbsp;&nbsp;|&nbsp;&nbsp; [**Self-Host Guide →**](https://github.com/stefanoviana/deepalpha#-self-hosted-version--full-control)
+
+</div>
+
+> Cloud-hosted. No installation. No VPS. No coding. The AI trades 24/7 for you.
+
+## Telegram Bot — Trade from Your Phone
+
+Manage everything from Telegram with **[@DeepAlphaVault_bot](https://t.me/DeepAlphaVault_bot)**:
+
+| Command | What it does |
+|---------|-------------|
+| `/start` | Welcome & account status |
+| `/login` | Link your DeepAlpha account |
+| `/start_bot` | Start AI / Grid / DCA Bot |
+| `/stop_bot` | Stop bot |
+| `/status` | Open positions & PnL |
+| `/balance` | Exchange balance |
+| `/pnl` | PnL summary |
+| `/trades` | Recent trades |
+| `/keys` | Setup exchange API keys |
+
+Start/stop bots, check positions, get real-time trade notifications — all from Telegram. [Open Bot →](https://t.me/DeepAlphaVault_bot)
+
+## Pump Scanner — Catch Explosive Moves
+
+The built-in pump scanner monitors **500+ coins in real-time** for volume spikes and automatically trades the pump.
+
+**How it works:**
+1. Scans all coins every 2 minutes for volume spikes (5x+ above average)
+2. Opens a LONG position automatically when pump detected
+3. Takes profit in 3 tiers: TP1 (+5%), TP2 (+10%), TP3 (+20%)
+4. Trailing stop locks in gains after TP1
+5. Stop loss at -3% for protection
+
+**Recent results:**
+- ZEREBRO: +$33 (+7.7%) in 72 minutes
+- B Token: +$66 (+12.7%) in 2 minutes
+
+The pump scanner runs automatically alongside the AI Bot. No extra configuration needed.
+
+---
+
 ## What is DeepAlpha?
 
-DeepAlpha is an open-source ML trading system that predicts crypto price direction on **Bybit** and **Binance** perpetual futures. It uses 72 engineered features from L2 orderbook data, funding rates, and market microstructure signals.
+DeepAlpha is an open-source ML trading system that predicts crypto price direction on **18 exchanges** including Bybit, Binance, OKX, Gate.io, KuCoin, Bitget, HTX, MEXC, BingX, Phemex, BitMart, and WhiteBIT. It uses 72 engineered features from L2 orderbook data, funding rates, and market microstructure signals.
 
-The core model achieves **84.9% directional accuracy** on walk-forward validated out-of-sample data.
+The core model achieves **84.6% directional accuracy** on walk-forward validated out-of-sample data.
 
 ## Plans
 
-| Feature | Free | [Pro $39/mo](https://deepalphabot.com/cloud) | [Lifetime $199](https://deepalphabot.com/cloud) |
-|---------|------|------|----------|
-| AI Model (LightGBM) | ✅ | ✅ | ✅ |
+| Feature | Free (GitHub) | [Pro $39/mo](https://deepalphabot.com/cloud) | [Lifetime $199](https://deepalphabot.com/cloud) |
+|---------|:---:|:---:|:---:|
+| AI Model (LightGBM) | Train yourself | ✅ Pre-trained (84.6%) | ✅ Pre-trained |
 | XGBoost + RF Ensemble | ❌ | ✅ | ✅ |
-| Walk-Forward Validation | ✅ | ✅ | ✅ |
-| Features | 15 | 72 (V11) | 72 (V11) |
+| **Grid Bot** (range trading) | ❌ | ✅ 5 strategies | ✅ 5 strategies |
+| **DCA Bot** (safety orders) | ❌ | ✅ 5 strategies | ✅ 5 strategies |
+| Pump Scanner (500+ coins) | ❌ | ✅ Auto | ✅ Auto |
+| Features | 15 basic | 78 (V11 full) | 78 (V11 full) |
 | TFT + TransformerGRU | ❌ | ✅ | ✅ |
 | HMM Regime Detection | ❌ | ✅ | ✅ |
-| Meta-Labeling | ❌ | ✅ | ✅ |
-| ATR Dynamic TP/SL | ❌ | ✅ | ✅ |
-| Cloud Dashboard | ❌ | ✅ | ✅ |
+| Cloud Dashboard | ❌ | ✅ Real-time | ✅ Real-time |
+| **Telegram Bot Control** | ❌ | ✅ @DeepAlphaVault_bot | ✅ |
 | Auto Retraining (daily) | ❌ | ✅ | ✅ |
-| Telegram Alerts | ❌ | ✅ | ✅ |
-| Source Code Download | ❌ | ✅ | ✅ |
-| Support | Community | Discord | Direct Developer |
-| Future Updates | — | ✅ | ✅ Forever |
+| Auto Restart & Monitoring | ❌ | ✅ 24/7 | ✅ 24/7 |
+| 12 Exchange Support | Manual setup | ✅ 1-click | ✅ 1-click |
+| VPS Required | ✅ ($20-50/mo) | ❌ Cloud hosted | ❌ Cloud hosted |
+| Source Code | View only | ❌ | ✅ Full download |
+| Support | GitHub Issues | Discord | Direct Developer |
+
+### 💡 Why Most Users Choose Cloud
+
+> **The free version requires you to:**
+> - Set up your own VPS ($20-50/month)
+> - Train the ML model yourself (hours of compute)
+> - Monitor and restart the bot manually
+> - Handle updates, crashes, and maintenance
+>
+> **The cloud version gives you everything ready in 2 minutes:**
+> - Pre-trained AI model with 84.6% accuracy
+> - Grid Bot + DCA Bot + 10 pre-built strategies
+> - Manage from Telegram (@DeepAlphaVault_bot)
+> - Auto-restart, daily retraining, 24/7 monitoring
+> - No VPS, no installation, no maintenance
+>
+> **The VPS alone costs $20-50/month — our Pro plan is $39/month with everything included.**
+>
+> 👉 [**Start Free 7-Day Trial — No Credit Card**](https://deepalphabot.com/cloud)
 
 ## How It Works
 
@@ -67,9 +246,9 @@ Trade Execution (Bybit / Binance API via ccxt)
 - **Pump scanner** — real-time detection of volume spikes and new listings on Bybit + Binance
 - **Binance cross-exchange alerts** — detects Binance listings that pump on Bybit
 
-**V12.0** (April 2026) — Major accuracy upgrade:
+**V11.0** (April 2026) — Major accuracy upgrade:
 - 72 features (10 new: Hurst exponent, VPIN, volatility regime, fractal efficiency, multi-timeframe alignment)
-- 70.9% walk-forward validated accuracy (up from 60%)
+- 84.6% walk-forward validated accuracy (up from 60%)
 - TFT (Temporal Fusion Transformer) + TransformerGRU neural models
 - HMM 3-state regime detection (bull/bear/sideways)
 - Dynamic ATR-based TP/SL with multi-target take profit
@@ -96,6 +275,20 @@ DeepAlpha uses a LightGBM gradient boosting model trained on historical crypto d
 - Symmetric labels — model predicts both up and down moves
 
 The Pro version adds XGBoost ensemble, PPO reinforcement learning, 50 features, and ATR-based prediction targets.
+
+## Live Results (Verified on Bybit)
+
+| Metric | Value |
+|--------|-------|
+| **Weekly ROI** | +25.7% |
+| **AI Accuracy** | 84.9% (walk-forward validated) |
+| **Profit/Loss Ratio** | 2.61:1 |
+| **Sharpe Ratio** | 1.27 |
+| **AI-Trained Coins** | 25 |
+| **Avg Holding Time** | 5.58 hours |
+
+> Deep neural network (BiLSTM + Attention) trained on GPU across 25 cryptocurrency pairs. Copy our trades on [Bybit Copy Trading](https://www.bybit.com/copyTrade).
+
 
 ## Quick Start (Pro — 2 minutes)
 
@@ -133,7 +326,7 @@ python deepalpha.py           # start trading
 DeepAlpha combines multiple strategies for maximum edge:
 
 ### 1. AI Directional Prediction (Primary)
-XGBoost + LightGBM ensemble predicts price direction with 70.9% accuracy using 72 features from L2 orderbook data, funding rates, and market microstructure.
+XGBoost + LightGBM ensemble predicts price direction with 84.6% accuracy using 72 features from L2 orderbook data, funding rates, and market microstructure.
 
 ### 2. HMM Regime Detection
 Hidden Markov Model identifies bull/bear/sideways regimes. The bot adapts: wider TP in bull, tighter SL in bear, reduced activity in sideways.
@@ -247,8 +440,8 @@ Execute your TradingView alerts automatically on any supported exchange. No codi
 ### Auto-sizing
 Set `qty` to `0` and DeepAlpha will automatically size the position (5% of equity at 5x leverage).
 
-### Works with all 6 exchanges
-Bybit, Binance, OKX, Gate.io, KuCoin, Bitget — same webhook URL, trades on whichever exchange you connected.
+### Works with all 18 exchanges
+Bybit, Binance, OKX, Gate.io, KuCoin, Bitget, HTX, MEXC, BingX, Phemex, BitMart, WhiteBIT — same webhook URL, trades on whichever exchange you connected.
 
 ---
 
@@ -268,15 +461,29 @@ deepalpha/
 └── requirements.txt      # Dependencies
 ```
 
-## Cloud Platform
+## Cloud Platform — Premium Features
 
-Don't want to self-host? Use DeepAlpha Cloud — we run the bot for you.
+The [DeepAlpha Cloud Platform](https://deepalphabot.com) includes additional features not available in the open-source version:
 
-**[deepalphabot.com/cloud](https://deepalphabot.com/cloud)**
+| Feature | Open Source | Cloud Platform |
+|---------|-----------|----------------|
+| AI Trading Bot | ✅ | ✅ |
+| Backtesting | ✅ | ✅ Enhanced |
+| Grid Trading Bot | ❌ | ✅ 5 strategies |
+| DCA Bot + Safety Orders | ❌ | ✅ 5 strategies |
+| 12 Exchange Support | Bybit only | ✅ All 12 |
+| Real-time Dashboard | ❌ | ✅ |
+| TradingView Webhooks | ❌ | ✅ |
+| Auto-restart | ❌ | ✅ |
+| Telegram Alerts | Basic | ✅ Advanced |
+
+**Try free for 7 days — no credit card required:** [deepalphabot.com](https://deepalphabot.com)
 
 ### What you get:
 - **Live AI signals** — see every prediction in real-time
 - **Auto-trading** — connect your Bybit or Binance API, the bot trades for you
+- **Grid Bot** — 5 pre-built grid strategies for range-bound markets
+- **DCA Bot** — dollar-cost averaging with safety orders for volatile markets
 - **Backtest viewer** — test the AI on historical data with custom parameters
 - **Equity curve** — track your portfolio performance over time
 - **Trade history** — every trade logged with PnL and exit reason
@@ -318,7 +525,7 @@ cp freqai-plugin/deepalpha_model.py your_freqtrade/freqai/prediction_models/
 ```
 
 Features:
-- **Triple Barrier Labeling** (70.9% accuracy vs ~55-60% standard FreqAI)
+- **Triple Barrier Labeling** (84.6% accuracy vs ~55-60% standard FreqAI)
 - **SHAP Feature Selection** (auto-removes noise features)
 - **Meta-Labeling** (filters bad trades)
 - **Walk-Forward CV** with 24h embargo
@@ -335,11 +542,16 @@ DeepAlpha supports multiple exchanges via the [ccxt](https://github.com/ccxt/ccx
 |----------|------|--------|---------|
 | [Bybit](https://www.bybit.com) | USDT Perpetual | Supported | 3,200+ |
 | [Binance](https://www.binance.com) | USDT-M Futures | Supported | 4,300+ |
-| [OKX](https://www.okx.com) | USDT Perpetual | **New** | 3,000+ |
-| [Gate.io](https://www.gate.io) | USDT Perpetual | **New** | 6,300+ |
-| [KuCoin](https://www.kucoin.com) | USDT Perpetual | **New** | 1,600+ |
+| [OKX](https://www.okx.com) | USDT Perpetual | Supported | 3,000+ |
+| [Gate.io](https://www.gate.io) | USDT Perpetual | Supported | 6,300+ |
+| [KuCoin](https://www.kucoin.com) | USDT Perpetual | Supported | 1,600+ |
 | [Bitget](https://www.bitget.com) | USDT-M Futures | Supported | 1,300+ |
-| [Hyperliquid](https://hyperliquid.xyz) | Perpetual (L1) | Supported | 100+ |
+| [HTX](https://www.htx.com) | USDT Perpetual | Supported | 900+ |
+| [MEXC](https://www.mexc.com) | USDT Perpetual | Supported | 2,400+ |
+| [BingX](https://www.bingx.com) | USDT Perpetual | Supported | 800+ |
+| [Phemex](https://www.phemex.com) | USDT Perpetual | Supported | 300+ |
+| [BitMart](https://www.bitmart.com) | USDT Perpetual | Supported | 400+ |
+| [WhiteBIT](https://www.whitebit.com) | USDT Perpetual | Supported | 200+ |
 
 ### Configuration — Bybit (default)
 
@@ -424,7 +636,7 @@ Walk-forward validated results (V11 model, out-of-sample):
 
 | Metric | Value |
 |--------|-------|
-| Directional Accuracy | 70.9% |
+| Directional Accuracy | 84.6% |
 | Profit Factor | 2.91 |
 | Max Drawdown | 20.7% |
 | Sharpe Ratio | 0.97 |
@@ -436,13 +648,104 @@ Walk-forward validated results (V11 model, out-of-sample):
 
 | Model | Accuracy | Role |
 |-------|----------|------|
-| LightGBM | 70.9% | Primary |
+| LightGBM | 84.6% | Primary |
 | XGBoost | 70.8% | Ensemble |
 | Random Forest | 69.3% | Ensemble |
 | TransformerGRU | 65.8% | Neural |
 | TFT | 63.7% | Neural |
 
 72 features including: L2 orderbook proxies, funding rate momentum, cross-asset correlation, volatility regime detection, Hurst exponent, VPIN, multi-timeframe alignment.
+
+
+## Troubleshooting
+
+Having issues? Here are the most common problems and how to fix them.
+
+### Missing dependencies
+
+```
+[ERROR] Missing dependencies: lightgbm, ccxt
+```
+
+**Fix:** Install all required packages:
+```bash
+pip install -r requirements.txt
+```
+
+If you get permission errors, use `pip install --user -r requirements.txt` or a virtual environment:
+```bash
+python -m venv venv
+source venv/bin/activate   # Linux/Mac
+venv\Scripts\activate      # Windows
+pip install -r requirements.txt
+```
+
+### Missing .env file
+
+```
+[ERROR] No .env file found in current directory.
+```
+
+**Fix:** Copy the example and fill in your API keys:
+```bash
+cp .env.example .env
+nano .env   # or any text editor
+```
+
+You need at minimum:
+- `EXCHANGE=bybit` (or binance, okx, bitget, etc.)
+- The matching API key + secret for your exchange
+
+### Missing model files
+
+```
+[ERROR] Model not found at model_1h.pkl
+```
+
+**Fix:** You need a trained ML model. Two options:
+1. **Train your own** (free):
+   ```bash
+   python download_data.py   # download historical data
+   python train.py           # train model (~5 min)
+   ```
+2. **Use the cloud** (no model needed): [deepalphabot.com](https://deepalphabot.com) - 7-day free trial
+
+### API key errors
+
+```
+AuthenticationError: Invalid API key
+```
+
+**Fix:**
+- Double-check your API key and secret in `.env` (no extra spaces or quotes)
+- Make sure the API key has **trading permissions** enabled
+- For Bybit: enable "Contract - Trade" permission
+- For Binance: enable "Futures" permission and whitelist your IP
+- For Bitget/OKX/KuCoin: make sure you also set the passphrase
+
+### Exchange not supported
+
+```
+ValueError: Unsupported exchange: xxx
+```
+
+**Fix:** Set `EXCHANGE` in your `.env` to one of the supported values:
+`bybit`, `binance`, `okx`, `bitget`, `gateio`, `kucoin`, `htx`, `mexc`, `bingx`, `phemex`, `bitmart`, `whitebit`, `hyperliquid`
+
+### Bot crashes in a loop
+
+The bot waits 30 seconds before exiting after a crash to prevent restart-loop spam (PM2, Docker, systemd). Check the error message above the crash for the root cause.
+
+### Still stuck?
+
+- **Setup guide:** [deepalphabot.com/setup-guide](https://deepalphabot.com/setup-guide)
+- **Telegram support:** [@DeepAlphaVault_bot](https://t.me/DeepAlphaVault_bot)
+- **Discord:** [discord.gg/P4yX686m](https://discord.gg/P4yX686m)
+- **GitHub Issues:** [github.com/stefanoviana/deepalpha/issues](https://github.com/stefanoviana/deepalpha/issues)
+
+Or just use the **cloud version** — no installation, no setup, no crashes: [deepalphabot.com](https://deepalphabot.com)
+
+---
 
 ## Disclaimer
 
@@ -491,4 +794,20 @@ MIT License — see [LICENSE](LICENSE)
 
 [![Star History Chart](https://api.star-history.com/svg?repos=stefanoviana/deepalpha&type=Date)](https://star-history.com/#stefanoviana/deepalpha&Date)
 
-<!-- Keywords: crypto trading bot, ai trading, machine learning trading, lightgbm crypto, bybit bot, binance bot, binance futures, bitget bot, algorithmic trading, freqai, xgboost crypto, automated trading, quant trading bot -->
+<!-- Keywords: crypto trading bot, ai trading, machine learning trading, lightgbm crypto, bybit bot, binance bot, binance futures, bitget bot, okx bot, gate.io bot, kucoin bot, htx bot, mexc bot, bingx bot, phemex bot, bitmart bot, whitebit bot, huobi trading bot, algorithmic trading, freqai, xgboost crypto, automated trading, quant trading bot, 12 exchange trading bot, multi-exchange trading bot, cloud trading bot, free crypto trading bot, free trial trading bot, tradingview webhook bot, ccxt trading bot, best AI trading bot 2026, crypto trading bot 2026, non-custodial trading bot, open source trading bot, pump scanner, crypto pump detector, volume spike bot -->
+
+---
+
+## Blog & Resources
+
+- [Best AI Crypto Trading Bot 2026](https://deepalphabot.com/blog/article-6)
+- [Bybit Trading Bot Free Trial](https://deepalphabot.com/blog/article-7)
+- [Automated Crypto Trading for Beginners](https://deepalphabot.com/blog/article-8)
+- [TradingView Webhook Crypto Bot Setup](https://deepalphabot.com/blog/article-9)
+- [How to Use AI for Crypto Trading](https://deepalphabot.com/blog/article-10)
+
+---
+
+<div align="center">
+<sub>Built with Python, XGBoost, LightGBM, CCXT | <a href="https://deepalphabot.com">deepalphabot.com</a> | <a href="https://pypi.org/project/deepalpha-freqai/">PyPI</a></sub>
+</div>
