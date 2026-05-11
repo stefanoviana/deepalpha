@@ -12,6 +12,8 @@ Usage:
     balance = exchange.get_balance()
 """
 
+from __future__ import annotations
+
 import logging
 import os
 import time
@@ -24,10 +26,16 @@ logger = logging.getLogger(__name__)
 # Slippage for simulated market orders (IOC limit).
 # Higher values fill more reliably but at a worse price.
 DEFAULT_SLIPPAGE = 0.002
-from eth_account import Account
-from hyperliquid.utils import constants
-from hyperliquid.exchange import Exchange as HLExchange
-from hyperliquid.info import Info as HLInfo
+try:
+    from eth_account import Account
+    from hyperliquid.exchange import Exchange as HLExchange
+    from hyperliquid.info import Info as HLInfo
+    from hyperliquid.utils import constants
+except ImportError:
+    Account = None
+    constants = None
+    HLExchange = None
+    HLInfo = None
 
 
 # ---------------------------------------------------------------------------
@@ -168,6 +176,11 @@ class HyperliquidAdapter(ExchangeAdapter):
     # -- connection ---------------------------------------------------------
 
     def connect(self) -> None:
+        if Account is None or HLInfo is None or HLExchange is None or constants is None:
+            raise ImportError(
+                "Hyperliquid support requires eth-account and hyperliquid-python-sdk. "
+                "Install them before using the Hyperliquid adapter."
+            )
         if not self.private_key:
             raise ValueError("PRIVATE_KEY env var not set (required for Hyperliquid)")
         if not self.wallet:
