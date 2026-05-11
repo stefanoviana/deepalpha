@@ -168,3 +168,64 @@ class TestSLTP:
         sl, tp = rm.calc_sl_tp(100.0, "short")
         assert sl > 100.0
         assert tp < 100.0
+
+
+class TestSignalPerformance:
+    """Tests for closed-trade performance metrics used by status surfaces."""
+
+    def test_signal_performance_empty_history(self, mock_config):
+        """Empty history should render zeroed metrics without division errors."""
+        rm = RiskManager()
+
+        metrics = rm.get_signal_performance()
+
+        assert metrics["total_trades"] == 0
+        assert metrics["wins"] == 0
+        assert metrics["losses"] == 0
+        assert metrics["win_rate"] == 0.0
+        assert metrics["average_pnl"] == 0.0
+        assert metrics["total_pnl"] == 0
+
+    def test_signal_performance_tracks_realized_trades(self, mock_config):
+        """Closed trades should produce win rate and average PnL metrics."""
+        rm = RiskManager()
+        rm.register_open("BTC", "long", 100.0, 1.0)
+        win_pnl = rm.register_close("BTC", 110.0)
+        rm.register_open("ETH", "short", 100.0, 1.0)
+        loss_pnl = rm.register_close("ETH", 105.0)
+
+        metrics = rm.get_signal_performance()
+
+        assert metrics["total_trades"] == 2
+        assert metrics["wins"] == 1
+        assert metrics["losses"] == 1
+        assert metrics["win_rate"] == 50.0
+        assert metrics["total_pnl"] == pytest.approx(win_pnl + loss_pnl)
+        assert metrics["average_pnl"] == pytest.approx((win_pnl + loss_pnl) / 2)
+
+    def test_signal_performance_respects_recent_window(self, mock_config):
+        """Recent window should compute metrics over the latest closed trades."""
+        rm = RiskManager()
+        rm.register_open("BTC", "long", 100.0, 1.0)
+        rm.register_close("BTC", 110.0)
+        rm.register_open("ETH", "long", 100.0, 1.0)
+        rm.register_close("ETH", 90.0)
+
+        metrics = rm.get_signal_performance(recent=1)
+
+        assert metrics["total_trades"] == 1
+        assert metrics["wins"] == 0
+        assert metrics["losses"] == 1
+
+    def test_signal_performance_format_for_status(self, mock_config):
+        """Formatted performance should include status command summary fields."""
+        rm = RiskManager()
+        rm.register_open("BTC", "long", 100.0, 1.0)
+        rm.register_close("BTC", 110.0)
+
+        text = rm.format_signal_performance()
+
+        assert "Signals (1 closed)" in text
+        assert "Win rate 100.0%" in text
+        assert "Avg PnL" in text
+        assert "Total PnL" in text

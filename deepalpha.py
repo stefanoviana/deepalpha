@@ -470,7 +470,8 @@ class DeepAlpha:
 
                 print(f"[{now}] Equity: ${equity:,.2f} | "
                       f"Positions: {n_pos}/{config.MAX_POSITIONS} | "
-                      f"Daily PnL: ${self.risk.daily_pnl:,.2f}")
+                      f"Daily PnL: ${self.risk.daily_pnl:,.2f} | "
+                      f"{self.risk.format_signal_performance()}")
 
                 # 1. Sync positions with exchange
                 self._sync_positions()

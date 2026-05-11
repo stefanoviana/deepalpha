@@ -6,6 +6,7 @@ and circuit breaker logic.
 
 import time
 from datetime import datetime, timezone
+from collections import deque
 
 import config
 from config import FEE_RATE
@@ -20,6 +21,7 @@ class RiskManager:
         self.consecutive_losses: int = 0
         self.circuit_breaker_until: float = 0.0
         self.open_positions: dict[str, dict] = {}  # coin -> position info
+        self.closed_trades: deque[dict] = deque(maxlen=100)
 
     # ─── Daily reset ────────────────────────────────────────────────────
 
@@ -133,6 +135,18 @@ class RiskManager:
         pnl = raw_pnl - fees
 
         self.daily_pnl += pnl
+        rounded_pnl = round(pnl, 2)
+        self.closed_trades.append(
+            {
+                "coin": coin,
+                "side": pos["side"],
+                "entry": pos["entry"],
+                "exit": exit_price,
+                "qty": pos["qty"],
+                "pnl": rounded_pnl,
+                "closed_at": time.time(),
+            }
+        )
 
         # Track consecutive losses for circuit breaker
         if pnl < 0:
@@ -143,7 +157,40 @@ class RiskManager:
         else:
             self.consecutive_losses = 0
 
-        return round(pnl, 2)
+        return rounded_pnl
+
+    def get_signal_performance(self, recent: int = 30) -> dict:
+        """
+        Return signal performance metrics for Telegram status surfaces.
+
+        Metrics are based on realised trades tracked by this process. They are
+        intentionally side-effect free so dashboards, CLI status, and Telegram
+        commands can call this without touching exchange state.
+        """
+        trades = list(self.closed_trades)[-recent:] if recent > 0 else list(self.closed_trades)
+        total = len(trades)
+        wins = [trade for trade in trades if trade["pnl"] > 0]
+        losses = [trade for trade in trades if trade["pnl"] < 0]
+        total_pnl = sum(trade["pnl"] for trade in trades)
+
+        return {
+            "total_trades": total,
+            "wins": len(wins),
+            "losses": len(losses),
+            "win_rate": (len(wins) / total * 100) if total else 0.0,
+            "average_pnl": (total_pnl / total) if total else 0.0,
+            "total_pnl": total_pnl,
+        }
+
+    def format_signal_performance(self, recent: int = 30) -> str:
+        """Render signal performance for human-facing Telegram/status messages."""
+        metrics = self.get_signal_performance(recent=recent)
+        return (
+            f"Signals ({metrics['total_trades']} closed): "
+            f"Win rate {metrics['win_rate']:.1f}% | "
+            f"Avg PnL ${metrics['average_pnl']:.2f} | "
+            f"Total PnL ${metrics['total_pnl']:.2f}"
+        )
 
     # ─── SL/TP check ───────────────────────────────────────────────────
 
