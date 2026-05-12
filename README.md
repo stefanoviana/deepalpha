@@ -287,7 +287,7 @@ The Pro version adds XGBoost ensemble, PPO reinforcement learning, 50 features, 
 | **AI-Trained Coins** | 25 |
 | **Avg Holding Time** | 5.58 hours |
 
-> Deep neural network (BiLSTM + Attention) trained on GPU across 25 cryptocurrency pairs. Copy our trades on [Bybit Copy Trading](https://www.bybit.com/copyTrade).
+> Deep neural network (BiLSTM + Attention) trained on GPU across 25 cryptocurrency pairs. 
 
 
 ## Quick Start (Pro — 2 minutes)
@@ -777,7 +777,6 @@ MIT License — see [LICENSE](LICENSE)
 - **[Crypto Pump Scanner](https://github.com/stefanoviana/crypto-pump-scanner)** — Real-time pump detection for Bybit. Monitors 500+ pairs, auto-trades volume spikes. Standalone or integrated.
 - **[FreqAI](https://www.freqtrade.io/en/stable/freqai/)** — Use DeepAlpha's ML pipeline as a drop-in FreqAI prediction model. See [freqai-plugin/](freqai-plugin/) for setup.
 - **[Binance Futures](https://www.binance.com)** — Full support for Binance USDT-M perpetual futures via ccxt.
-- **[Bybit Copy Trading](https://www.bybit.com/invite?ref=LN1XOX)** — Follow DeepAlpha trades directly on Bybit with one click.
 - **Telegram** — Real-time trade alerts and portfolio updates via bot.
 
 ## Links
